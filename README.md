@@ -1,33 +1,10 @@
-# ipfs-service-provider
+# ipfs-bch-wallet-consumer
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-This is a 'boilerplate' repository. It's intended to be forked to start new projects. This repository has been forked from the [koa-api-boilerplate](https://github.com/christroutner/koa-api-boilerplate). It has all the same features as that boilerplate:
+This is a REST API server based on [Koa](https://koajs.com/). It's essentially a mirror image of [ipfs-bch-wallet-service](https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-service). Where ipfs-bch-wallet-service is intended to be coupled to [bch-api](https://github.com/Permissionless-Software-Foundation/bch-api) to _provide_ blockchain service, ipfs-bch-wallet-consumer provides a localized REST API for _consuming_ that blockchain service.
 
-- [Koa](https://koajs.com/) framework for REST APIs
-- User management
-- Access and rate-limit control using [JWT tokens](https://jwt.io/).
-
-This boilerplate extends that code to provide the basic features required to be a 'service provider' on the [IPFS](https://ipfs.io) network. See [this article](https://troutsblog.com/blog/ipfs-api) if you're new to the concept of service providers on IPFS. These basic features include:
-
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating service providers and consumers across the IPFS network.
-- JSON RPC for creating an API between providers and consumers.
-
-If you are interested in creating your own service provider on the IPFS network, fork this repository and start building.
-
-## Features
-
-This project covers basic necessities of most APIs.
-
-- [Koa](https://koajs.com/) framework for REST APIs
-- Authentication (passport & jwt)
-- Database (mongoose)
-- Testing (mocha)
-- Doc generation with apidoc
-- Linting using [Standard](https://github.com/standard/standard)
-- Packaged for production environment as a Docker container
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord) for coordinating peers over IPFS
-- JSON RPC for mirroring the REST API over IPFS
+When started, this web server starts an [IPFS](https://ipfs.io) node and connects to an ipfs-bch-wallet-service server over the IPFS network. It then pipes that connection over its own localized REST API.
 
 ## Requirements
 

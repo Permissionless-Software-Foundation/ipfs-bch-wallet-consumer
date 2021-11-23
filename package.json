@@ -1,7 +1,7 @@
 {
-  "name": "ipfs-service-provider",
-  "version": "1.3.0",
-  "description": "A Koa-based combination of a REST API and IPFS JSON RPC. Boilerplate for starting new projects.",
+  "name": "ipfs-bch-wallet-consumer",
+  "version": "1.0.0",
+  "description": "A (local) REST API that proxies BCH wallet services delivered over IPFS (global).",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -18,13 +18,13 @@
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "apidoc": {
-    "title": "ipfs-service-provider",
+    "title": "ipfs-bch-wallet-consumer",
     "url": "localhost:5000"
   },
-  "repository": "Permissionless-Software-Foundation/ipfs-service-provider",
+  "repository": "Permissionless-Software-Foundation/ipfs-bch-wallet-consumer",
   "dependencies": {
     "@chris.troutner/ipfs": "2.0.2",
-    "@psf/bch-js": "4.20.20",
+    "@psf/bch-js": "4.20.26",
     "axios": "0.21.1",
     "bcryptjs": "2.4.3",
     "glob": "7.1.6",
