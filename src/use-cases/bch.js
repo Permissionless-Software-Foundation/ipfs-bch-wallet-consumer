@@ -27,6 +27,11 @@ class BchUseCases {
         test: 'test'
       }
 
+      console.log(
+        'this.adapters.ipfs.ipfsCoordAdapter.state: ',
+        this.adapters.ipfs.ipfsCoordAdapter.state
+      )
+
       return status
     } catch (err) {
       // console.log('createUser() error: ', err)
