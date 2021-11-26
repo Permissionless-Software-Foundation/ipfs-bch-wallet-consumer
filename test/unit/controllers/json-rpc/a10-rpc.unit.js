@@ -74,10 +74,17 @@ describe('#JSON RPC', () => {
     })
 
     it('should return default response if routing is not possible', async () => {
+      // Force desired code path
+      // sandbox
+      //   .stub(uut.adapters.ipfs.ipfsCoordAdapter, 'peerInputHandler')
+      //   .returns()
+      // uut.adapters.ipfs.ipfsCoordAdapter.peer
+
       const id = uid()
       const json = jsonrpc.request(id, 'unknownMethod', {})
 
       const str = JSON.stringify(json)
+      // console.log(`str: ${str}`)
 
       const result = await uut.router(str, 'peerA')
       // console.log('result: ', result)
@@ -204,7 +211,9 @@ describe('#JSON RPC', () => {
       // Force the RPC type to be 'success', to indicate an RPC that was
       // processed internal to ipfs-coord.
       sandbox.stub(uut.jsonrpc, 'parse').returns({
-        payload: {},
+        payload: {
+          id: 'metrics5323'
+        },
         type: 'success'
       })
 

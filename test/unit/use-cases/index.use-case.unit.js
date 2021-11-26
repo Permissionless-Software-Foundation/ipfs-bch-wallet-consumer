@@ -5,6 +5,7 @@
 // Public npm libraries
 const assert = require('chai').assert
 const sinon = require('sinon')
+const EventEmitter = require('events')
 
 // Local support libraries
 // const testUtils = require('../../utils/test-utils')
@@ -25,7 +26,7 @@ describe('#use-cases', () => {
   beforeEach(() => {
     sandbox = sinon.createSandbox()
 
-    uut = new UseCases({ adapters })
+    uut = new UseCases({ adapters, eventEmitter: new EventEmitter() })
   })
 
   afterEach(() => sandbox.restore())

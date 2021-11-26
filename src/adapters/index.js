@@ -21,8 +21,16 @@ const config = require('../../config')
 
 class Adapters {
   constructor (localConfig = {}) {
+    // Dependency injection.
+    this.eventEmitter = localConfig.eventEmitter
+    if (!this.eventEmitter) {
+      throw new Error(
+        'An instance of an EventEmitter must be passed when instantiating the adapters.'
+      )
+    }
+
     // Encapsulate dependencies
-    this.ipfs = new IPFSAdapter()
+    this.ipfs = new IPFSAdapter(localConfig)
     this.localdb = new LocalDB()
     this.logapi = new LogsAPI()
     this.passport = new Passport()

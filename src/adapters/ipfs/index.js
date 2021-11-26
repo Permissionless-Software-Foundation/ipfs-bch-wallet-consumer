@@ -7,6 +7,14 @@ const IpfsCoordAdapter = require('./ipfs-coord')
 
 class IPFS {
   constructor (localConfig = {}) {
+    // Dependency injection.
+    this.eventEmitter = localConfig.eventEmitter
+    if (!this.eventEmitter) {
+      throw new Error(
+        'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
+      )
+    }
+
     // Encapsulate dependencies
     this.ipfsAdapter = new IpfsAdapter()
     this.IpfsCoordAdapter = IpfsCoordAdapter
@@ -31,7 +39,8 @@ class IPFS {
 
       // Start ipfs-coord
       this.ipfsCoordAdapter = new this.IpfsCoordAdapter({
-        ipfs: this.ipfs
+        ipfs: this.ipfs,
+        eventEmitter: this.eventEmitter
       })
       await this.ipfsCoordAdapter.start()
       console.log('ipfs-coord is ready.')

@@ -62,6 +62,7 @@ class JSONRPC {
       // Attempt to parse the incoming data as a JSON RPC string.
       const parsedData = _this.jsonrpc.parse(str)
       // wlogger.debug(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
+      // console.log(`parsedData; ${JSON.stringify(parsedData, null, 2)}`)
 
       // Exit quietly if the incoming string is an invalid JSON RPC string.
       if (parsedData.type === 'invalid') {
@@ -71,6 +72,7 @@ class JSONRPC {
 
       // Check for duplicate entries with same 'id' value.
       const alreadyProcessed = _this._checkIfAlreadyProcessed(parsedData)
+      // console.log(`alreadyProcessed: ${alreadyProcessed}`)
       if (alreadyProcessed) {
         return false
       } else {
@@ -81,14 +83,18 @@ class JSONRPC {
         // up to this library. Ignore these messages.
         if (
           parsedData.type.includes('success') &&
-          parsedData.payload.method === undefined
+          // parsedData.payload.method === undefined
+          parsedData.payload.id.includes('metrics')
         ) {
           return false
         }
 
+        // Process response from REST API.
+        _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
+
         // Log the incoming JSON RPC command.
         wlogger.info(
-          `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}, method: ${parsedData.payload.method}`
+          `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}`
         )
       }
 
@@ -109,6 +115,10 @@ class JSONRPC {
           break
         case 'about':
           retObj = await _this.aboutController.aboutRouter(parsedData)
+          break
+        // default:
+        //   // Process response from REST API.
+        //   _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
       }
 
       // console.log('retObj: ', retObj)

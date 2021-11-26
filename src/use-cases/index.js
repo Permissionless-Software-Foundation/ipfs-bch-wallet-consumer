@@ -5,6 +5,7 @@
 */
 
 const UserUseCases = require('./user')
+const BchUseCases = require('./bch')
 
 class UseCases {
   constructor (localConfig = {}) {
@@ -14,9 +15,16 @@ class UseCases {
         'Instance of adapters must be passed in when instantiating Use Cases library.'
       )
     }
+    this.eventEmitter = localConfig.eventEmitter
+    if (!this.eventEmitter) {
+      throw new Error(
+        'Instance of Event Emitter must be passed in when instantiating Use Cases library.'
+      )
+    }
 
     // console.log('use-cases/index.js localConfig: ', localConfig)
     this.user = new UserUseCases(localConfig)
+    this.bch = new BchUseCases(localConfig)
   }
 }
 
