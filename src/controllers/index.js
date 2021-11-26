@@ -5,6 +5,7 @@
 */
 
 // Public npm libraries.
+const EventEmitter = require('events')
 
 // Load the Clean Architecture Adapters library
 const Adapters = require('../adapters')
@@ -21,8 +22,14 @@ const RESTControllers = require('./rest-api')
 
 class Controllers {
   constructor (localConfig = {}) {
-    this.adapters = new Adapters()
-    this.useCases = new UseCases({ adapters: this.adapters })
+    // Initialize EventEmitters used to pass event-driven data around the app.
+    this.eventEmitter = new EventEmitter()
+    localConfig.eventEmitter = this.eventEmitter
+
+    // Initialize Clean Architecture classes. Inject dependencies.
+    this.adapters = new Adapters(localConfig)
+    localConfig.adapters = this.adapters
+    this.useCases = new UseCases(localConfig)
   }
 
   async attachControllers (app) {

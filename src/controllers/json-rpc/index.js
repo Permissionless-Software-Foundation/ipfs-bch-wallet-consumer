@@ -71,6 +71,7 @@ class JSONRPC {
 
       // Check for duplicate entries with same 'id' value.
       const alreadyProcessed = _this._checkIfAlreadyProcessed(parsedData)
+      console.log(`alreadyProcessed: ${alreadyProcessed}`)
       if (alreadyProcessed) {
         return false
       } else {
@@ -81,10 +82,14 @@ class JSONRPC {
         // up to this library. Ignore these messages.
         if (
           parsedData.type.includes('success') &&
-          parsedData.payload.method === undefined
+          // parsedData.payload.method === undefined
+          parsedData.payload.id.includes('metrics')
         ) {
           return false
         }
+
+        // Process response from REST API.
+        _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
 
         // Log the incoming JSON RPC command.
         wlogger.info(
@@ -109,6 +114,10 @@ class JSONRPC {
           break
         case 'about':
           retObj = await _this.aboutController.aboutRouter(parsedData)
+          break
+        // default:
+        //   // Process response from REST API.
+        //   _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
       }
 
       // console.log('retObj: ', retObj)

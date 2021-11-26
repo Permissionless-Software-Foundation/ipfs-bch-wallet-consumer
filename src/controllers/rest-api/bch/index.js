@@ -52,6 +52,7 @@ class BchRouter {
 
     // Define the routes and attach the controller.
     this.router.get('/', this.getStatus)
+    this.router.post('/balance', this.postBalance)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -60,6 +61,10 @@ class BchRouter {
 
   async getStatus (ctx, next) {
     await _this.bchRESTController.getStatus(ctx, next)
+  }
+
+  async postBalance (ctx, next) {
+    await _this.bchRESTController.balance(ctx, next)
   }
 }
 

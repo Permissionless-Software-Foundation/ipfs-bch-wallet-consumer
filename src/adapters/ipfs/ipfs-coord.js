@@ -29,12 +29,12 @@ class IpfsCoordAdapter {
         'Instance of IPFS must be passed when instantiating ipfs-coord.'
       )
     }
-    // this.eventEmitter = localConfig.eventEmitter
-    // if (!this.eventEmitter) {
-    //   throw new Error(
-    //     'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
-    //   )
-    // }
+    this.eventEmitter = localConfig.eventEmitter
+    if (!this.eventEmitter) {
+      throw new Error(
+        'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
+      )
+    }
 
     // Encapsulate dependencies
     this.IpfsCoord = IpfsCoord
@@ -83,7 +83,7 @@ class IpfsCoordAdapter {
       type: 'node.js',
       // type: 'browser',
       bchjs: this.bchjs,
-      privateLog: console.log, // Default to console.log
+      privateLog: this.peerInputHandler,
       isCircuitRelay: this.config.isCircuitRelay,
       circuitRelayInfo,
       apiInfo: this.config.apiInfo,
@@ -157,8 +157,15 @@ class IpfsCoordAdapter {
             console.log(`---->BCH wallet service selected: ${thisPeer}`)
           }
 
-          // Add the peer to the list of serviceProviders.
-          _this.state.serviceProviders.push(thisPeer)
+          const alreadyExists = _this.state.serviceProviders.filter(
+            (x) => x === thisPeer
+          )
+
+          // Add the peer to the list of serviceProviders if it doesn't already
+          // exist in the list.
+          if (!alreadyExists.length) {
+            _this.state.serviceProviders.push(thisPeer)
+          }
         }
       }
     } catch (err) {
@@ -169,16 +176,16 @@ class IpfsCoordAdapter {
 
   // This method handles input coming in from other IPFS peers.
   // It passes the data on to the REST API library by emitting an event.
-  // peerInputHandler (data) {
-  //   try {
-  //     // console.log('peerInputHandler triggered with this data: ', data)
-  //
-  //     _this.eventEmitter.emit('rpcData', data)
-  //   } catch (err) {
-  //     console.error('Error in ipfs-coord.js/peerInputHandler(): ', err)
-  //     // Do not throw error. This is a top-level function.
-  //   }
-  // }
+  peerInputHandler (data) {
+    try {
+      console.log('peerInputHandler triggered with this data: ', data)
+
+      this.eventEmitter.emit('rpcData', data)
+    } catch (err) {
+      console.error('Error in ipfs-coord.js/peerInputHandler(): ', err)
+      // Do not throw error. This is a top-level function.
+    }
+  }
 }
 
 // Create a random number to use in the name of this IPFS n ode.
