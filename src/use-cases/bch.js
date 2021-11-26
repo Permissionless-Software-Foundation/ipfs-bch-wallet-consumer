@@ -18,13 +18,13 @@ class BchUseCases {
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of adapters must be passed in when instantiating User Use Cases library.'
+        'Instance of adapters must be passed in when instantiating BCH Use Cases library.'
       )
     }
     this.eventEmitter = localConfig.eventEmitter
     if (!this.eventEmitter) {
       throw new Error(
-        'An instance of an EventEmitter must be passed when instantiating the RestApi library.'
+        'An instance of an EventEmitter must be passed when instantiating the BCH Use Cases library.'
       )
     }
 

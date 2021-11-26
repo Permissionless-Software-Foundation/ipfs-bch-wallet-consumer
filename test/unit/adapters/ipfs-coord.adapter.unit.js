@@ -4,24 +4,33 @@
 
 const assert = require('chai').assert
 const sinon = require('sinon')
+const cloneDeep = require('lodash.clonedeep')
 
 const IPFSCoordAdapter = require('../../../src/adapters/ipfs/ipfs-coord')
 const IPFSMock = require('../mocks/ipfs-mock')
 const IPFSCoordMock = require('../mocks/ipfs-coord-mock')
 const EventEmitter = require('events')
+const mockDataLib = require('../mocks/adapters/ipfs-coord-mocks')
 
 describe('#IPFS', () => {
   let uut
   let sandbox
+  let mockData
 
   beforeEach(() => {
     const ipfs = IPFSMock.create()
     uut = new IPFSCoordAdapter({ ipfs, eventEmitter: new EventEmitter() })
 
     sandbox = sinon.createSandbox()
+
+    mockData = cloneDeep(mockDataLib)
   })
 
-  afterEach(() => sandbox.restore())
+  afterEach(() => {
+    sandbox.restore()
+
+    clearInterval(uut.pollServiceInterval)
+  })
 
   describe('#constructor', () => {
     it('should throw an error if ipfs instance is not included', () => {
@@ -33,6 +42,20 @@ describe('#IPFS', () => {
         assert.include(
           err.message,
           'Instance of IPFS must be passed when instantiating ipfs-coord.'
+        )
+      }
+    })
+
+    it('should throw an error if EventEmitter instance is not included', () => {
+      try {
+        const ipfs = IPFSMock.create()
+        uut = new IPFSCoordAdapter({ ipfs })
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(
+          err.message,
+          'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
         )
       }
     })
@@ -99,6 +122,50 @@ describe('#IPFS', () => {
       } catch (err) {
         assert.include(err.message, 'Cannot read property')
       }
+    })
+  })
+
+  describe('#pollForServices', () => {
+    it('should find and select the wallet service', () => {
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+
+      uut.pollForServices()
+
+      // It should fine the service in the mocked data.
+      assert.equal(
+        uut.state.selectedServiceProvider,
+        'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
+      )
+    })
+
+    it('should catch and report errors', () => {
+      uut.pollForServices()
+
+      assert.isOk(true, 'Not throwing an error is a success.')
+    })
+  })
+
+  describe('#peerInputHandler', () => {
+    it('should emit an event trigger', () => {
+      const data = 'some data'
+
+      uut.peerInputHandler(data)
+
+      assert.isOk(true, 'Not throwing an error is a success')
+    })
+
+    it('should catch and report errors', () => {
+      // Force an error
+      sandbox.stub(uut.eventEmitter, 'emit').throws(new Error('test error'))
+
+      uut.peerInputHandler()
+
+      assert.isOk(true, 'Not throwing an error is a success.')
     })
   })
 })

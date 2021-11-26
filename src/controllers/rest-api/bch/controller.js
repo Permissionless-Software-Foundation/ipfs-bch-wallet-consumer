@@ -41,10 +41,6 @@ class BchRESTControllerLib {
    */
   async getStatus (ctx) {
     try {
-      // const users = await _this.useCases.user.getAllUsers()
-      // const status = {
-      //   test: 'test'
-      // }
       const status = await this.useCases.bch.getStatus()
 
       ctx.body = { status }

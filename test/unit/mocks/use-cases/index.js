@@ -31,12 +31,33 @@ class UserUseCaseMock {
   }
 }
 
+class BchUseCaseMock {
+  rpcHandler() {
+    return {}
+  }
+
+  async getStatus() {
+    return {}
+  }
+
+  async getBalances() {
+    return {}
+  }
+
+  async waitForRPCResponse() {
+    return {}
+  }
+}
+
 class UseCasesMock {
   constuctor(localConfig = {}) {
     // this.user = new UserUseCaseMock(localConfig)
+    // this.user = new UserUseCaseMock()
+    // this.bch = new BchUseCaseMock()
   }
 
   user = new UserUseCaseMock()
+  bch = new BchUseCaseMock()
 }
 
 module.exports = UseCasesMock
