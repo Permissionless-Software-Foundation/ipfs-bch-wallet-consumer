@@ -178,7 +178,7 @@ class IpfsCoordAdapter {
   // It passes the data on to the REST API library by emitting an event.
   peerInputHandler (data) {
     try {
-      console.log('peerInputHandler triggered with this data: ', data)
+      // console.log('peerInputHandler triggered with this data: ', data)
 
       this.eventEmitter.emit('rpcData', data)
     } catch (err) {

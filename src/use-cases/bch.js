@@ -80,7 +80,7 @@ class BchUseCases {
   // Get the BCH balance for an array of addresses.
   async getBalances (addrs) {
     try {
-      console.log('addrs: ', addrs)
+      // console.log('addrs: ', addrs)
 
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
@@ -100,7 +100,7 @@ class BchUseCases {
       // Generate a JSON RPC command.
       const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
       const cmdStr = JSON.stringify(cmd)
-      console.log('cmdStr: ', cmdStr)
+      // console.log('cmdStr: ', cmdStr)
 
       // Send the RPC command to selected wallet service.
       const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
@@ -137,7 +137,7 @@ class BchUseCases {
 
       // Loop that waits for a response from the service provider.
       do {
-        console.log(`this.rpcDataQueue.length: ${this.rpcDataQueue.length}`)
+        // console.log(`this.rpcDataQueue.length: ${this.rpcDataQueue.length}`)
         for (let i = 0; i < this.rpcDataQueue.length; i++) {
           const rawData = this.rpcDataQueue[i]
           // console.log(`rawData: ${JSON.stringify(rawData, null, 2)}`)

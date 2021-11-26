@@ -13,7 +13,8 @@ const ipfs = {
           sendPrivateMessage: () => {}
         }
       }
-    }
+    },
+    peerInputHandler: () => {}
   }
 }
 

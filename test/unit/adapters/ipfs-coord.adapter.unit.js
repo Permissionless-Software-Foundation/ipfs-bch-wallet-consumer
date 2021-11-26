@@ -8,6 +8,7 @@ const sinon = require('sinon')
 const IPFSCoordAdapter = require('../../../src/adapters/ipfs/ipfs-coord')
 const IPFSMock = require('../mocks/ipfs-mock')
 const IPFSCoordMock = require('../mocks/ipfs-coord-mock')
+const EventEmitter = require('events')
 
 describe('#IPFS', () => {
   let uut
@@ -15,7 +16,7 @@ describe('#IPFS', () => {
 
   beforeEach(() => {
     const ipfs = IPFSMock.create()
-    uut = new IPFSCoordAdapter({ ipfs })
+    uut = new IPFSCoordAdapter({ ipfs, eventEmitter: new EventEmitter() })
 
     sandbox = sinon.createSandbox()
   })

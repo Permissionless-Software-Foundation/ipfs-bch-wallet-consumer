@@ -13,7 +13,8 @@ const context = {}
 
 const UserController = require('../../../src/controllers/rest-api/users/controller')
 const Adapters = require('../../../src/adapters')
-const adapters = new Adapters()
+const EventEmitter = require('events')
+const adapters = new Adapters({ eventEmitter: new EventEmitter() })
 const UseCases = require('../../../src/use-cases/')
 let uut
 let sandbox
@@ -50,7 +51,7 @@ describe('Users', () => {
   })
 
   beforeEach(() => {
-    const useCases = new UseCases({ adapters })
+    const useCases = new UseCases({ adapters, eventEmitter: new EventEmitter() })
     uut = new UserController({ adapters, useCases })
 
     sandbox = sinon.createSandbox()
