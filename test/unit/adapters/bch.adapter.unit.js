@@ -14,7 +14,7 @@ const cloneDeep = require('lodash.clonedeep')
 // const testUtils = require('../../utils/test-utils')
 
 // Unit under test (uut)
-const BchUseCases = require('../../../src/use-cases/bch')
+const BchAdapter = require('../../../src/adapters/bch')
 const adapters = require('../mocks/adapters')
 const eventEmitter = new EventEmitter()
 const mockDataLib = require('../mocks/use-cases/rest-api-mocks')
@@ -34,43 +34,45 @@ describe('#bch-use-case', () => {
 
     mockData = cloneDeep(mockDataLib)
 
-    uut = new BchUseCases({ adapters, eventEmitter })
+    const ipfs = adapters.ipfs
+    uut = new BchAdapter({ ipfs, eventEmitter })
   })
 
   afterEach(() => sandbox.restore())
 
   describe('#constructor', () => {
-    it('should throw an error if adapters are not passed in', () => {
+    it('should throw an error if ipfs is not passed in', () => {
       try {
-        uut = new BchUseCases()
+        uut = new BchAdapter()
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'Instance of adapters must be passed in when instantiating BCH Use Cases library.'
+          'An instance of IPFS must be passed when instantiating the BCH Adapter library.'
         )
       }
     })
 
     it('should throw an error if adapters are not passed in', () => {
       try {
-        uut = new BchUseCases({ adapters })
+        const ipfs = {}
+        uut = new BchAdapter({ ipfs })
 
         assert.fail('Unexpected code path')
       } catch (err) {
         assert.include(
           err.message,
-          'An instance of an EventEmitter must be passed when instantiating the BCH Use Cases library.'
+          'An instance of an EventEmitter must be passed when instantiating the adapters.'
         )
       }
     })
   })
 
   describe('#waitForRPCResponse', () => {
-    it('should should resolve when data is received', async () => {
+    it('should resolve when data is received', async () => {
       // Mock dependencies
-      uut.adapters.ipfs.ipfsCoordAdapter.bchjs = {
+      uut.ipfs.ipfsCoordAdapter.bchjs = {
         Util: {
           sleep: () => {}
         }
@@ -92,7 +94,7 @@ describe('#bch-use-case', () => {
     it('should catch and throw an error', async () => {
       try {
         // Force an error
-        uut.adapters.ipfs.ipfsCoordAdapter.bchjs = {
+        uut.ipfs.ipfsCoordAdapter.bchjs = {
           Util: {
             sleep: () => {
               throw new Error('test error')
@@ -136,7 +138,7 @@ describe('#bch-use-case', () => {
   describe('#getBalances', () => {
     it('should get the balance of an address', async () => {
       // Force connection to a wallet service
-      uut.adapters.ipfs.ipfsCoordAdapter.state = {
+      uut.ipfs.ipfsCoordAdapter.state = {
         selectedServiceProvider: 'abc123'
       }
 

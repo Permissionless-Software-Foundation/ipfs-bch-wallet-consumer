@@ -41,7 +41,7 @@ class BchRESTControllerLib {
    */
   async getStatus (ctx) {
     try {
-      const status = await this.useCases.bch.getStatus()
+      const status = await this.adapters.bch.getStatus()
 
       ctx.body = { status }
     } catch (err) {
@@ -100,7 +100,7 @@ class BchRESTControllerLib {
     try {
       const addrs = ctx.request.body.addresses
 
-      const data = await this.useCases.bch.getBalances(addrs)
+      const data = await this.adapters.bch.getBalances(addrs)
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       ctx.body = data

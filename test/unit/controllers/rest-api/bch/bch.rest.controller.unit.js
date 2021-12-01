@@ -79,7 +79,7 @@ describe('#BCH-REST-Controller', () => {
       try {
         // Force an error
         sandbox
-          .stub(uut.useCases.bch, 'getStatus')
+          .stub(uut.adapters.bch, 'getStatus')
           .rejects(new Error('test error'))
 
         await uut.getStatus(ctx)
@@ -93,7 +93,7 @@ describe('#BCH-REST-Controller', () => {
     })
 
     it('should return 200 status on success', async () => {
-      sandbox.stub(uut.useCases.bch, 'getStatus').resolves('bch')
+      sandbox.stub(uut.adapters.bch, 'getStatus').resolves('bch')
 
       await uut.getStatus(ctx)
 
@@ -110,7 +110,7 @@ describe('#BCH-REST-Controller', () => {
       try {
         // Force an error
         sandbox
-          .stub(uut.useCases.bch, 'getBalances')
+          .stub(uut.adapters.bch, 'getBalances')
           .rejects(new Error('test error'))
 
         ctx.request.body = {
@@ -128,7 +128,7 @@ describe('#BCH-REST-Controller', () => {
     })
 
     it('should return 200 status on success', async () => {
-      sandbox.stub(uut.useCases.bch, 'getBalances').resolves({ status: 200 })
+      sandbox.stub(uut.adapters.bch, 'getBalances').resolves({ status: 200 })
 
       ctx.request.body = {
         addresses: 'blah'

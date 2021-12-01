@@ -8,23 +8,23 @@ const { v4: uid } = require('uuid')
 const jsonrpc = require('jsonrpc-lite')
 
 // Local libraries
-const { wlogger } = require('../adapters/wlogger')
+const { wlogger } = require('../wlogger')
 
 let _this
 
-class BchUseCases {
+class BchAdapter {
   constructor (localConfig = {}) {
-    // console.log('User localConfig: ', localConfig)
-    this.adapters = localConfig.adapters
-    if (!this.adapters) {
+    // console.log('BCH localConfig: ', localConfig)
+    this.ipfs = localConfig.ipfs
+    if (!this.ipfs) {
       throw new Error(
-        'Instance of adapters must be passed in when instantiating BCH Use Cases library.'
+        'An instance of IPFS must be passed when instantiating the BCH Adapter library.'
       )
     }
     this.eventEmitter = localConfig.eventEmitter
     if (!this.eventEmitter) {
       throw new Error(
-        'An instance of an EventEmitter must be passed when instantiating the BCH Use Cases library.'
+        'An instance of an EventEmitter must be passed when instantiating the adapters.'
       )
     }
 
@@ -61,12 +61,12 @@ class BchUseCases {
   async getStatus () {
     try {
       console.log(
-        'this.adapters.ipfs.ipfsCoordAdapter.state: ',
-        this.adapters.ipfs.ipfsCoordAdapter.state
+        'this.ipfs.ipfsCoordAdapter.state: ',
+        this.ipfs.ipfsCoordAdapter.state
       )
 
       const status = {
-        state: this.adapters.ipfs.ipfsCoordAdapter.state
+        state: this.ipfs.ipfsCoordAdapter.state
       }
 
       return status
@@ -84,7 +84,8 @@ class BchUseCases {
 
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
-      const selectedProvider = this.adapters.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
       if (!selectedProvider) {
         throw new Error('No BCH Wallet Service provider available yet.')
       }
@@ -103,8 +104,8 @@ class BchUseCases {
       // console.log('cmdStr: ', cmdStr)
 
       // Send the RPC command to selected wallet service.
-      const thisNode = this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-      await this.adapters.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
         selectedProvider,
         cmdStr,
         thisNode
@@ -157,7 +158,7 @@ class BchUseCases {
 
         // Wait between loops.
         // await this.sleep(1000)
-        await this.adapters.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
+        await this.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
 
         cnt++
 
@@ -173,4 +174,4 @@ class BchUseCases {
   }
 }
 
-module.exports = BchUseCases
+module.exports = BchAdapter
