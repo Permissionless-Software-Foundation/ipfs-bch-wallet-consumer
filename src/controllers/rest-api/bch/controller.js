@@ -392,8 +392,56 @@ class BchRESTControllerLib {
     try {
       const txid = ctx.request.body.txid
 
-      // const data = await _this.bchjs.Transaction.get(txid)
       const data = await this.adapters.bch.getTransaction(txid)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      ctx.body = data
+    } catch (err) {
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {JSON} /bch PubKey
+   * @apiPermission public
+   * @apiName PubKey
+   * @apiGroup JSON BCH
+   * @apiDescription Get the public key from an address.
+   * Given an address the endpoint will return an object with the
+   * following properties
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the petition with the RPC information
+   *      - success: - Request status
+   *      - publickey: - Address public key
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "pubkey", "address": "bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk"}}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *  {
+   *     "jsonrpc":"2.0",
+   *     "id":"555",
+   *     "result":{
+   *        "method":"bch",
+   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *        "value":{
+   *          "success": true,
+   *          "status": 200,
+   *          "endpoint": "pubkey",
+   *          "pubkey": {
+   *            "success": true,
+   *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+   *     }
+   *
+   *  }
+   */
+  async pubKey (ctx) {
+    try {
+      const address = ctx.request.body.address
+
+      const data = await this.adapters.bch.getPubKey(address)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
       ctx.body = data

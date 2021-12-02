@@ -109,4 +109,41 @@ describe('#BCH E2E Tests', () => {
       assert.property(result.data, 'vin')
     })
   })
+
+  describe('#pubkey', () => {
+    it('should return "not found" if pubkey is not on chain', async () => {
+      const body = {
+        address: 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
+      }
+
+      const url = `${SERVER}/bch/pubkey`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      assert.equal(result.data.success, true)
+      assert.equal(result.data.status, 200)
+      assert.equal(result.data.endpoint, 'pubkey')
+      assert.equal(result.data.pubkey.success, false)
+      assert.equal(result.data.pubkey.publicKey, 'not found')
+    })
+
+    it('should get a public key for an address', async () => {
+      const body = {
+        address: 'bitcoincash:qznxh6yegf7nfrsd0zeksed4jcqzvg7tzqlcqw3v97'
+      }
+
+      const url = `${SERVER}/bch/pubkey`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      assert.equal(result.data.success, true)
+      assert.equal(result.data.status, 200)
+      assert.equal(result.data.endpoint, 'pubkey')
+      assert.equal(result.data.pubkey.success, true)
+      assert.equal(
+        result.data.pubkey.publicKey,
+        '03ebd6d6aae05da1c5905445e3886b30f6a31b26a88de5980de236bd22380fa942'
+      )
+    })
+  })
 })

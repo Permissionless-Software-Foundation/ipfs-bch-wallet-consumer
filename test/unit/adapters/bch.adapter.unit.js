@@ -254,4 +254,34 @@ describe('#bch-use-case', () => {
       }
     })
   })
+
+  describe('#getPubKey', () => {
+    it('should get transaction details for a txid', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const addr = 'abc123'
+
+      const result = await uut.getPubKey(addr)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getPubKey()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
 })

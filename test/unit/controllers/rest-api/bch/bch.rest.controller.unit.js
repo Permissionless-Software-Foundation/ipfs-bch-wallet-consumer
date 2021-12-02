@@ -271,17 +271,55 @@ describe('#BCH-REST-Controller', () => {
       }
     })
 
-    // it('should return 200 status on success', async () => {
-    //   sandbox.stub(uut.adapters.bch, 'getUtxos').resolves({ status: 200 })
-    //
-    //   ctx.request.body = {
-    //     address: 'blah'
-    //   }
-    //
-    //   await uut.transactions(ctx)
-    //
-    //   // Assert the expected HTTP response
-    //   assert.equal(ctx.status, 200)
-    // })
+    it('should return 200 status on success', async () => {
+      sandbox
+        .stub(uut.adapters.bch, 'getTransactions')
+        .resolves({ status: 200 })
+
+      ctx.request.body = {
+        txid: 'blah'
+      }
+
+      await uut.transaction(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#pubKey', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'getPubKey')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          addr: 'blah'
+        }
+
+        await uut.pubKey(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.bch, 'getPubKey').resolves({ status: 200 })
+
+      ctx.request.body = {
+        addr: 'blah'
+      }
+
+      await uut.pubKey(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
   })
 })
