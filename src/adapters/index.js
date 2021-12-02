@@ -16,6 +16,7 @@ const Nodemailer = require('./nodemailer')
 // const { wlogger } = require('./wlogger')
 const JSONFiles = require('./json-files')
 const FullStackJWT = require('./fullstack-jwt')
+const BCH = require('./bch')
 
 const config = require('../../config')
 
@@ -31,6 +32,7 @@ class Adapters {
 
     // Encapsulate dependencies
     this.ipfs = new IPFSAdapter(localConfig)
+    localConfig.ipfs = this.ipfs
     this.localdb = new LocalDB()
     this.logapi = new LogsAPI()
     this.passport = new Passport()
@@ -38,6 +40,7 @@ class Adapters {
     this.jsonFiles = new JSONFiles()
     this.bchjs = new BCHJS()
     this.config = config
+    this.bch = new BCH(localConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)

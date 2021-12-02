@@ -54,4 +54,43 @@ const localdb = {
   }
 }
 
-module.exports = { ipfs, localdb }
+class BchUseCaseMock {
+  rpcHandler () {
+    return {}
+  }
+
+  async getStatus () {
+    return {}
+  }
+
+  async getBalances () {
+    return {}
+  }
+
+  async getUtxos () {
+    return {}
+  }
+
+  async broadcast () {
+    return {}
+  }
+
+  async getTransaction () {
+    return {}
+  }
+
+  async getTransactions () {
+    return {}
+  }
+
+  async getPubKey () {
+    return {}
+  }
+
+  async waitForRPCResponse () {
+    return {}
+  }
+}
+const bch = new BchUseCaseMock()
+
+module.exports = { ipfs, localdb, bch }

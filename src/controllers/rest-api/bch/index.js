@@ -53,6 +53,11 @@ class BchRouter {
     // Define the routes and attach the controller.
     this.router.get('/', this.getStatus)
     this.router.post('/balance', this.postBalance)
+    this.router.post('/utxos', this.postUtxos)
+    this.router.post('/broadcast', this.postBroadcast)
+    this.router.post('/transactions', this.postTransactions)
+    this.router.post('/transaction', this.postTransaction)
+    this.router.post('/pubkey', this.postPubKey)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -65,6 +70,26 @@ class BchRouter {
 
   async postBalance (ctx, next) {
     await _this.bchRESTController.balance(ctx, next)
+  }
+
+  async postUtxos (ctx, next) {
+    await _this.bchRESTController.utxos(ctx, next)
+  }
+
+  async postBroadcast (ctx, next) {
+    await _this.bchRESTController.broadcast(ctx, next)
+  }
+
+  async postTransactions (ctx, next) {
+    await _this.bchRESTController.transactions(ctx, next)
+  }
+
+  async postTransaction (ctx, next) {
+    await _this.bchRESTController.transaction(ctx, next)
+  }
+
+  async postPubKey (ctx, next) {
+    await _this.bchRESTController.pubKey(ctx, next)
   }
 }
 
