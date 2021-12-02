@@ -67,6 +67,26 @@ class BchUseCaseMock {
     return {}
   }
 
+  async getUtxos () {
+    return {}
+  }
+
+  async broadcast () {
+    return {}
+  }
+
+  async getTransaction () {
+    return {}
+  }
+
+  async getTransactions () {
+    return {}
+  }
+
+  async getPubKey () {
+    return {}
+  }
+
   async waitForRPCResponse () {
     return {}
   }

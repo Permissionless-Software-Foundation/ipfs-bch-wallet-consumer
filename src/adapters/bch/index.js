@@ -122,6 +122,174 @@ class BchAdapter {
     }
   }
 
+  async getUtxos (addr) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      if (!selectedProvider) {
+        throw new Error('No BCH Wallet Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'utxos',
+        address: addr
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data[0]
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in use-cases/bch.js/getUtxos()')
+      throw err
+    }
+  }
+
+  async broadcast (hex) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      if (!selectedProvider) {
+        throw new Error('No BCH Wallet Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'broadcast',
+        hex
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in adapters/bch.js/broadcast()')
+      throw err
+    }
+  }
+
+  async getTransactions (address) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      if (!selectedProvider) {
+        throw new Error('No BCH Wallet Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'transactions',
+        addresses: [address]
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in adapters/bch.js/transactions()')
+      throw err
+    }
+  }
+
+  async getTransaction (txid) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      if (!selectedProvider) {
+        throw new Error('No BCH Wallet Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'transaction',
+        txid
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in adapters/bch.js/transaction()')
+      throw err
+    }
+  }
+
   // Returns a promise that resolves to data when the RPC response is recieved.
   async waitForRPCResponse (rpcId) {
     try {

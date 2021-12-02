@@ -157,6 +157,16 @@ class IpfsCoordAdapter {
             console.log(`---->BCH wallet service selected: ${thisPeer}`)
           }
 
+          // If a preferred provider is set in the config file, then connect
+          // to the preferred provider when it's discovered.
+          if (
+            _this.config.preferredProvider &&
+            thisPeer === _this.config.preferredProvider
+          ) {
+            _this.state.selectedServiceProvider = thisPeer
+          }
+
+          // Check if the peer has already been added to the list of providers.
           const alreadyExists = _this.state.serviceProviders.filter(
             (x) => x === thisPeer
           )

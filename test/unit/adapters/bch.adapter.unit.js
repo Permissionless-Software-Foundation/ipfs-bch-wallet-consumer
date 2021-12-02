@@ -164,4 +164,94 @@ describe('#bch-use-case', () => {
       }
     })
   })
+
+  describe('#broadcast', () => {
+    it('should broadcast a transaction', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const hex = 'abc123'
+
+      const result = await uut.broadcast(hex)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.broadcast()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getTransactions', () => {
+    it('should get transactions history for an address', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const addr = 'abc123'
+
+      const result = await uut.getTransactions(addr)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getTransactions()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getTransaction', () => {
+    it('should get transaction details for a txid', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const txid = 'abc123'
+
+      const result = await uut.getTransaction(txid)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getTransaction()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
 })

@@ -106,7 +106,7 @@ describe('#BCH-REST-Controller', () => {
   })
 
   describe('#balance', () => {
-    it('should return 422 status on arbitrary biz logic error', async () => {
+    it('should return 422 status on arbitrary error', async () => {
       try {
         // Force an error
         sandbox
@@ -134,10 +134,154 @@ describe('#BCH-REST-Controller', () => {
         addresses: 'blah'
       }
 
-      await uut.getStatus(ctx)
+      await uut.balance(ctx)
 
       // Assert the expected HTTP response
       assert.equal(ctx.status, 200)
     })
+  })
+
+  describe('#utxos', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'getUtxos')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          address: 'blah'
+        }
+
+        await uut.utxos(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.bch, 'getUtxos').resolves({ status: 200 })
+
+      ctx.request.body = {
+        address: 'blah'
+      }
+
+      await uut.utxos(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#broadcast', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'broadcast')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          hex: 'blah'
+        }
+
+        await uut.broadcast(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.bch, 'broadcast').resolves({ status: 200 })
+
+      ctx.request.body = {
+        hex: 'blah'
+      }
+
+      await uut.broadcast(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#transactions', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'getTransactions')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          address: 'blah'
+        }
+
+        await uut.transactions(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.bch, 'getUtxos').resolves({ status: 200 })
+
+      ctx.request.body = {
+        address: 'blah'
+      }
+
+      await uut.transactions(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#transaction', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'getTransaction')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          txid: 'blah'
+        }
+
+        await uut.transaction(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    // it('should return 200 status on success', async () => {
+    //   sandbox.stub(uut.adapters.bch, 'getUtxos').resolves({ status: 200 })
+    //
+    //   ctx.request.body = {
+    //     address: 'blah'
+    //   }
+    //
+    //   await uut.transactions(ctx)
+    //
+    //   // Assert the expected HTTP response
+    //   assert.equal(ctx.status, 200)
+    // })
   })
 })
