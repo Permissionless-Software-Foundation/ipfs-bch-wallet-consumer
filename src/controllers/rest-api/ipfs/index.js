@@ -51,7 +51,7 @@ class BchRouter {
     }
 
     // Define the routes and attach the controller.
-    this.router.get('/', this.getStatus)
+    this.router.get('/', this.ipfsRESTController.getStatus)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())

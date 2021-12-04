@@ -12,6 +12,7 @@ const UserRouter = require('./users')
 const ContactRESTController = require('./contact')
 const LogsRESTController = require('./logs')
 const BchRESTController = require('./bch')
+const IpfsRESTController = require('./ipfs')
 
 class RESTControllers {
   constructor (localConfig = {}) {
@@ -57,6 +58,10 @@ class RESTControllers {
     // Attach the REST API Controllers associated with the /bch route
     const bchRESTController = new BchRESTController(dependencies)
     bchRESTController.attach(app)
+
+    // Attach the REST API Controllers associated with the /ipfs route
+    const ipfsRESTController = new IpfsRESTController(dependencies)
+    ipfsRESTController.attach(app)
   }
 }
 

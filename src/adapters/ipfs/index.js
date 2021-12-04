@@ -58,6 +58,31 @@ class IPFS {
       throw err
     }
   }
+
+  // Get the status of this IPFS node.
+  getStatus () {
+    try {
+      // console.log(
+      //   'this.ipfsCoordAdapter.ipfsCoord.thisNode: ',
+      //   this.ipfsCoordAdapter.ipfsCoord.thisNode
+      // )
+
+      const statusObj = {
+        ipfsId: this.ipfsCoordAdapter.ipfsCoord.thisNode.ipfsId,
+        multiAddrs: this.ipfsCoordAdapter.ipfsCoord.thisNode.ipfsMultiaddrs,
+        bchAddr: this.ipfsCoordAdapter.ipfsCoord.thisNode.bchAddr,
+        slpAddr: this.ipfsCoordAdapter.ipfsCoord.thisNode.slpAddr,
+        pubKey: this.ipfsCoordAdapter.ipfsCoord.thisNode.pubKey,
+        peers: this.ipfsCoordAdapter.ipfsCoord.thisNode.peerList.length,
+        relays: this.ipfsCoordAdapter.ipfsCoord.thisNode.relayData.length
+      }
+
+      return statusObj
+    } catch (err) {
+      console.error('Error in ipfs-coord.js/getStatus()')
+      throw err
+    }
+  }
 }
 
 module.exports = IPFS
