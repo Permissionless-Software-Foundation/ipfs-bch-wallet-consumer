@@ -52,6 +52,7 @@ class BchRouter {
 
     // Define the routes and attach the controller.
     this.router.get('/', this.getStatus)
+    this.router.post('/provider', this.postProvider)
     this.router.post('/balance', this.postBalance)
     this.router.post('/utxos', this.postUtxos)
     this.router.post('/broadcast', this.postBroadcast)
@@ -66,6 +67,10 @@ class BchRouter {
 
   async getStatus (ctx, next) {
     await _this.bchRESTController.getStatus(ctx, next)
+  }
+
+  async postProvider (ctx, next) {
+    await _this.bchRESTController.postProvider(ctx, next)
   }
 
   async postBalance (ctx, next) {

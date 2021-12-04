@@ -1,5 +1,5 @@
 /*
-  REST API Controller library for the /bch route
+  REST API Controller library for the /ipfs route
 */
 
 const { wlogger } = require('../../../adapters/wlogger')
@@ -12,13 +12,13 @@ class BchRESTControllerLib {
     this.adapters = localConfig.adapters
     if (!this.adapters) {
       throw new Error(
-        'Instance of Adapters library required when instantiating /bch REST Controller.'
+        'Instance of Adapters library required when instantiating /ipfs REST Controller.'
       )
     }
     this.useCases = localConfig.useCases
     if (!this.useCases) {
       throw new Error(
-        'Instance of Use Cases library required when instantiating /bch REST Controller.'
+        'Instance of Use Cases library required when instantiating /ipfs REST Controller.'
       )
     }
 
@@ -30,13 +30,13 @@ class BchRESTControllerLib {
   }
 
   /**
-   * @api {get} /bch Get status on BCH infrastructure
+   * @api {get} /ipfs Get status on IPFS infrastructure
    * @apiPermission public
-   * @apiName GetBchStatus
+   * @apiName GetIpfsStatus
    * @apiGroup REST BCH
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X GET localhost:5001/bch
+   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs
    *
    */
   async getStatus (ctx) {
@@ -46,24 +46,6 @@ class BchRESTControllerLib {
       ctx.body = { status }
     } catch (err) {
       wlogger.error('Error in bch/controller.js/getStatus(): ')
-      // ctx.throw(422, err.message)
-      this.handleError(ctx, err)
-    }
-  }
-
-  async postProvider (ctx) {
-    try {
-      const providerId = ctx.request.body.provider
-
-      await this.adapters.bch.selectProvider(providerId)
-
-      const body = {
-        success: true
-      }
-
-      ctx.body = body
-    } catch (err) {
-      wlogger.error('Error in bch/controller.js/postProvider(): ')
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }
