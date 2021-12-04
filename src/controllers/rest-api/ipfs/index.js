@@ -9,7 +9,7 @@ const Router = require('koa-router')
 const IPFSRESTControllerLib = require('./controller')
 const Validators = require('../middleware/validators')
 
-let _this
+// let _this
 
 class BchRouter {
   constructor (localConfig = {}) {
@@ -40,7 +40,7 @@ class BchRouter {
     const baseUrl = '/ipfs'
     this.router = new Router({ prefix: baseUrl })
 
-    _this = this
+    // _this = this
   }
 
   attach (app) {
@@ -52,15 +52,16 @@ class BchRouter {
 
     // Define the routes and attach the controller.
     this.router.get('/', this.ipfsRESTController.getStatus)
+    this.router.post('/peers', this.ipfsRESTController.getPeers)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
     app.use(this.router.allowedMethods())
   }
 
-  async getStatus (ctx, next) {
-    await _this.bchRESTController.getStatus(ctx, next)
-  }
+  // async getStatus (ctx, next) {
+  //   await _this.ipfsRESTController.getStatus(ctx, next)
+  // }
 }
 
 module.exports = BchRouter

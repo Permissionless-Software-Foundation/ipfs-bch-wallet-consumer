@@ -51,6 +51,20 @@ class IpfsRESTControllerLib {
     }
   }
 
+  async getPeers (ctx) {
+    try {
+      const showAll = ctx.request.body.showAll
+
+      const peers = await _this.adapters.ipfs.getPeers(showAll)
+
+      ctx.body = { peers }
+    } catch (err) {
+      wlogger.error('Error in ipfs/controller.js/getStatus(): ')
+      // ctx.throw(422, err.message)
+      _this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.

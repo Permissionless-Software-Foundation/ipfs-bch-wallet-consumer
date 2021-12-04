@@ -83,6 +83,72 @@ class IPFS {
       throw err
     }
   }
+
+  // Get details on the other peers this node is connected to.
+  async getPeers (showAll) {
+    try {
+      const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+
+      let ipfsPeers =
+        await this.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.getPeers()
+      // console.log('ipfsPeers: ', ipfsPeers)
+
+      ipfsPeers = this._removeDuplicatePeers(ipfsPeers)
+      // console.log('filtered ipfsPeers: ', ipfsPeers)
+
+      // Loop through each IPFS peer and hydrate it with data from the peerData.
+      for (let i = 0; i < ipfsPeers.length; i++) {
+        const thisPeer = ipfsPeers[i]
+
+        if (!showAll) {
+          // Delete properties that don't contain good info.
+          delete thisPeer.muxer
+          delete thisPeer.latency
+          delete thisPeer.streams
+        }
+
+        // Get the ipfs-coord peer data for this peer.
+        let thisPeerData = peerData.filter((x) =>
+          x.from.includes(thisPeer.peer)
+        )
+        thisPeerData = thisPeerData[0]
+
+        // Skip if peerData for this IPFS peer could not be found.
+        if (!thisPeerData) continue
+
+        try {
+          // console.log('thisPeerData: ', thisPeerData)
+
+          // Add data to the IPFS peer data.
+          thisPeer.name = thisPeerData.data.jsonLd.name
+          thisPeer.protocol = thisPeerData.data.jsonLd.protocol
+          thisPeer.version = thisPeerData.data.jsonLd.version
+
+          if (showAll) {
+            // Add all the peer data.
+            thisPeer.peerData = thisPeerData
+          }
+        } catch (err) {
+          console.log(
+            `Error trying to hydrate peer ${thisPeer.peer}: ${err.message}`
+          )
+        }
+      }
+
+      return ipfsPeers
+    } catch (err) {
+      console.error('Error in getPeers(): ', err)
+      return {}
+    }
+  }
+
+  // Expects an array of peers and returns an array of peers with duplicates
+  // removed.
+  _removeDuplicatePeers (arr) {
+    // https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
+    return arr.filter((v, i, a) => a.findIndex((t) => t.peer === v.peer) === i)
+  }
 }
 
 module.exports = IPFS
