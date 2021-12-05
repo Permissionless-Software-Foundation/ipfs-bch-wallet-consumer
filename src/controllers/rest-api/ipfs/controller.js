@@ -51,6 +51,7 @@ class IpfsRESTControllerLib {
     }
   }
 
+  // Return information on IPFS peers this node is connected to.
   async getPeers (ctx) {
     try {
       const showAll = ctx.request.body.showAll
@@ -59,7 +60,20 @@ class IpfsRESTControllerLib {
 
       ctx.body = { peers }
     } catch (err) {
-      wlogger.error('Error in ipfs/controller.js/getStatus(): ')
+      wlogger.error('Error in ipfs/controller.js/getPeers(): ')
+      // ctx.throw(422, err.message)
+      _this.handleError(ctx, err)
+    }
+  }
+
+  // Get data about the known Circuit Relays. Hydrate with data from peers list.
+  async getRelays (ctx) {
+    try {
+      const relays = await _this.adapters.ipfs.getRelays()
+
+      ctx.body = { relays }
+    } catch (err) {
+      wlogger.error('Error in ipfs/controller.js/getRelays(): ')
       // ctx.throw(422, err.message)
       _this.handleError(ctx, err)
     }

@@ -53,6 +53,7 @@ class BchRouter {
     // Define the routes and attach the controller.
     this.router.get('/', this.ipfsRESTController.getStatus)
     this.router.post('/peers', this.ipfsRESTController.getPeers)
+    this.router.post('/relays', this.ipfsRESTController.getRelays)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
