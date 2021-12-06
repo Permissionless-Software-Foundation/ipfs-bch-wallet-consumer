@@ -77,6 +77,19 @@ class BchAdapter {
     }
   }
 
+  // Choose the BCH wallet service to use.
+  async selectProvider (providerId) {
+    try {
+      this.ipfs.ipfsCoordAdapter.config.preferredProvider = providerId
+
+      return true
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in use-cases/bch.js/getStatus()')
+      throw err
+    }
+  }
+
   // Get the BCH balance for an array of addresses.
   async getBalances (addrs) {
     try {

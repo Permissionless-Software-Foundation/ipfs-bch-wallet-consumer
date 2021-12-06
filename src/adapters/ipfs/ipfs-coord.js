@@ -198,14 +198,4 @@ class IpfsCoordAdapter {
   }
 }
 
-// Create a random number to use in the name of this IPFS n ode.
-// const randNum = Math.floor(Math.random() * 10000)
-
-// const announceJsonLd = {
-//   '@context': 'https://schema.org/',
-//   '@type': 'Person',
-//   name: `wallet-consumer-${randNum}`,
-//   description: 'A consumer of BCH wallet services'
-// }
-
 module.exports = IpfsCoordAdapter

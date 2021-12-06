@@ -1,5 +1,5 @@
 /*
-  REST API Controller library for the /user route
+  REST API Controller library for the /bch route
 */
 
 const { wlogger } = require('../../../adapters/wlogger')
@@ -46,6 +46,24 @@ class BchRESTControllerLib {
       ctx.body = { status }
     } catch (err) {
       wlogger.error('Error in bch/controller.js/getStatus(): ')
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  async postProvider (ctx) {
+    try {
+      const providerId = ctx.request.body.provider
+
+      await this.adapters.bch.selectProvider(providerId)
+
+      const body = {
+        success: true
+      }
+
+      ctx.body = body
+    } catch (err) {
+      wlogger.error('Error in bch/controller.js/postProvider(): ')
       // ctx.throw(422, err.message)
       this.handleError(ctx, err)
     }
@@ -196,7 +214,7 @@ class BchRESTControllerLib {
       const utxos = await this.adapters.bch.getUtxos(address)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
-      ctx.body = utxos
+      ctx.body = [utxos]
     } catch (err) {
       this.handleError(ctx, err)
     }
