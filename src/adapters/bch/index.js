@@ -60,16 +60,44 @@ class BchAdapter {
 
   async getStatus () {
     try {
-      console.log(
-        'this.ipfs.ipfsCoordAdapter.state: ',
-        this.ipfs.ipfsCoordAdapter.state
-      )
+      const peerData = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
 
-      const status = {
-        state: this.ipfs.ipfsCoordAdapter.state
+      // const status = {
+      //   state: this.ipfs.ipfsCoordAdapter.state
+      // }
+
+      // Add names to the IPFS IDs for each provider.
+      const initialServiceProviders =
+        this.ipfs.ipfsCoordAdapter.state.serviceProviders
+      const serviceProviders = []
+      for (let i = 0; i < initialServiceProviders.length; i++) {
+        const thisProvider = initialServiceProviders[i]
+
+        const providerData = peerData.filter((x) => x.from === thisProvider)
+
+        if (providerData.length) {
+          const provObj = {
+            ipfsId: thisProvider,
+            name: providerData[0].data.jsonLd.name
+          }
+
+          serviceProviders.push(provObj)
+        }
       }
 
-      return status
+      // console.log(
+      //   `serviceProviders: ${JSON.stringify(serviceProviders, null, 2)}`
+      // )
+
+      const outObj = {
+        serviceProviders,
+        selectedProvider:
+          this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      }
+      // console.log('outObj: ', outObj)
+
+      return outObj
     } catch (err) {
       // console.log('createUser() error: ', err)
       wlogger.error('Error in use-cases/bch.js/getStatus()')
