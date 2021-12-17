@@ -66,5 +66,6 @@ system-user-*.json
 orbitdb
 ipfsdata
 .ipfsdata
+run-dev.sh
 
 !README.md

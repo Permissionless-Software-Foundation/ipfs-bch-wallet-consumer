@@ -12,9 +12,15 @@ const ipfs = {
         peer: {
           sendPrivateMessage: () => {}
         }
+      },
+      thisNode: {
+        peerData: []
       }
     },
-    peerInputHandler: () => {}
+    peerInputHandler: () => {},
+    state: {
+      serviceProviders: []
+    }
   }
 }
 
