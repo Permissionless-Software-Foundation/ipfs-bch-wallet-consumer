@@ -51,23 +51,23 @@ class P2wdbRESTControllerLib {
     }
   }
 
-  // async postProvider (ctx) {
-  //   try {
-  //     const providerId = ctx.request.body.provider
-  //
-  //     await this.adapters.bch.selectProvider(providerId)
-  //
-  //     const body = {
-  //       success: true
-  //     }
-  //
-  //     ctx.body = body
-  //   } catch (err) {
-  //     wlogger.error('Error in bch/controller.js/postProvider(): ')
-  //     // ctx.throw(422, err.message)
-  //     this.handleError(ctx, err)
-  //   }
-  // }
+  async postProvider (ctx) {
+    try {
+      const providerId = ctx.request.body.provider
+
+      await this.adapters.p2wdb.selectProvider(providerId)
+
+      const body = {
+        success: true
+      }
+
+      ctx.body = body
+    } catch (err) {
+      wlogger.error('Error in p2wdb/controller.js/postProvider(): ', err)
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
 
   // DRY error handler
   handleError (ctx, err) {
