@@ -46,7 +46,7 @@ const peerData = [
         '@context': 'https://schema.org/',
         '@type': 'WebAPI',
         name: 'trout-bch-wallet-service-dev',
-        version: '1.11.1',
+        version: '1.11.12',
         protocol: 'bch-wallet',
         description:
           'IPFS service providing BCH blockchain access needed by a wallet.',
