@@ -51,6 +51,17 @@ class BchRESTControllerLib {
     }
   }
 
+  /**
+   * @api {post} /bch/provider Provider
+   * @apiPermission public
+   * @apiName Provider
+   * @apiGroup REST BCH
+   * @apiDescription Select a different BCH wallet service on the IPFS network,
+   * for interacting with the BCH blockchain.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "provider": "QmXtHADckCmT6jodpAgn3TcDQWjC29gQd2fKKHDTpo8DJT" }' localhost:5001/bch/provider
+   */
   async postProvider (ctx) {
     try {
       const providerId = ctx.request.body.provider

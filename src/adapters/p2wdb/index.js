@@ -120,260 +120,98 @@ class P2wdbAdapter {
     }
   }
 
-  // Get the BCH balance for an array of addresses.
-  // async getBalances (addrs) {
-  //   try {
-  //     // console.log('addrs: ', addrs)
-  //
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'balance',
-  //       addresses: addrs
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     // console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data
-  //   } catch (err) {
-  //     // console.log('createUser() error: ', err)
-  //     wlogger.error('Error in use-cases/bch.js/getBalances()')
-  //     throw err
-  //   }
-  // }
+  // Read an entry from the P2WDB, given an entry hash.
+  async getEntryByHash (hash) {
+    try {
+      // Input validation.
+      if (!hash || typeof hash !== 'string') {
+        throw new Error('getEntry() input hash must be a string.')
+      }
 
-  // async getUtxos (addr) {
-  //   try {
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'utxos',
-  //       address: addr
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     // console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data[0]
-  //   } catch (err) {
-  //     // console.log('createUser() error: ', err)
-  //     wlogger.error('Error in use-cases/bch.js/getUtxos()')
-  //     throw err
-  //   }
-  // }
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
+      if (!selectedProvider) {
+        throw new Error('No P2WDB Service provider available yet.')
+      }
 
-  // async broadcast (hex) {
-  //   try {
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'broadcast',
-  //       hex
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     // console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data
-  //   } catch (err) {
-  //     // console.log('createUser() error: ', err)
-  //     wlogger.error('Error in adapters/bch.js/broadcast()')
-  //     throw err
-  //   }
-  // }
+      const rpcData = {
+        endpoint: 'getByHash',
+        hash
+      }
 
-  // async getTransactions (address) {
-  //   try {
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'transactions',
-  //       addresses: [address]
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     // console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data
-  //   } catch (err) {
-  //     // console.log('createUser() error: ', err)
-  //     wlogger.error('Error in adapters/bch.js/transactions()')
-  //     throw err
-  //   }
-  // }
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
 
-  // async getTransaction (txid) {
-  //   try {
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'transaction',
-  //       txid
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     // console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data
-  //   } catch (err) {
-  //     // console.log('createUser() error: ', err)
-  //     wlogger.error('Error in adapters/bch.js/transaction()')
-  //     throw err
-  //   }
-  // }
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'p2wdb', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
 
-  // async getPubKey (address) {
-  //   try {
-  //     // Throw an error if this IPFS node has not yet made a connection to a
-  //     // wallet service provider.
-  //     const selectedProvider =
-  //       this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
-  //     if (!selectedProvider) {
-  //       throw new Error('No BCH Wallet Service provider available yet.')
-  //     }
-  //
-  //     const rpcData = {
-  //       endpoint: 'pubkey',
-  //       address
-  //     }
-  //
-  //     // Generate a UUID for the call.
-  //     const rpcId = this.uid()
-  //
-  //     // Generate a JSON RPC command.
-  //     const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
-  //     const cmdStr = JSON.stringify(cmd)
-  //     console.log('cmdStr: ', cmdStr)
-  //
-  //     // Send the RPC command to selected wallet service.
-  //     const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
-  //     await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
-  //       selectedProvider,
-  //       cmdStr,
-  //       thisNode
-  //     )
-  //
-  //     // Wait for data to come back from the wallet service.
-  //     const data = await this.waitForRPCResponse(rpcId)
-  //
-  //     return data
-  //   } catch (err) {
-  //     console.log('getPubKey() error: ', err)
-  //     wlogger.error('Error in adapters/bch.js/getPubKey()')
-  //     throw err
-  //   }
-  // }
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data
+    } catch (err) {
+      console.error('Error in getEntryByHash()')
+      throw err
+    }
+  }
+
+  async writeEntry (writeObj) {
+    try {
+      const { txid, signature, message, data } = writeObj
+
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
+      if (!selectedProvider) {
+        throw new Error('No P2WDB Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'write',
+        txid,
+        signature,
+        message,
+        data
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'p2wdb', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const result = await this.waitForRPCResponse(rpcId)
+
+      return result
+    } catch (err) {
+      console.error('Error in adapters/p2wdb/writeEntry()')
+      throw err
+    }
+  }
 
   // Returns a promise that resolves to data when the RPC response is recieved.
   async waitForRPCResponse (rpcId) {

@@ -51,6 +51,16 @@ class P2wdbRESTControllerLib {
     }
   }
 
+  /**
+   * @api {post} /p2wdb/provider Provider
+   * @apiName Provider
+   * @apiGroup REST P2WDB
+   * @apiDescription Select a different P2WDB service on the IPFS network, for
+   * interacting with the P2WDB.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "provider": "QmXtHADckCmT6jodpAgn3TcDQWjC29gQd2fKKHDTpo8DJT" }' localhost:5001/p2wdb/provider
+   */
   async postProvider (ctx) {
     try {
       const providerId = ctx.request.body.provider
@@ -65,6 +75,46 @@ class P2wdbRESTControllerLib {
     } catch (err) {
       wlogger.error('Error in p2wdb/controller.js/postProvider(): ', err)
       // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  // curl -H "Content-Type: application/json" -X POST -d '{ "hash": "zdpuAzNVEHYegiazAmbnQtvQpEvJGsdXDbcH7vHFYx4NWDUqk" }' localhost:5001/p2wdb/entryFromHash
+  async getEntryByHash (ctx) {
+    try {
+      const hash = ctx.request.body.hash
+
+      const data = await this.adapters.p2wdb.getEntryByHash(hash)
+
+      const body = {
+        success: true,
+        data
+      }
+
+      ctx.body = body
+    } catch (err) {
+      wlogger.error('Error in p2wdb/controller.js/getEntryByHash(): ', err)
+      // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  async writeEntry (ctx) {
+    try {
+      const txid = ctx.request.body.txid
+      const signature = ctx.request.body.signature
+      const message = ctx.request.body.message
+      const data = ctx.request.body.data
+      const writeObj = { txid, signature, message, data }
+
+      const hash = await this.adapters.p2wdb.writeEntry(writeObj)
+
+      ctx.body = {
+        success: true,
+        hash
+      }
+    } catch (err) {
+      wlogger.error('Error in p2wdb/controller.js/writeEntry(): ', err)
       this.handleError(ctx, err)
     }
   }

@@ -53,8 +53,8 @@ class P2wdbRouter {
     // Define the routes and attach the controller.
     this.router.get('/', this.getStatus)
     this.router.post('/provider', this.postProvider)
-    // this.router.post('/balance', this.postBalance)
-    // this.router.post('/utxos', this.postUtxos)
+    this.router.post('/entryFromHash', this.entryFromHash)
+    this.router.post('/write', this.write)
     // this.router.post('/broadcast', this.postBroadcast)
     // this.router.post('/transactions', this.postTransactions)
     // this.router.post('/transaction', this.postTransaction)
@@ -73,14 +73,14 @@ class P2wdbRouter {
     await _this.p2wdbRESTController.postProvider(ctx, next)
   }
 
-  // async postBalance (ctx, next) {
-  //   await _this.bchRESTController.balance(ctx, next)
-  // }
-  //
-  // async postUtxos (ctx, next) {
-  //   await _this.bchRESTController.utxos(ctx, next)
-  // }
-  //
+  async entryFromHash (ctx, next) {
+    await _this.p2wdbRESTController.getEntryByHash(ctx, next)
+  }
+
+  async write (ctx, next) {
+    await _this.p2wdbRESTController.writeEntry(ctx, next)
+  }
+
   // async postBroadcast (ctx, next) {
   //   await _this.bchRESTController.broadcast(ctx, next)
   // }
