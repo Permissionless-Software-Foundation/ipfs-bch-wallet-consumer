@@ -29,7 +29,8 @@ describe('#IPFS', () => {
   afterEach(() => {
     sandbox.restore()
 
-    clearInterval(uut.pollServiceInterval)
+    clearInterval(uut.pollBchServiceInterval)
+    clearInterval(uut.pollP2wdbServiceInterval)
   })
 
   describe('#constructor', () => {
@@ -125,7 +126,7 @@ describe('#IPFS', () => {
     })
   })
 
-  describe('#pollForServices', () => {
+  describe('#pollForBchServices', () => {
     it('should find and select the wallet service', () => {
       uut.ipfsCoord = {
         thisNode: {
@@ -134,7 +135,7 @@ describe('#IPFS', () => {
         }
       }
 
-      uut.pollForServices()
+      uut.pollForBchServices()
 
       // It should fine the service in the mocked data.
       assert.equal(
@@ -144,7 +145,7 @@ describe('#IPFS', () => {
     })
 
     it('should catch and report errors', () => {
-      uut.pollForServices()
+      uut.pollForBchServices()
 
       assert.isOk(true, 'Not throwing an error is a success.')
     })

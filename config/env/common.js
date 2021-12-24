@@ -80,10 +80,16 @@ module.exports = {
 
   debugLevel: process.env.DEBUG_LEVEL ? parseInt(process.env.DEBUG_LEVEL) : 2,
 
+  // Preferred provider running ipfs-bch-wallet-service for BCH wallet.
   preferredProvider: process.env.PREFERRED_PROVIDER
     ? process.env.PREFERRED_PROVIDER
-    : ''
+    : '',
   //  : 'QmdBGB8S6sEr19gaAxJYjhRbz5ZmMiH5a1JyyMmaxcRKnY'
   // : 'QmUTx6KqYKVZbKpKxR7vGDUgZFYVvVVyEWDeCYq4GwBCff'
   // Used for development
+
+  // Preferred P2WDB provider
+  preferredP2wdbProvider: process.env.PREFERRED_P2WDB_PROVIDER
+    ? process.env.PREFERRED_P2WDB_PROVIDER
+    : ''
 }
