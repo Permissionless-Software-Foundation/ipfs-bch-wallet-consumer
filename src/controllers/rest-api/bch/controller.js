@@ -420,10 +420,10 @@ class BchRESTControllerLib {
   }
 
   /**
-   * @api {JSON} /bch PubKey
+   * @api {REST} /bch/pubkey PubKey
    * @apiPermission public
    * @apiName PubKey
-   * @apiGroup JSON BCH
+   * @apiGroup REST BCH
    * @apiDescription Get the public key from an address.
    * Given an address the endpoint will return an object with the
    * following properties
@@ -435,7 +435,7 @@ class BchRESTControllerLib {
    *      - publickey: - Address public key
    *
    * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "pubkey", "address": "bitcoincash:qpnty9t0w93fez04h7yzevujpv8pun204qv6yfuahk"}}
+   * curl -H "Content-Type: application/json" -X POST -d '{ "txid": "01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b" }' localhost:5001/bch/pubkey
    *
    * @apiSuccessExample {json} Success-Response:
    *  {
@@ -452,7 +452,6 @@ class BchRESTControllerLib {
    *            "success": true,
    *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
    *     }
-   *
    *  }
    */
   async pubKey (ctx) {
@@ -460,7 +459,7 @@ class BchRESTControllerLib {
       const address = ctx.request.body.address
 
       const data = await this.adapters.bch.getPubKey(address)
-      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+      console.log(`pubkey data: ${JSON.stringify(data, null, 2)}`)
 
       ctx.body = data
     } catch (err) {
