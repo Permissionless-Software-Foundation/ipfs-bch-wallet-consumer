@@ -15,8 +15,10 @@ const config = require('../../../config')
 // const JSONRPC = require('../../controllers/json-rpc/')
 
 // The minimum version of ipfs-bch-wallet-service that this wallet can work with.
-const MIN_BCH_WALLET_VERSION = '1.11.0'
+const MIN_BCH_WALLET_VERSION = '1.11.11'
 const WALLET_PROTOCOL = 'bch-wallet'
+const MIN_P2WDB_VERSION = '1.4.0'
+const P2WDB_PROTOCOL = 'p2wdb'
 
 let _this
 
@@ -48,12 +50,15 @@ class IpfsCoordAdapter {
     this.isReady = false
 
     // Periodically poll services for available wallet service providers.
-    this.pollServiceInterval = setInterval(this.pollForServices, 10000)
+    this.pollBchServiceInterval = setInterval(this.pollForBchServices, 10000)
+    this.pollP2wdbServiceInterval = setInterval(this.pollForP2wdbServices, 11000)
 
     // State object. TODO: Make this more robust.
     this.state = {
       serviceProviders: [],
-      selectedServiceProvider: ''
+      selectedServiceProvider: '',
+      p2wdbProviders: [],
+      selectedP2wdbProvider: ''
     }
 
     _this = this
@@ -112,9 +117,84 @@ class IpfsCoordAdapter {
     }
   }
 
-  // Poll the ipfs-coord coordination channel for available service providers.
-  // This method is called periodically by a timer-interval.
-  pollForServices () {
+  // Poll the ipfs-coord coordination channel for available P2WDB service
+  // providers. This method is called periodically by a timer-interval.
+  pollForP2wdbServices () {
+    try {
+      // An array of IPFS IDs of other nodes in the coordination pubsub channel.
+      const peers = _this.ipfsCoord.thisNode.peerList
+      // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
+
+      // Array of objects. Each object is the IPFS ID of the peer and contains
+      // data about that peer.
+      const peerData = _this.ipfsCoord.thisNode.peerData
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+
+      for (let i = 0; i < peers.length; i++) {
+        const thisPeer = peers[i]
+        const thisData = peerData.filter((x) => x.from === thisPeer)
+        const thisPeerData = thisData[0]
+
+        // Create a 'fingerprint' that defines the wallet service.
+        const protocol = thisPeerData.data.jsonLd.protocol
+        const version = thisPeerData.data.jsonLd.version
+        // console.log(
+        //   `debug: peer ${thisPeer} uses protocol: ${protocol} v${version}`
+        // )
+
+        let versionMatches = false
+        if (version) {
+          versionMatches = _this.semver.gt(version, MIN_P2WDB_VERSION)
+        }
+
+        // p2wdbProviders: [],
+        // selectedP2wdbProvider: ''
+
+        // Ignore any peers that don't match the fingerprint for a BCH wallet
+        // service.
+        if (protocol && protocol.includes(P2WDB_PROTOCOL) && versionMatches) {
+          // console.log('Matching peer: ', thisPeerData)
+
+          // Temporary business logic.
+          // Use the first available wallet service detected.
+          if (_this.state.p2wdbProviders.length === 0) {
+            _this.state.selectedP2wdbProvider = thisPeer
+
+            // Persist the config setting, so it can be used by other commands.
+            // _this.conf.set('selectedService', thisPeer)
+            console.log(`---->P2WDB service selected: ${thisPeer}`)
+          }
+
+          // If a preferred provider is set in the config file, then connect
+          // to the preferred provider when it's discovered.
+          if (
+            _this.config.preferredP2wdbProvider &&
+              thisPeer === _this.config.preferredP2wdbProvider
+          ) {
+            _this.state.selectedP2wdbProvider = thisPeer
+          }
+
+          // Check if the peer has already been added to the list of providers.
+          const alreadyExists = _this.state.p2wdbProviders.filter(
+            (x) => x === thisPeer
+          )
+
+          // Add the peer to the list of serviceProviders if it doesn't already
+          // exist in the list.
+          if (!alreadyExists.length) {
+            _this.state.p2wdbProviders.push(thisPeer)
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error in pollForP2wdbServices()')
+      throw err
+    }
+  }
+
+  // Poll the ipfs-coord coordination channel for available BCH wallet service
+  // providers. This method is called periodically by a timer-interval.
+  pollForBchServices () {
     try {
       // An array of IPFS IDs of other nodes in the coordination pubsub channel.
       const peers = _this.ipfsCoord.thisNode.peerList
@@ -179,7 +259,7 @@ class IpfsCoordAdapter {
         }
       }
     } catch (err) {
-      console.error('Error in pollForServices(): ', err)
+      console.error('Error in pollForBchServices(): ', err)
       // Do not throw error. This is a top-level function.
     }
   }

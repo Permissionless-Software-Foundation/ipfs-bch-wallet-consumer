@@ -58,6 +58,8 @@ class BchAdapter {
     }
   }
 
+  // Get the status of BCH wallet services this node can talk to. Returns an
+  // array of BCH wallet service providers.
   async getStatus () {
     try {
       const peerData = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode.peerData

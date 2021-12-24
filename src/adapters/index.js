@@ -17,6 +17,7 @@ const Nodemailer = require('./nodemailer')
 const JSONFiles = require('./json-files')
 const FullStackJWT = require('./fullstack-jwt')
 const BCH = require('./bch')
+const P2WDB = require('./p2wdb')
 
 const config = require('../../config')
 
@@ -41,6 +42,7 @@ class Adapters {
     this.bchjs = new BCHJS()
     this.config = config
     this.bch = new BCH(localConfig)
+    this.p2wdb = new P2WDB(localConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)
