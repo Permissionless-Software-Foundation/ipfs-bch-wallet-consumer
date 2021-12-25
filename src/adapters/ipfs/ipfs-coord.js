@@ -51,7 +51,10 @@ class IpfsCoordAdapter {
 
     // Periodically poll services for available wallet service providers.
     this.pollBchServiceInterval = setInterval(this.pollForBchServices, 10000)
-    this.pollP2wdbServiceInterval = setInterval(this.pollForP2wdbServices, 11000)
+    this.pollP2wdbServiceInterval = setInterval(
+      this.pollForP2wdbServices,
+      11000
+    )
 
     // State object. TODO: Make this more robust.
     this.state = {
@@ -169,7 +172,7 @@ class IpfsCoordAdapter {
           // to the preferred provider when it's discovered.
           if (
             _this.config.preferredP2wdbProvider &&
-              thisPeer === _this.config.preferredP2wdbProvider
+            thisPeer === _this.config.preferredP2wdbProvider
           ) {
             _this.state.selectedP2wdbProvider = thisPeer
           }
@@ -187,8 +190,15 @@ class IpfsCoordAdapter {
         }
       }
     } catch (err) {
+      // catch and handle known failure mode.
+      if (
+        err.message.includes("Cannot read property 'peerList' of undefined")
+      ) {
+        return
+      }
+
       console.error('Error in pollForP2wdbServices()')
-      throw err
+      // Do not throw error. This is a top-level function.
     }
   }
 
@@ -259,6 +269,13 @@ class IpfsCoordAdapter {
         }
       }
     } catch (err) {
+      // catch and handle known failure mode.
+      if (
+        err.message.includes("Cannot read property 'peerList' of undefined")
+      ) {
+        return
+      }
+
       console.error('Error in pollForBchServices(): ', err)
       // Do not throw error. This is a top-level function.
     }
