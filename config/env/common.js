@@ -91,5 +91,12 @@ module.exports = {
   // Preferred P2WDB provider
   preferredP2wdbProvider: process.env.PREFERRED_P2WDB_PROVIDER
     ? process.env.PREFERRED_P2WDB_PROVIDER
-    : ''
+    : '',
+
+  // Settings for production, using external go-ipfs node.
+  isProduction: process.env.SVC_ENV === 'production' ? true : false,
+  ipfsHost: process.env.IPFS_HOST ? process.env.IPFS_HOST : 'localhost',
+  ipfsApiPort: process.env.IPFS_API_PORT
+    ? parseInt(process.env.IPFS_API_PORT)
+    : 5001
 }

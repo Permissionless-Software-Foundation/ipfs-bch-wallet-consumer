@@ -67,5 +67,6 @@ orbitdb
 ipfsdata
 .ipfsdata
 run-dev.sh
+data/
 
 !README.md
