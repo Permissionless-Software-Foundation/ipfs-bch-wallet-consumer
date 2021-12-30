@@ -4,13 +4,13 @@
 # defined by running an external go-ipfs node.
 
 # Ports
-export PORT=5010 # REST API port
+export PORT=5005 # REST API port
 
 # The human-readible name that is used when displaying data about this node.
-export COORD_NAME=ipfs-service-provider-generic
+export COORD_NAME=trout-dev-bch-wallet-consumer
 
 # This is used for end-to-end encryption (e2ee).
-export MNEMONIC="churn aisle shield silver ladder swear hunt slim pen demand spoil veteran"
+export MNEMONIC="stomach mean catch march census author cousin size south romance pumpkin trap"
 
 # 0 = less verbose. 3 = most verbose
 export DEBUG_LEVEL=1
