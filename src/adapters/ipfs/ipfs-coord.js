@@ -78,6 +78,7 @@ class IpfsCoordAdapter {
 
         circuitRelayInfo.ip4 = ip4
         circuitRelayInfo.tcpPort = this.config.ipfsTcpPort
+        circuitRelayInfo.wsPort = this.config.ipfsWsPort
 
         // Domain used by browser-based secure websocket connections.
         circuitRelayInfo.crDomain = this.config.crDomain
