@@ -7,21 +7,18 @@
 // Public npm libraries.
 const EventEmitter = require('events')
 
-// Load the Clean Architecture Adapters library
+// Local libraries
+const config = require('../../config')
 const Adapters = require('../adapters')
-
-// Load the JSON RPC Controller.
 const JSONRPC = require('./json-rpc')
-
-// Load the Clean Architecture Use Case libraries.
 const UseCases = require('../use-cases')
-// const useCases = new UseCases({ adapters })
-
-// Load the REST API Controllers.
 const RESTControllers = require('./rest-api')
 
 class Controllers {
   constructor (localConfig = {}) {
+    // Encapsulate dependencies
+    this.config = config
+
     // Initialize EventEmitters used to pass event-driven data around the app.
     this.eventEmitter = new EventEmitter()
     localConfig.eventEmitter = this.eventEmitter
@@ -33,13 +30,16 @@ class Controllers {
   }
 
   async attachControllers (app) {
-    // Wait for any startup processes to complete for the Adapters libraries.
-    await this.adapters.start()
+    // Skip in a test environment.
+    if (this.config.env !== 'test') {
+      // Wait for any startup processes to complete for the Adapters libraries.
+      await this.adapters.start()
 
-    // Attach the REST controllers to the Koa app.
-    // this.attachRESTControllers(app)
+      // Attach the REST controllers to the Koa app.
+      // this.attachRESTControllers(app)
 
-    this.attachRPCControllers()
+      this.attachRPCControllers()
+    }
   }
 
   // Top-level function for this library.

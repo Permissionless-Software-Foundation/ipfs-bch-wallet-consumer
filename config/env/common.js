@@ -15,7 +15,7 @@ const ipfsCoordName = process.env.COORD_NAME
 
 module.exports = {
   // Configure TCP port.
-  port: process.env.PORT || 5001,
+  port: process.env.PORT || 5005,
 
   // Password for HTML UI that displays logs.
   logPass: 'test',
@@ -72,8 +72,8 @@ module.exports = {
   },
 
   // IPFS Ports
-  ipfsTcpPort: process.env.IPFS_TCP_PORT ? process.env.IPFS_TCP_PORT : 4001,
-  ipfsWsPort: process.env.IPFS_WS_PORT ? process.env.IPFS_WS_PORT : 4003,
+  ipfsTcpPort: process.env.IPFS_TCP_PORT ? process.env.IPFS_TCP_PORT : 4101,
+  ipfsWsPort: process.env.IPFS_WS_PORT ? process.env.IPFS_WS_PORT : 4103,
 
   // BCH Mnemonic for generating encryption keys and payment address
   mnemonic: process.env.MNEMONIC ? process.env.MNEMONIC : '',
@@ -91,5 +91,12 @@ module.exports = {
   // Preferred P2WDB provider
   preferredP2wdbProvider: process.env.PREFERRED_P2WDB_PROVIDER
     ? process.env.PREFERRED_P2WDB_PROVIDER
-    : ''
+    : '',
+
+  // Settings for production, using external go-ipfs node.
+  isProduction: process.env.SVC_ENV === 'production' ? true : false,
+  ipfsHost: process.env.IPFS_HOST ? process.env.IPFS_HOST : 'localhost',
+  ipfsApiPort: process.env.IPFS_API_PORT
+    ? parseInt(process.env.IPFS_API_PORT)
+    : 5001
 }
