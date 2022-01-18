@@ -198,8 +198,9 @@ class BchAdapter {
 
       // Wait for data to come back from the wallet service.
       const data = await this.waitForRPCResponse(rpcId)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
-      return data[0]
+      return data
     } catch (err) {
       // console.log('createUser() error: ', err)
       wlogger.error('Error in use-cases/bch.js/getUtxos()')
@@ -400,6 +401,9 @@ class BchAdapter {
             dataFound = true
             // console.log('data was found in the queue')
 
+            // console.log(
+            //   `rawData.payload: ${JSON.stringify(rawData.payload, null, 2)}`
+            // )
             data = rawData.payload.result.value
 
             // Remove the data from the queue
