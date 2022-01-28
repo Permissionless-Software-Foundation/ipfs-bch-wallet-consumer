@@ -319,9 +319,17 @@ class BchRESTControllerLib {
    */
   async transactions (ctx) {
     try {
-      const addr = ctx.request.body.address
+      console.log('transactions REST API handler called.')
 
-      const data = await this.adapters.bch.getTransactions(addr)
+      const addr = ctx.request.body.address
+      const sortOrder = ctx.request.body.sortOrder
+      const page = ctx.request.body.page
+
+      const data = await this.adapters.bch.getTransactions(
+        addr,
+        sortOrder,
+        page
+      )
       // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       ctx.body = data

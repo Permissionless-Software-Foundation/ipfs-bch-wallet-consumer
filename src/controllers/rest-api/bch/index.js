@@ -86,6 +86,7 @@ class BchRouter {
   }
 
   async postTransactions (ctx, next) {
+    console.log('Calling _this.bchRESTController.transactions()')
     await _this.bchRESTController.transactions(ctx, next)
   }
 
