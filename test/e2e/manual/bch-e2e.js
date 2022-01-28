@@ -159,43 +159,50 @@ describe('#BCH E2E Tests', () => {
       assert.isAbove(result.data.txs[1].height, result.data.txs[0].height)
     })
 
-    it('should paginate an address with deep tx history', async () => {
-      const body = {
-        address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
-      }
+    // it('should paginate an address with deep tx history', async () => {
+    //   const body = {
+    //     address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+    //   }
+    //
+    //   const url = `${SERVER}/bch/transactions`
+    //   const result = await axios.post(url, body)
+    //   // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+    //
+    //   // Assert there is no more than 100 entries
+    //   assert.isBelow(result.data.txs.length, 101)
+    // })
 
-      const url = `${SERVER}/bch/transactions`
-      const result = await axios.post(url, body)
-      console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
-
-      // Assert there is no more than 100 entries
-      assert.isBelow(result.data.txs.length, 101)
-    })
-
-    it('should get the second page of results', async () => {
-      const body = {
-        address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d',
-        page: 1
-      }
-
-      const url = `${SERVER}/bch/transactions`
-      const result = await axios.post(url, body)
-      console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
-    })
+    // it('should get the second page of results', async () => {
+    //   const body = {
+    //     address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d',
+    //     page: 1
+    //   }
+    //
+    //   const url = `${SERVER}/bch/transactions`
+    //   const result = await axios.post(url, body)
+    //   // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+    //
+    //   // Assert there is no more than 100 entries
+    //   assert.isBelow(result.data.txs.length, 101)
+    // })
   })
 
-  // describe('#transaction', () => {
-  //   it('should get transaction details for a txid', async () => {
-  //     const body = {
-  //       txid: '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
-  //     }
-  //
-  //     const url = `${SERVER}/bch/transaction`
-  //     const result = await axios.post(url, body)
-  //     // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
-  //
-  //     assert.property(result.data, 'txid')
-  //     assert.property(result.data, 'vin')
-  //   })
-  // })
+  describe('#transaction', () => {
+    it('should get transaction details for a txid', async () => {
+      const body = {
+        txids: [
+          '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
+        ]
+      }
+
+      const url = `${SERVER}/bch/transaction`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      assert.equal(result.data.status, 200)
+      assert.isArray(result.data.txData)
+      assert.property(result.data.txData[0].txData, 'txid')
+      assert.property(result.data.txData[0].txData, 'vin')
+    })
+  })
 })

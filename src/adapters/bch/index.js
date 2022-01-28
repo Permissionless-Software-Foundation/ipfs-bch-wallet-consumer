@@ -296,7 +296,7 @@ class BchAdapter {
     }
   }
 
-  async getTransaction (txid) {
+  async getTransaction (txids) {
     try {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
@@ -308,7 +308,7 @@ class BchAdapter {
 
       const rpcData = {
         endpoint: 'transaction',
-        txid
+        txids
       }
 
       // Generate a UUID for the call.
@@ -317,7 +317,7 @@ class BchAdapter {
       // Generate a JSON RPC command.
       const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
       const cmdStr = JSON.stringify(cmd)
-      // console.log('cmdStr: ', cmdStr)
+      console.log('cmdStr: ', cmdStr)
 
       // Send the RPC command to selected wallet service.
       const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode

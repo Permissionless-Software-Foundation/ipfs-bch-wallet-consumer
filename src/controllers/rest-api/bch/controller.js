@@ -342,8 +342,8 @@ class BchRESTControllerLib {
    * @api {post} /bch/transaction Transaction
    * @apiName Transaction
    * @apiGroup REST BCH
-   * @apiDescription Get data about a specific transaction.
-   * Given a transaction id this endpoint will return an object
+   * @apiDescription Get data about specific transactions.
+   * Given an array of transaction IDs this endpoint will return an array of objects
    * with the following properties
    *
    * - txid: "" - Transaction ID
@@ -361,11 +361,11 @@ class BchRESTControllerLib {
    * - isValidSLPTx: - Determines if the transaction was under SLP
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "txid": "01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b" }' localhost:5001/bch/transaction
+   * curl -H "Content-Type: application/json" -X POST -d '{ "txids": ["01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b"] }' localhost:5001/bch/transaction
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
-   * {
+   * [{
    *    "txid":"01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b",
    *    "hash":"01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b",
    *    "version":1,
@@ -414,7 +414,7 @@ class BchRESTControllerLib {
    *    "time":1568338904,
    *    "blocktime":1568338904,
    *    "isValidSLPTx":false
-   * }
+   * }]
    *
    * @apiError UnprocessableEntity Missing required parameters
    *
@@ -427,9 +427,9 @@ class BchRESTControllerLib {
    */
   async transaction (ctx) {
     try {
-      const txid = ctx.request.body.txid
+      const txids = ctx.request.body.txids
 
-      const data = await this.adapters.bch.getTransaction(txid)
+      const data = await this.adapters.bch.getTransaction(txids)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
       ctx.body = data
