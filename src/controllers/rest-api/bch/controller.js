@@ -271,10 +271,17 @@ class BchRESTControllerLib {
 
   /**
    *
-   * @api {post} /bch/transactions Transactions
-   * @apiName Transactions
+   * @api {post} /bch/txHistory TX History
+   * @apiName TX History
    * @apiGroup REST BCH
    * @apiDescription This endpoint wraps the bchjs.Electrumx.transactions([]) function.
+   * It returns the transaction history for an address. This list of TXIDs is
+   * sorted and paginated.
+   *
+   * There are three possible inputs:
+   * - address: (required) the address to query for a transaction history
+   * - sortOrder: (optional) will sort results in 'DECENDING' (default) or 'ASCENDING' order.
+   * - page: (optional) will return a 'page' of 100 results. Default is 0
    *
    *  Given the 'addresses' property returns an array of objects
    *  with the following properties
@@ -289,7 +296,7 @@ class BchRESTControllerLib {
    *  Note: For a single address pass the 'addresses' of string type
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"] }' localhost:5001/bch/transactions
+   * curl -H "Content-Type: application/json" -X POST -d '{ "address": "bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj" }' localhost:5001/bch/txHistory
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -317,9 +324,10 @@ class BchRESTControllerLib {
    *       "error": "Unprocessable Entity"
    *     }
    */
-  async transactions (ctx) {
+  async txHistory (ctx) {
     try {
-      console.log('transactions REST API handler called.')
+      // console.log('transactions REST API handler called.')
+      // console.log(`body: ${JSON.stringify(ctx.request.body, null, 2)}`)
 
       const addr = ctx.request.body.address
       const sortOrder = ctx.request.body.sortOrder
@@ -339,10 +347,13 @@ class BchRESTControllerLib {
   }
 
   /**
-   * @api {post} /bch/transaction Transaction
-   * @apiName Transaction
+   * @api {post} /bch/txData TX Data
+   * @apiName txData
    * @apiGroup REST BCH
-   * @apiDescription Get data about specific transactions.
+   * @apiDescription Get expanded transaction data for an array of transaction
+   * IDs. Each call is limited to 20 TXIDs or less.
+   *
+   * Get data about specific transactions.
    * Given an array of transaction IDs this endpoint will return an array of objects
    * with the following properties
    *
@@ -425,8 +436,16 @@ class BchRESTControllerLib {
    *       "error": "Unprocessable Entity"
    *     }
    */
-  async transaction (ctx) {
+  async txData (ctx) {
     try {
+      console.log(
+        `txData called with this body data: ${JSON.stringify(
+          ctx.request.body,
+          null,
+          2
+        )}`
+      )
+
       const txids = ctx.request.body.txids
 
       const data = await this.adapters.bch.getTransaction(txids)

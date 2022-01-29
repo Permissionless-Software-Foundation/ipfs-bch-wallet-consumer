@@ -116,14 +116,14 @@ describe('#BCH E2E Tests', () => {
     })
   })
 
-  describe('#transactions', () => {
+  describe('#txHistory', () => {
     it('should get transaction history for an address, and sort by default in descending order.', async () => {
       const address = 'bitcoincash:qpdh9s677ya8tnx7zdhfrn8qfyvy22wj4qa7nwqa5v'
       const body = {
         address
       }
 
-      const url = `${SERVER}/bch/transactions`
+      const url = `${SERVER}/bch/txHistory`
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
@@ -145,7 +145,7 @@ describe('#BCH E2E Tests', () => {
         sortOrder: 'ASCENDING'
       }
 
-      const url = `${SERVER}/bch/transactions`
+      const url = `${SERVER}/bch/txHistory`
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
@@ -164,7 +164,7 @@ describe('#BCH E2E Tests', () => {
         address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
       }
 
-      const url = `${SERVER}/bch/transactions`
+      const url = `${SERVER}/bch/txHistory`
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
@@ -178,7 +178,7 @@ describe('#BCH E2E Tests', () => {
         page: 1
       }
 
-      const url = `${SERVER}/bch/transactions`
+      const url = `${SERVER}/bch/txHistory`
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
@@ -187,7 +187,7 @@ describe('#BCH E2E Tests', () => {
     })
   })
 
-  describe('#transaction', () => {
+  describe('#txData', () => {
     it('should get transaction details for a txid', async () => {
       const body = {
         txids: [
@@ -195,14 +195,14 @@ describe('#BCH E2E Tests', () => {
         ]
       }
 
-      const url = `${SERVER}/bch/transaction`
+      const url = `${SERVER}/bch/txData`
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
       assert.equal(result.data.status, 200)
       assert.isArray(result.data.txData)
-      assert.property(result.data.txData[0].txData, 'txid')
-      assert.property(result.data.txData[0].txData, 'vin')
+      assert.property(result.data.txData[0], 'txid')
+      assert.property(result.data.txData[0], 'vin')
     })
   })
 })

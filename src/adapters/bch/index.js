@@ -250,6 +250,7 @@ class BchAdapter {
     }
   }
 
+  // Get the transaction history for an address.
   async getTransactions (address, sortOrder = 'DESCENDING', page = 0) {
     try {
       console.log('Executing getTransaction() bch adapter')
@@ -263,7 +264,7 @@ class BchAdapter {
       }
 
       const rpcData = {
-        endpoint: 'transactions',
+        endpoint: 'txHistory',
         address: address,
         sortOrder,
         page
@@ -298,6 +299,10 @@ class BchAdapter {
 
   async getTransaction (txids) {
     try {
+      console.log(
+        `Getting txData on these txids: ${JSON.stringify(txids, null, 2)}`
+      )
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -307,7 +312,7 @@ class BchAdapter {
       }
 
       const rpcData = {
-        endpoint: 'transaction',
+        endpoint: 'txData',
         txids
       }
 
@@ -329,11 +334,12 @@ class BchAdapter {
 
       // Wait for data to come back from the wallet service.
       const data = await this.waitForRPCResponse(rpcId)
+      console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in adapters/bch.js/transaction()')
+      wlogger.error('Error in adapters/bch.js/getTransaction()')
       throw err
     }
   }
