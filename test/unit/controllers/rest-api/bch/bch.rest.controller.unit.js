@@ -213,7 +213,7 @@ describe('#BCH-REST-Controller', () => {
     })
   })
 
-  describe('#transactions', () => {
+  describe('#txHistory', () => {
     it('should return 422 status on arbitrary error', async () => {
       try {
         // Force an error
@@ -225,7 +225,7 @@ describe('#BCH-REST-Controller', () => {
           address: 'blah'
         }
 
-        await uut.transactions(ctx)
+        await uut.txHistory(ctx)
 
         assert.fail('Unexpected result')
       } catch (err) {
@@ -242,14 +242,14 @@ describe('#BCH-REST-Controller', () => {
         address: 'blah'
       }
 
-      await uut.transactions(ctx)
+      await uut.txHistory(ctx)
 
       // Assert the expected HTTP response
       assert.equal(ctx.status, 200)
     })
   })
 
-  describe('#transaction', () => {
+  describe('#txData', () => {
     it('should return 422 status on arbitrary error', async () => {
       try {
         // Force an error
@@ -261,7 +261,7 @@ describe('#BCH-REST-Controller', () => {
           txid: 'blah'
         }
 
-        await uut.transaction(ctx)
+        await uut.txData(ctx)
 
         assert.fail('Unexpected result')
       } catch (err) {
@@ -280,7 +280,7 @@ describe('#BCH-REST-Controller', () => {
         txid: 'blah'
       }
 
-      await uut.transaction(ctx)
+      await uut.txData(ctx)
 
       // Assert the expected HTTP response
       assert.equal(ctx.status, 200)

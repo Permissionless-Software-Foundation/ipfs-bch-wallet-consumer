@@ -326,8 +326,8 @@ class BchRESTControllerLib {
    */
   async txHistory (ctx) {
     try {
-      console.log('transactions REST API handler called.')
-      console.log(`body: ${JSON.stringify(ctx.request.body, null, 2)}`)
+      // console.log('transactions REST API handler called.')
+      // console.log(`body: ${JSON.stringify(ctx.request.body, null, 2)}`)
 
       const addr = ctx.request.body.address
       const sortOrder = ctx.request.body.sortOrder
