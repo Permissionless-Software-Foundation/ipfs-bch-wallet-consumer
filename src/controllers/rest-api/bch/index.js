@@ -56,7 +56,7 @@ class BchRouter {
     this.router.post('/balance', this.postBalance)
     this.router.post('/utxos', this.postUtxos)
     this.router.post('/broadcast', this.postBroadcast)
-    this.router.post('/transactions', this.postTransactions)
+    this.router.post('/txHistory', this.postTxHistory)
     this.router.post('/transaction', this.postTransaction)
     this.router.post('/pubkey', this.postPubKey)
 
@@ -85,9 +85,8 @@ class BchRouter {
     await _this.bchRESTController.broadcast(ctx, next)
   }
 
-  async postTransactions (ctx, next) {
-    console.log('Calling _this.bchRESTController.transactions()')
-    await _this.bchRESTController.transactions(ctx, next)
+  async postTxHistory (ctx, next) {
+    await _this.bchRESTController.txHistory(ctx, next)
   }
 
   async postTransaction (ctx, next) {

@@ -250,6 +250,7 @@ class BchAdapter {
     }
   }
 
+  // Get the transaction history for an address.
   async getTransactions (address, sortOrder = 'DESCENDING', page = 0) {
     try {
       console.log('Executing getTransaction() bch adapter')
@@ -263,7 +264,7 @@ class BchAdapter {
       }
 
       const rpcData = {
-        endpoint: 'transactions',
+        endpoint: 'txHistory',
         address: address,
         sortOrder,
         page
