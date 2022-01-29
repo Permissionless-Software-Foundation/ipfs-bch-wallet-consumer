@@ -347,10 +347,13 @@ class BchRESTControllerLib {
   }
 
   /**
-   * @api {post} /bch/transaction Transaction
-   * @apiName Transaction
+   * @api {post} /bch/txData TX Data
+   * @apiName txData
    * @apiGroup REST BCH
-   * @apiDescription Get data about specific transactions.
+   * @apiDescription Get expanded transaction data for an array of transaction
+   * IDs. Each call is limited to 20 TXIDs or less.
+   *
+   * Get data about specific transactions.
    * Given an array of transaction IDs this endpoint will return an array of objects
    * with the following properties
    *
@@ -433,8 +436,16 @@ class BchRESTControllerLib {
    *       "error": "Unprocessable Entity"
    *     }
    */
-  async transaction (ctx) {
+  async txData (ctx) {
     try {
+      console.log(
+        `txData called with this body data: ${JSON.stringify(
+          ctx.request.body,
+          null,
+          2
+        )}`
+      )
+
       const txids = ctx.request.body.txids
 
       const data = await this.adapters.bch.getTransaction(txids)

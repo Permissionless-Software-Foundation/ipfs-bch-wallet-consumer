@@ -57,7 +57,7 @@ class BchRouter {
     this.router.post('/utxos', this.postUtxos)
     this.router.post('/broadcast', this.postBroadcast)
     this.router.post('/txHistory', this.postTxHistory)
-    this.router.post('/transaction', this.postTransaction)
+    this.router.post('/txData', this.postTxData)
     this.router.post('/pubkey', this.postPubKey)
 
     // Attach the Controller routes to the Koa app.
@@ -89,8 +89,8 @@ class BchRouter {
     await _this.bchRESTController.txHistory(ctx, next)
   }
 
-  async postTransaction (ctx, next) {
-    await _this.bchRESTController.transaction(ctx, next)
+  async postTxData (ctx, next) {
+    await _this.bchRESTController.txData(ctx, next)
   }
 
   async postPubKey (ctx, next) {
