@@ -7,7 +7,7 @@
   This test will query each REST API endpoint and ensure they are working correctly.
 */
 
-const SERVER = 'http://localhost:5001'
+const SERVER = 'http://localhost:5005'
 
 const axios = require('axios')
 const assert = require('chai').assert
@@ -23,8 +23,8 @@ describe('#BCH E2E Tests', () => {
       const result = await axios.get(url)
       // console.log(`data: ${JSON.stringify(result.data, null, 2)}`)
 
-      assert.isAbove(result.data.status.state.serviceProviders.length, 0)
-      assert.isOk(result.data.status.state.selectedServiceProvider)
+      assert.isAbove(result.data.status.serviceProviders.length, 0)
+      assert.isOk(result.data.status.selectedProvider)
     })
   })
 
@@ -56,9 +56,9 @@ describe('#BCH E2E Tests', () => {
       const result = await axios.post(url, body)
       // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
 
-      assert.equal(result.data.address, body.address)
-      assert.property(result.data, 'bchUtxos')
-      assert.property(result.data, 'slpUtxos')
+      assert.equal(result.data[0].address, body.address)
+      assert.property(result.data[0], 'bchUtxos')
+      assert.property(result.data[0], 'slpUtxos')
     })
   })
 
@@ -74,39 +74,8 @@ describe('#BCH E2E Tests', () => {
 
       assert.equal(result.data.status, 422)
       assert.equal(result.data.success, false)
-      assert.equal(result.data.message, 'TX decode failed')
+      assert.equal(result.data.message, 'Missing inputs')
       assert.equal(result.data.endpoint, 'broadcast')
-    })
-  })
-
-  describe('#transactions', () => {
-    it('should get transaction history for an address', async () => {
-      const body = {
-        address: 'bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj'
-      }
-
-      const url = `${SERVER}/bch/transactions`
-      const result = await axios.post(url, body)
-      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
-
-      assert.equal(result.data.status, 200)
-      assert.equal(result.data.success, true)
-      assert.property(result.data, 'transactions')
-    })
-  })
-
-  describe('#transaction', () => {
-    it('should get transaction details for a txid', async () => {
-      const body = {
-        txid: '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
-      }
-
-      const url = `${SERVER}/bch/transaction`
-      const result = await axios.post(url, body)
-      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
-
-      assert.property(result.data, 'txid')
-      assert.property(result.data, 'vin')
     })
   })
 
@@ -144,6 +113,96 @@ describe('#BCH E2E Tests', () => {
         result.data.pubkey.publicKey,
         '03ebd6d6aae05da1c5905445e3886b30f6a31b26a88de5980de236bd22380fa942'
       )
+    })
+  })
+
+  describe('#transactions', () => {
+    it('should get transaction history for an address, and sort by default in descending order.', async () => {
+      const address = 'bitcoincash:qpdh9s677ya8tnx7zdhfrn8qfyvy22wj4qa7nwqa5v'
+      const body = {
+        address
+      }
+
+      const url = `${SERVER}/bch/transactions`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      // Assert expected values and properties.
+      assert.equal(result.data.status, 200)
+      assert.equal(result.data.success, true)
+      assert.equal(result.data.address, address)
+      assert.isArray(result.data.txs)
+
+      // Assert expected sorting
+      assert.isAbove(result.data.txs[0].height, result.data.txs[1].height)
+    })
+
+    it('should sort in ascending order.', async () => {
+      const address = 'bitcoincash:qpdh9s677ya8tnx7zdhfrn8qfyvy22wj4qa7nwqa5v'
+
+      const body = {
+        address,
+        sortOrder: 'ASCENDING'
+      }
+
+      const url = `${SERVER}/bch/transactions`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      // Assert expected values and properties.
+      assert.equal(result.data.status, 200)
+      assert.equal(result.data.success, true)
+      assert.equal(result.data.address, address)
+      assert.isArray(result.data.txs)
+
+      // Assert expected sorting
+      assert.isAbove(result.data.txs[1].height, result.data.txs[0].height)
+    })
+
+    it('should paginate an address with deep tx history', async () => {
+      const body = {
+        address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d'
+      }
+
+      const url = `${SERVER}/bch/transactions`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      // Assert there is no more than 100 entries
+      assert.isBelow(result.data.txs.length, 101)
+    })
+
+    it('should get the second page of results', async () => {
+      const body = {
+        address: 'bitcoincash:qqlrzp23w08434twmvr4fxw672whkjy0py26r63g3d',
+        page: 1
+      }
+
+      const url = `${SERVER}/bch/transactions`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      // Assert there is no more than 100 entries
+      assert.isBelow(result.data.txs.length, 101)
+    })
+  })
+
+  describe('#transaction', () => {
+    it('should get transaction details for a txid', async () => {
+      const body = {
+        txids: [
+          '01517ff1587fa5ffe6f5eb91c99cf3f2d22330cd7ee847e928ce90ca95bf781b'
+        ]
+      }
+
+      const url = `${SERVER}/bch/transaction`
+      const result = await axios.post(url, body)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      assert.equal(result.data.status, 200)
+      assert.isArray(result.data.txData)
+      assert.property(result.data.txData[0].txData, 'txid')
+      assert.property(result.data.txData[0].txData, 'vin')
     })
   })
 })
