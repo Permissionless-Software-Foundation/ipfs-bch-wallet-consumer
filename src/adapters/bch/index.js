@@ -297,6 +297,7 @@ class BchAdapter {
     }
   }
 
+  // Get details on an array of TXIDs.
   async getTransaction (txids) {
     try {
       console.log(
