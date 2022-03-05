@@ -137,7 +137,8 @@ class P2wdbAdapter {
 
       const rpcData = {
         endpoint: 'getByHash',
-      hash}
+        hash
+      }
 
       // Generate a UUID for the call.
       const rpcId = this.uid()
@@ -182,7 +183,8 @@ class P2wdbAdapter {
         txid,
         signature,
         message,
-      data}
+        data
+      }
 
       // Generate a UUID for the call.
       const rpcId = this.uid()
