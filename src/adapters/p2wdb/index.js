@@ -49,12 +49,12 @@ class P2wdbAdapter {
       // Convert string input into an object.
       // const jsonData = JSON.parse(data)
 
-      console.log(`JSON RPC response for ID ${data.payload.id} received.`)
+      // console.log(`JSON RPC response for ID ${data.payload.id} received.`)
 
       _this.rpcDataQueue.push(data)
     } catch (err) {
       console.error('Error in p2wdb/rpcHandler(): ', err)
-      // Do not throw error. This is a top-level function.
+    // Do not throw error. This is a top-level function.
     }
   }
 
@@ -71,7 +71,7 @@ class P2wdbAdapter {
 
       // Add names to the IPFS IDs for each provider.
       const initialServiceProviders =
-        this.ipfs.ipfsCoordAdapter.state.p2wdbProviders
+      this.ipfs.ipfsCoordAdapter.state.p2wdbProviders
       const serviceProviders = []
       for (let i = 0; i < initialServiceProviders.length; i++) {
         const thisProvider = initialServiceProviders[i]
@@ -94,8 +94,7 @@ class P2wdbAdapter {
 
       const outObj = {
         serviceProviders,
-        selectedProvider:
-          this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
+        selectedProvider: this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
       }
       // console.log('outObj: ', outObj)
 
@@ -131,15 +130,14 @@ class P2wdbAdapter {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
-        this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
+      this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
       if (!selectedProvider) {
         throw new Error('No P2WDB Service provider available yet.')
       }
 
       const rpcData = {
         endpoint: 'getByHash',
-        hash
-      }
+      hash}
 
       // Generate a UUID for the call.
       const rpcId = this.uid()
@@ -174,7 +172,7 @@ class P2wdbAdapter {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
-        this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
+      this.ipfs.ipfsCoordAdapter.state.selectedP2wdbProvider
       if (!selectedProvider) {
         throw new Error('No P2WDB Service provider available yet.')
       }
@@ -184,8 +182,7 @@ class P2wdbAdapter {
         txid,
         signature,
         message,
-        data
-      }
+      data}
 
       // Generate a UUID for the call.
       const rpcId = this.uid()
@@ -253,7 +250,7 @@ class P2wdbAdapter {
 
         cnt++
 
-        // Exit if data was returned, or the window for a response expires.
+      // Exit if data was returned, or the window for a response expires.
       } while (!dataFound && cnt < 10)
       // console.log(`dataFound: ${dataFound}, cnt: ${cnt}`)
 
