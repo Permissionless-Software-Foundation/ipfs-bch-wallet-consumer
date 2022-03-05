@@ -76,7 +76,7 @@ class IpfsAdapter {
       const ipfsOptionsExternal = {
         host: this.config.ipfsHost,
         port: this.config.ipfsApiPort,
-        agent: http.Agent({ keepAlive: true, maxSockets: 2000 })
+        agent: http.Agent({ keepAlive: true, maxSockets: 200 })
       }
 
       let ipfsOptions = ipfsOptionsEmbedded
