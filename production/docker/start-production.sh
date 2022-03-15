@@ -8,7 +8,7 @@
 export MNEMONIC="olive two muscle bottom coral ancient wait legend bronze useful process session"
 
 # The human readable name this IPFS node identifies as.
-export COORD_NAME=ipfs-service-provider-generic
+export COORD_NAME=bch-consumer-generic
 
 # Allow this node to function as a circuit relay. It must not be behind a firewall.
 #export ENABLE_CIRCUIT_RELAY=true
@@ -17,13 +17,13 @@ export COORD_NAME=ipfs-service-provider-generic
 #export CR_DOMAIN=subdomain.yourdomain.com
 
 # Debug level. 0 = minimal info. 2 = max info.
-export DEBUG_LEVEL=2
+export DEBUG_LEVEL=1
 
 # END: Optional configuration settings
 
 
 # Production database connection string.
-export DBURL=mongodb://172.17.0.1:5555/ipfs-service-prod
+export DBURL=mongodb://172.17.0.1:5555/ipfs-bch-consumer-prod
 
 # Configure REST API port
 export PORT=5010
