@@ -295,7 +295,7 @@ describe('#bch-use-case', () => {
       // Mock depenencies
       sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
 
-      const utxo = {a: 'b'}
+      const utxo = { a: 'b' }
 
       const result = await uut.utxoIsValid(utxo)
       // console.log('result: ', result)
