@@ -489,6 +489,8 @@ class BchRESTControllerLib {
    *          "pubkey": {
    *            "success": true,
    *            "publicKey": "033f267fec0f7eb2b27f8c2e3052b3d03b09d36b47de4082ffb638ffb334ef0eee"
+   *          }
+   *        }
    *     }
    *  }
    */
@@ -498,6 +500,54 @@ class BchRESTControllerLib {
 
       const data = await this.adapters.bch.getPubKey(address)
       console.log(`pubkey data: ${JSON.stringify(data, null, 2)}`)
+
+      ctx.body = data
+    } catch (err) {
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {REST} /bch/utxoIsValid utxoIsValid
+   * @apiPermission public
+   * @apiName utxoIsValid
+   * @apiGroup REST BCH
+   * @apiDescription Verify if UTXO is valid
+   * Given a UTXO object (txid and vout), a full node is queried to verify that
+   * the UTXO still exists in the mempool (true), or if it has been spent (false).
+   *
+   *  - jsonrpc: "" - jsonrpc version
+   *  - id: "" - jsonrpc id
+   *  - result: {} - Result of the petition with the RPC information
+   *      - success: - Request status
+   *      - isValid: - Boolean: true or false
+   *
+   * @apiExample Example usage:
+   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "utxoIsValid", "utxo": {"tx_hash": "17754221b29f189532d4fc2ae89fb467ad2dede30fdec4854eb2129b3ba90d7a", "tx_pos": 0}}}
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *  {
+   *     "jsonrpc":"2.0",
+   *     "id":"555",
+   *     "result":{
+   *        "method":"bch",
+   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
+   *        "value":{
+   *          "success": true,
+   *          "status": 200,
+   *          "endpoint": "utxoIsValid",
+   *          "isValid": true
+   *        }
+   *     }
+   *
+   *  }
+   */
+  async utxoIsValid (ctx) {
+    try {
+      const utxo = ctx.request.body.utxo
+
+      const data = await this.adapters.bch.utxoIsValid(utxo)
+      console.log(`utxoIsValid data: ${JSON.stringify(data, null, 2)}`)
 
       ctx.body = data
     } catch (err) {
