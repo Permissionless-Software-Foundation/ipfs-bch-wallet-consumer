@@ -93,6 +93,14 @@ class BchUseCaseMock {
     return {}
   }
 
+  async utxoIsValid() {
+    return {}
+  }
+
+  async getTokenData() {
+    return {}
+  }
+
   async waitForRPCResponse () {
     return {}
   }

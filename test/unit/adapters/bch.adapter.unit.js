@@ -284,4 +284,64 @@ describe('#bch-use-case', () => {
       }
     })
   })
+
+  describe('#utxoIsValid', () => {
+    it('should validate a utxo', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const utxo = { a: 'b' }
+
+      const result = await uut.utxoIsValid(utxo)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.utxoIsValid()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getTokenData', () => {
+    it('should validate a utxo', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const tokenId = 'blah'
+
+      const result = await uut.getTokenData(tokenId)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getTokenData()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
 })
