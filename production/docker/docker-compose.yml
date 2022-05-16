@@ -43,8 +43,8 @@ services:
     restart: always
 
   bch-consumer:
-    #build: .
-    image: christroutner/ipfs-bch-wallet-consumer:v1.8.0
+    build: .
+    #image: christroutner/ipfs-bch-wallet-consumer:v1.8.0
     container_name: bch-consumer
     logging:
       driver: 'json-file'
@@ -58,5 +58,6 @@ services:
     ports:
       - '5010:5010' # <host port>:<container port>
     volumes:
-      - ../data/ipfsdata:/home/safeuser/ipfs-service-provider/.ipfsdata
+      - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-consumer/.ipfsdata
+      - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-consumer/start-production.sh
     restart: always
