@@ -31,12 +31,12 @@ class IpfsCoordAdapter {
         'Instance of IPFS must be passed when instantiating ipfs-coord.'
       )
     }
-    this.eventEmitter = localConfig.eventEmitter
-    if (!this.eventEmitter) {
-      throw new Error(
-        'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
-      )
-    }
+    // this.eventEmitter = localConfig.eventEmitter
+    // if (!this.eventEmitter) {
+    //   throw new Error(
+    //     'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
+    //   )
+    // }
 
     // Encapsulate dependencies
     this.IpfsCoord = IpfsCoord
@@ -291,16 +291,16 @@ class IpfsCoordAdapter {
 
   // This method handles input coming in from other IPFS peers.
   // It passes the data on to the REST API library by emitting an event.
-  peerInputHandler (data) {
-    try {
-      // console.log('peerInputHandler triggered with this data: ', data)
-
-      this.eventEmitter.emit('rpcData', data)
-    } catch (err) {
-      console.error('Error in ipfs-coord.js/peerInputHandler(): ', err)
-      // Do not throw error. This is a top-level function.
-    }
-  }
+  // peerInputHandler (data) {
+  //   try {
+  //     // console.log('peerInputHandler triggered with this data: ', data)
+  //
+  //     this.eventEmitter.emit('rpcData', data)
+  //   } catch (err) {
+  //     console.error('Error in ipfs-coord.js/peerInputHandler(): ', err)
+  //     // Do not throw error. This is a top-level function.
+  //   }
+  // }
 }
 
 module.exports = IpfsCoordAdapter

@@ -21,15 +21,15 @@ class P2wdbAdapter {
         'An instance of IPFS must be passed when instantiating the P2WDB Adapter library.'
       )
     }
-    this.eventEmitter = localConfig.eventEmitter
-    if (!this.eventEmitter) {
-      throw new Error(
-        'An instance of an EventEmitter must be passed when instantiating the adapters.'
-      )
-    }
+    // this.eventEmitter = localConfig.eventEmitter
+    // if (!this.eventEmitter) {
+    //   throw new Error(
+    //     'An instance of an EventEmitter must be passed when instantiating the adapters.'
+    //   )
+    // }
 
     // Connect the RPC handler when the event fires with new data.
-    this.eventEmitter.on('rpcData', this.rpcHandler)
+    // this.eventEmitter.on('rpcData', this.rpcHandler)
 
     // Encapsulate dependencies
     this.uid = uid
