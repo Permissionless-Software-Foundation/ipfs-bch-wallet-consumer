@@ -43,8 +43,8 @@ services:
     restart: always
 
   bch-consumer:
-    build: .
-    #image: christroutner/ipfs-bch-wallet-consumer:v1.8.0
+    #build: .
+    image: christroutner/ipfs-bch-wallet-consumer:v1.8.2
     container_name: bch-consumer
     logging:
       driver: 'json-file'
