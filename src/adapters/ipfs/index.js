@@ -39,7 +39,7 @@ class IPFS {
 
       // Start ipfs-coord
       this.ipfsCoordAdapter = new this.IpfsCoordAdapter({
-        ipfs: this.ipfs,
+        ipfs: this.ipfs
         // eventEmitter: this.eventEmitter
       })
       await this.ipfsCoordAdapter.start()

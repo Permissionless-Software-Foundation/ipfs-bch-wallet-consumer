@@ -99,8 +99,6 @@ class JSONRPC {
       }
       console.log(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
 
-
-
       // Added the property "from" to the parsedData object;
       // necessary for calculating rate limits (based on the IPFS ID).
       parsedData.from = from
@@ -110,11 +108,11 @@ class JSONRPC {
 
       // Forward data on to bch adapter if this is the response of a BCH query.
       try {
-        if(parsedData.payload.result.method === 'bch') {
-          console.log(`routing to BCH adapter`)
+        if (parsedData.payload.result.method === 'bch') {
+          console.log('routing to BCH adapter')
           retObj = await _this.adapters.bch.rpcHandler(parsedData)
         }
-      } catch(err) {
+      } catch (err) {
         /* exit quietly */
       }
 
