@@ -97,7 +97,7 @@ class JSONRPC {
           `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}`
         )
       }
-      console.log(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
+      // console.log(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
 
       // Added the property "from" to the parsedData object;
       // necessary for calculating rate limits (based on the IPFS ID).
