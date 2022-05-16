@@ -5,7 +5,7 @@
 */
 
 // Public npm libraries.
-const EventEmitter = require('events')
+// const EventEmitter = require('events')
 
 // Local libraries
 const config = require('../../config')
@@ -20,8 +20,8 @@ class Controllers {
     this.config = config
 
     // Initialize EventEmitters used to pass event-driven data around the app.
-    this.eventEmitter = new EventEmitter()
-    localConfig.eventEmitter = this.eventEmitter
+    // this.eventEmitter = new EventEmitter()
+    // localConfig.eventEmitter = this.eventEmitter
 
     // Initialize Clean Architecture classes. Inject dependencies.
     this.adapters = new Adapters(localConfig)

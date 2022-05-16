@@ -9,7 +9,7 @@ const cloneDeep = require('lodash.clonedeep')
 const IPFSCoordAdapter = require('../../../src/adapters/ipfs/ipfs-coord')
 const IPFSMock = require('../mocks/ipfs-mock')
 const IPFSCoordMock = require('../mocks/ipfs-coord-mock')
-const EventEmitter = require('events')
+const config = require('../../../config')
 const mockDataLib = require('../mocks/adapters/ipfs-coord-mocks')
 
 describe('#IPFS', () => {
@@ -19,7 +19,7 @@ describe('#IPFS', () => {
 
   beforeEach(() => {
     const ipfs = IPFSMock.create()
-    uut = new IPFSCoordAdapter({ ipfs, eventEmitter: new EventEmitter() })
+    uut = new IPFSCoordAdapter({ ipfs })
 
     sandbox = sinon.createSandbox()
 
@@ -47,19 +47,19 @@ describe('#IPFS', () => {
       }
     })
 
-    it('should throw an error if EventEmitter instance is not included', () => {
-      try {
-        const ipfs = IPFSMock.create()
-        uut = new IPFSCoordAdapter({ ipfs })
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.include(
-          err.message,
-          'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
-        )
-      }
-    })
+    // it('should throw an error if EventEmitter instance is not included', () => {
+    //   try {
+    //     const ipfs = IPFSMock.create()
+    //     uut = new IPFSCoordAdapter({ ipfs })
+    //
+    //     assert.fail('Unexpected code path')
+    //   } catch (err) {
+    //     assert.include(
+    //       err.message,
+    //       'An instance of an EventEmitter must be passed when instantiating the ipfs-coord adapter.'
+    //     )
+    //   }
+    // })
   })
 
   describe('#start', () => {
@@ -85,6 +85,16 @@ describe('#IPFS', () => {
       // console.log('result: ', result)
 
       assert.equal(result, true)
+    })
+    it('should return a promise that resolves into an instance of IPFS in production mode', async () => {
+      uut.config.isProduction = true
+      // Mock dependencies.
+      uut.IpfsCoord = IPFSCoordMock
+
+      const result = await uut.start()
+      // console.log('result: ', result)
+      assert.equal(result, true)
+      config.isProduction = false
     })
   })
 
@@ -152,22 +162,22 @@ describe('#IPFS', () => {
     })
   })
 
-  describe('#peerInputHandler', () => {
-    it('should emit an event trigger', () => {
-      const data = 'some data'
-
-      uut.peerInputHandler(data)
-
-      assert.isOk(true, 'Not throwing an error is a success')
-    })
-
-    it('should catch and report errors', () => {
-      // Force an error
-      sandbox.stub(uut.eventEmitter, 'emit').throws(new Error('test error'))
-
-      uut.peerInputHandler()
-
-      assert.isOk(true, 'Not throwing an error is a success.')
-    })
-  })
+  // describe('#peerInputHandler', () => {
+  //   it('should emit an event trigger', () => {
+  //     const data = 'some data'
+  //
+  //     uut.peerInputHandler(data)
+  //
+  //     assert.isOk(true, 'Not throwing an error is a success')
+  //   })
+  //
+  //   it('should catch and report errors', () => {
+  //     // Force an error
+  //     sandbox.stub(uut.eventEmitter, 'emit').throws(new Error('test error'))
+  //
+  //     uut.peerInputHandler()
+  //
+  //     assert.isOk(true, 'Not throwing an error is a success.')
+  //   })
+  // })
 })

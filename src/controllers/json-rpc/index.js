@@ -90,13 +90,14 @@ class JSONRPC {
         }
 
         // Process response from REST API.
-        _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
+        // _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)
 
         // Log the incoming JSON RPC command.
         wlogger.info(
           `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}`
         )
       }
+      // console.log(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
 
       // Added the property "from" to the parsedData object;
       // necessary for calculating rate limits (based on the IPFS ID).
@@ -104,6 +105,16 @@ class JSONRPC {
 
       // Default return string
       let retObj = _this.defaultResponse()
+
+      // Forward data on to bch adapter if this is the response of a BCH query.
+      try {
+        if (parsedData.payload.result.method === 'bch') {
+          console.log('routing to BCH adapter')
+          retObj = await _this.adapters.bch.rpcHandler(parsedData)
+        }
+      } catch (err) {
+        /* exit quietly */
+      }
 
       // Route the command to the appropriate route handler.
       switch (parsedData.payload.method) {
@@ -116,6 +127,8 @@ class JSONRPC {
         case 'about':
           retObj = await _this.aboutController.aboutRouter(parsedData)
           break
+        case 'bch':
+          retObj = await _this.adapters.bch.rpcHandler(parsedData)
         // default:
         //   // Process response from REST API.
         //   _this.adapters.ipfs.ipfsCoordAdapter.peerInputHandler(parsedData)

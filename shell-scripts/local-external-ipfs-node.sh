@@ -13,7 +13,7 @@ export COORD_NAME=trout-dev-bch-wallet-consumer
 export MNEMONIC="stomach mean catch march census author cousin size south romance pumpkin trap"
 
 # 0 = less verbose. 3 = most verbose
-export DEBUG_LEVEL=2
+export DEBUG_LEVEL=1
 
 # Production settings that use external IPFS node.
 # https://github.com/christroutner/docker-ipfs

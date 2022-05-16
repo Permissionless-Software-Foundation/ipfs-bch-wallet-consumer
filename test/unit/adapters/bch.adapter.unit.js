@@ -54,19 +54,19 @@ describe('#bch-use-case', () => {
       }
     })
 
-    it('should throw an error if adapters are not passed in', () => {
-      try {
-        const ipfs = {}
-        uut = new BchAdapter({ ipfs })
-
-        assert.fail('Unexpected code path')
-      } catch (err) {
-        assert.include(
-          err.message,
-          'An instance of an EventEmitter must be passed when instantiating the adapters.'
-        )
-      }
-    })
+    // it('should throw an error if adapters are not passed in', () => {
+    //   try {
+    //     const ipfs = {}
+    //     uut = new BchAdapter({ ipfs })
+    //
+    //     assert.fail('Unexpected code path')
+    //   } catch (err) {
+    //     assert.include(
+    //       err.message,
+    //       'An instance of an EventEmitter must be passed when instantiating the adapters.'
+    //     )
+    //   }
+    // })
   })
 
   describe('#waitForRPCResponse', () => {
