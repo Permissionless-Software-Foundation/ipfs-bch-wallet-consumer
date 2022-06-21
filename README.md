@@ -95,5 +95,3 @@ Snapshots pinned to IPFS will be listed here.
 ## License
 
 [MIT](./LICENSE.md)
-
-test
