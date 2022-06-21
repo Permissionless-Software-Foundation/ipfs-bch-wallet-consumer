@@ -301,6 +301,15 @@ class IpfsCoordAdapter {
   //     // Do not throw error. This is a top-level function.
   //   }
   // }
+
+  // Subscribe to the chat pubsub channel
+  async subscribeToChat () {
+    await this.ipfsCoord.adapters.pubsub.subscribeToPubsubChannel(
+      this.config.chatPubSubChan,
+      console.log,
+      this.ipfsCoord.thisNode
+    )
+  }
 }
 
 module.exports = IpfsCoordAdapter

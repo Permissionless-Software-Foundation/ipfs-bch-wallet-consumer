@@ -180,4 +180,20 @@ describe('#IPFS', () => {
   //     assert.isOk(true, 'Not throwing an error is a success.')
   //   })
   // })
+
+  describe('#subscribeToChat', () => {
+    it('should subscribe to the chat channel', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        adapters: {
+          pubsub: {
+            subscribeToPubsubChannel: async () => {
+            }
+          }
+        }
+      }
+
+      await uut.subscribeToChat()
+    })
+  })
 })
