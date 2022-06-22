@@ -14,7 +14,7 @@ services:
     restart: always
 
   ipfs-bch-consumer:
-    image: ipfs/go-ipfs:v0.12.0
+    image: ipfs/go-ipfs:v0.13.0
     container_name: ipfs-bch-consumer
     environment:
       MY_ENV_VAR: 'placeholder'
@@ -44,7 +44,7 @@ services:
 
   bch-consumer:
     #build: .
-    image: christroutner/ipfs-bch-wallet-consumer:v1.8.2
+    image: christroutner/ipfs-bch-wallet-consumer:v1.8.4
     container_name: bch-consumer
     logging:
       driver: 'json-file'
