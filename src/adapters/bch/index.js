@@ -429,7 +429,7 @@ class BchAdapter {
     }
   }
 
-  async getTokenData (tokenId) {
+  async getTokenData (tokenId, withTxHistory = false) {
     try {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
@@ -441,7 +441,8 @@ class BchAdapter {
 
       const rpcData = {
         endpoint: 'getTokenData',
-        tokenId
+        tokenId,
+        withTxHistory
       }
 
       // Generate a UUID for the call.
