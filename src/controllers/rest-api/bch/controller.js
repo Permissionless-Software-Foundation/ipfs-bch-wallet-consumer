@@ -612,8 +612,9 @@ class BchRESTControllerLib {
   async getTokenData (ctx) {
     try {
       const tokenId = ctx.request.body.tokenId
+      const withTxHistory = !!ctx.request.body.withTxHistory
 
-      const data = await this.adapters.bch.getTokenData(tokenId)
+      const data = await this.adapters.bch.getTokenData(tokenId, withTxHistory)
       console.log(`getTokenData data: ${JSON.stringify(data, null, 2)}`)
 
       ctx.body = data
