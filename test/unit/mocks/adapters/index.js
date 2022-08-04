@@ -14,6 +14,7 @@ class IpfsAdapter {
 
 class IpfsCoordAdapter {
   constructor () {
+
     this.ipfsCoord = {
       useCases: {
         peer: {
@@ -24,8 +25,10 @@ class IpfsCoordAdapter {
         peerData: []
       }
     },
-    peerInputHandler: () => {},
-    state: {
+
+    this.peerInputHandler = () => {}
+
+    this.state = {
       serviceProviders: []
     }
   }
