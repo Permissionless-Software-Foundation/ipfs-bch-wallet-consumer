@@ -394,4 +394,40 @@ describe('#BCH-REST-Controller', () => {
       assert.equal(ctx.status, 200)
     })
   })
+
+  describe('#getTokenData2', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        // Force an error
+        sandbox
+          .stub(uut.adapters.bch, 'getTokenData2')
+          .rejects(new Error('test error'))
+
+        ctx.request.body = {
+          tokenId: 'blah'
+        }
+
+        await uut.getTokenData2(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.bch, 'getTokenData2').resolves({ status: 200 })
+
+      ctx.request.body = {
+        tokenId: 'blah'
+      }
+
+      await uut.getTokenData2(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
 })

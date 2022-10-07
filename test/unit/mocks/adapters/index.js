@@ -117,6 +117,10 @@ class BchUseCaseMock {
     return {}
   }
 
+  async getTokenData2() {
+    return {}
+  }
+
   async waitForRPCResponse () {
     return {}
   }

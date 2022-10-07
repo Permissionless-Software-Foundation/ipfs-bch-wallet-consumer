@@ -585,6 +585,41 @@ class BchRESTControllerLib {
     }
   }
 
+  /**
+    * @api {REST} /bch getTokenData2
+    * @apiPermission public
+    * @apiName getTokenData2
+    * @apiGroup REST BCH
+    * @apiDescription Get token icon and other media
+    *
+    * Get the icon for a token, given it's token ID.
+    * This function expects a string input of a token ID property.
+    * This function returns an object with a tokenIcon property that contains
+    * the URL to the icon.
+    *
+    * The output object always have these properties:
+    * - tokenIcon: A url to the token icon, if it exists.
+    * - tokenStats: Data about the token from psf-slp-indexer.
+    * - optimizedTokenIcon: An alternative, potentially more optimal, url to the token icon, if it exists.
+    * - iconRepoCompatible: true if the token icon is available via token.bch.sx
+    * - ps002Compatible: true if the token icon is compatible with PS007 specification.
+    *
+    * @apiExample Example usage:
+    * curl -H "Content-Type: application/json" -X POST -d '{ "tokenId": "43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d" }' https://bc01-ca-bch-consumer.fullstackcash.nl/bch/getTokenData2
+    */
+  async getTokenData2 (ctx) {
+    try {
+      const tokenId = ctx.request.body.tokenId
+
+      const data = await this.adapters.bch.getTokenData2(tokenId)
+      console.log(`getTokenData2 data: ${JSON.stringify(data, null, 2)}`)
+
+      ctx.body = data
+    } catch (err) {
+      this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.
