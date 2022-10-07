@@ -344,4 +344,34 @@ describe('#bch-use-case', () => {
       }
     })
   })
+
+  describe('#getTokenData2', () => {
+    it('should validate a utxo', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const tokenId = 'blah'
+
+      const result = await uut.getTokenData2(tokenId)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getTokenData2()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
 })

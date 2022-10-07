@@ -556,59 +556,21 @@ class BchRESTControllerLib {
   }
 
   /**
-   * @api {REST} /bch getTokenData
-   * @apiPermission public
-   * @apiName getTokenData
-   * @apiGroup REST BCH
-   * @apiDescription Get data associated with a token
-   * Given a token ID, this endpoint will retrieve the IPFS CIDs associated with
-   * the tokens mutable and immutable data. This is extension of the PS002
-   * specification for mutable data for tokens:
-   * https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md
-   *
-   *  - jsonrpc: "" - jsonrpc version
-   *  - id: "" - jsonrpc id
-   *  - result: {} - Result of the petition with the RPC information
-   *      - success: - Request status
-   *      - getTokenData: - Address public key
-   *
-   * @apiExample Example usage:
-   * {"jsonrpc":"2.0","id":"555","method":"bch","params":{ "endpoint": "getTokenData", "tokenId": "c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d" }}
-   *
-   * @apiSuccessExample {json} Success-Response:
-   *  {
-   *     "jsonrpc":"2.0",
-   *     "id":"555",
-   *     "result":{
-   *        "method":"bch",
-   *        "reciever":"QmU86vLVbUY1UhziKB6rak7GPKRA2QHWvzNm2AjEvXNsT6",
-   *        "value":{
-   *          "success": true,
-   *          "status": 200,
-   *          "endpoint": "getTokenData",
-   *          "tokenData": {
-   *            "genesisData": {
-   *              "type": 1,
-   *              "ticker": 'MT2',
-   *              "name": 'Mutable Token',
-   *              "tokenId": 'c85042ab08a2099f27de880a30f9a42874202751d834c42717a20801a00aab0d',
-   *              "documentUri": 'ipfs://bafybeie7oxpsr7evcnlptecxfdhaqlot4732phukd2ekgvuzoir2frost4',
-   *              "documentHash": '56ed1a5768076a318d02b5db64e125544dca57ab6b2cc7ca61dfa4645d244463',
-   *              "decimals": 0,
-   *              "mintBatonIsActive": true,
-   *              "tokensInCirculationBN": '1000',
-   *              "tokensInCirculationStr": '1000',
-   *              "blockCreated": 739412,
-   *              "totalBurned": '0',
-   *              "totalMinted": '1000'
-   *            },
-   *            "immutableData": 'ipfs://bafybeie7oxpsr7evcnlptecxfdhaqlot4732phukd2ekgvuzoir2frost4',
-   *            "mutableData": 'ipfs://bafybeigotuony53ley3n63hqwyxiqruqn5uamskmci6f645putnc46jju4'
-   *          }
-   *        }
-   *     }
-   *  }
-   */
+    * @api {REST} /bch getTokenData
+    * @apiPermission public
+    * @apiName getTokenData
+    * @apiGroup REST BCH
+    * @apiDescription Get data associated with a token
+    *
+    * Given a token ID, this endpoint will retrieve the IPFS CIDs associated with
+    * the tokens mutable and immutable data. This is extension of the PS002
+    * specification for mutable data for tokens:
+    * https://github.com/Permissionless-Software-Foundation/specifications/blob/master/ps002-slp-mutable-data.md
+    *
+    *
+    * @apiExample Example usage:
+    * curl -H "Content-Type: application/json" -X POST -d '{ "tokenId": "43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d", "withTxHistory": true }' https://bc01-ca-bch-consumer.fullstackcash.nl/bch/getTokenData
+    */
   async getTokenData (ctx) {
     try {
       const tokenId = ctx.request.body.tokenId
