@@ -64,6 +64,31 @@ class PriceRESTControllerLib {
     }
   }
 
+  // Get the XEC price.
+  // TODO: Add API docs.
+  async getXecPrice (ctx) {
+    try {
+      // Request options
+      const opt = {
+        method: 'get',
+        baseURL: 'https://api.coinex.com',
+        url: '/v1/market/ticker?market=xecusdt',
+        timeout: 15000
+      }
+      //
+
+      const response = await this.axios.request(opt)
+      console.log(`response.data: ${JSON.stringify(response.data, null, 2)}`)
+
+      ctx.body = { usd: Number(response.data.data.ticker.last) }
+    } catch (err) {
+      // Write out error to error log.
+      wlogger.error('Error in GET /price/xecusd.', err)
+
+      this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.
