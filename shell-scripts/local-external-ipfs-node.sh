@@ -30,4 +30,7 @@ export DBURL=mongodb://localhost:27017/ipfs-service-dev
 
 export CONSUMER_ENV=production
 
+# Lock the consumer into a preferred service provider.
+#export PREFERRED_PROVIDER=12D3KooWEzE3HNH86WCb2Xocu6PgBCnSGUD7myJmuTHvoedMwp7K
+
 npm start
