@@ -3,6 +3,7 @@
 */
 
 const { wlogger } = require('../../../adapters/wlogger')
+const config = require('../../../../config')
 
 // let _this
 
@@ -23,10 +24,7 @@ class BchRESTControllerLib {
     }
 
     // Encapsulate dependencies
-    // this.UserModel = this.adapters.localdb.Users
-    // this.userUseCases = this.useCases.user
-
-    // _this = this
+    this.config = config
   }
 
   /**
@@ -65,6 +63,11 @@ class BchRESTControllerLib {
   async postProvider (ctx) {
     try {
       const providerId = ctx.request.body.provider
+
+      // Throw an error, if the provider has been set by an environment variable.
+      if(this.config.preferredProvider) {
+        throw new Error(`Consumer has preferredProvider set in environment variable. Refusing to switch providers.`)
+      }
 
       await this.adapters.bch.selectProvider(providerId)
 
