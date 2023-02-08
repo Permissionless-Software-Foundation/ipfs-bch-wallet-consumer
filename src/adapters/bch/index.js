@@ -208,6 +208,58 @@ class BchAdapter {
     }
   }
 
+  // Query the UTXOs associated with an array of up to 20 addresses.
+  async getUtxosBulk (addrs) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+      if (!selectedProvider) {
+        throw new Error('No BCH Wallet Service provider available yet.')
+      }
+
+      // Input validation
+      if (!Array.isArray(addrs)) {
+        throw new Error('addresses parameter must be an array')
+      }
+      if (addrs.length > 20) {
+        throw new Error('addresses parameter must not exceed 20 elements')
+      }
+
+      const rpcData = {
+        endpoint: 'utxosBulk',
+        address: addrs
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'bch', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+
+      return data
+    } catch (err) {
+      // console.log('createUser() error: ', err)
+      wlogger.error('Error in use-cases/bch.js/getUtxosBulk()')
+      throw err
+    }
+  }
+
   async broadcast (hex) {
     try {
       // Throw an error if this IPFS node has not yet made a connection to a
