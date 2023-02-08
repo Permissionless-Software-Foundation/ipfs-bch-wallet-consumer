@@ -235,6 +235,103 @@ class BchRESTControllerLib {
   }
 
   /**
+   * @api {post} /bch/utxosBulk UTXOs Bulk
+   * @apiName UTXOs Bulk
+   * @apiGroup REST BCH
+   * @apiDescription This endpoint returns UTXOs held at an address, hydrated
+   *  with token information.
+   * @apiDescription This endpoint is the same as the /bch/utxos endpoint, but
+   * it allows an array of up to 20 addresses to be queried at the same time.
+   * This reduces the number of JSON RPC calls, and is very handy
+   * for HD wallets that need to quickly scan a lot of addresses.
+   *
+   *  Given an address, this endpoint will return an object with thre following
+   *  properties:
+   *
+   *  - addresses: [] - the addresses these UTXOs are associated with
+   *  - bchUtxos: [] - UTXOs confirmed to be spendable as normal BCH
+   *  - nullUtxo: [] - UTXOs that did not pass SLP validation. Should be ignored and
+   *    not spent, to be safe.
+   *  - slpUtxos: {} - UTXOs confirmed to be colored as valid SLP tokens
+   *    - type1: {}
+   *      - tokens: [] - SLP token Type 1 tokens.
+   *      - mintBatons: [] - SLP token Type 1 mint batons.
+   *    - nft: {}
+   *      - tokens: [] - NFT tokens
+   *      - groupTokens: [] - NFT Group tokens, used to create NFT tokens.
+   *      - groupMintBatons: [] - Minting baton to create more NFT Group tokens.
+   *
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "address": "bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj" }' localhost:5001/bch/utxos
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     [
+   *        {
+   *           "addresses": ["bitcoincash:qrl2nlsaayk6ekxn80pq0ks32dya8xfclyktem2mqj"],
+   *           "bchUtxos":[
+   *              {
+   *                 "height":631219,
+   *                 "tx_hash":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f",
+   *                 "tx_pos":0,
+   *                 "value":1000,
+   *                 "txid":"ae2daa01c8172545b5edd205ea438706bcb74e63d4084a26b9ff2a46d46dc97f",
+   *                 "vout":0,
+   *                 "isValid":false
+   *              }
+   *           ],
+   *           "nullUtxos":[
+   *
+   *           ],
+   *           "slpUtxos":{
+   *              "type1":{
+   *                 "mintBatons":[
+   *
+   *                 ],
+   *                 "tokens":[
+   *
+   *                 ]
+   *              },
+   *              "nft":{
+   *                 "groupMintBatons":[
+   *
+   *                 ],
+   *                 "groupTokens":[
+   *
+   *                 ],
+   *                 "tokens":[
+   *
+   *                 ]
+   *              }
+   *           }
+   *        }
+   *     ]
+   *
+   * @apiError UnprocessableEntity Missing required parameters
+   *
+   * @apiErrorExample {json} Error-Response:
+   *     HTTP/1.1 422 Unprocessable Entity
+   *     {
+   *       "status": 422,
+   *       "error": "Unprocessable Entity"
+   *     }
+   */
+  async utxosBulk (ctx) {
+    try {
+      const addrs = ctx.request.body.addresses
+      // console.log('address: ', address)
+
+      const utxos = await this.adapters.bch.getUtxosBulk(addrs)
+      // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
+
+      ctx.body = [utxos]
+    } catch (err) {
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
    * @api {post} /bch/broadcast Broadcast
    * @apiName Broadcast
    * @apiGroup REST BCH

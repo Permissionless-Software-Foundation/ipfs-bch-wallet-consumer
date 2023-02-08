@@ -55,6 +55,7 @@ class BchRouter {
     this.router.post('/provider', this.postProvider)
     this.router.post('/balance', this.postBalance)
     this.router.post('/utxos', this.postUtxos)
+    this.router.post('/utxosBulk', this.postUtxosBulk)
     this.router.post('/broadcast', this.postBroadcast)
     this.router.post('/txHistory', this.postTxHistory)
     this.router.post('/txData', this.postTxData)
@@ -82,6 +83,10 @@ class BchRouter {
 
   async postUtxos (ctx, next) {
     await _this.bchRESTController.utxos(ctx, next)
+  }
+
+  async postUtxosBulk (ctx, next) {
+    await _this.bchRESTController.utxosBulk(ctx, next)
   }
 
   async postBroadcast (ctx, next) {

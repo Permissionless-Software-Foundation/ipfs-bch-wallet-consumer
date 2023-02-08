@@ -93,6 +93,10 @@ class BchUseCaseMock {
     return {}
   }
 
+  async getUtxosBulk () {
+    return {}
+  }
+
   async broadcast () {
     return {}
   }

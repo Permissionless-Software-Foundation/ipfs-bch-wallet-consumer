@@ -165,6 +165,82 @@ describe('#bch-use-case', () => {
     })
   })
 
+  describe('#getUtxos', () => {
+    it('should get the UTXOs of an address', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const addr = 'addr'
+
+      const result = await uut.getUtxos(addr)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should catch and throw an error', async () => {
+      try {
+        await uut.getUtxos()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'test error')
+      }
+    })
+  })
+
+  describe('#getUtxosBulk', () => {
+    it('should get the UTXOs of an address', async () => {
+      // Force connection to a wallet service
+      uut.ipfs.ipfsCoordAdapter.state = {
+        selectedServiceProvider: 'abc123'
+      }
+
+      // Mock depenencies
+      sandbox.stub(uut, 'waitForRPCResponse').resolves({ key: 'value' })
+
+      const addrs = ['addr']
+
+      const result = await uut.getUtxosBulk(addrs)
+      // console.log('result: ', result)
+
+      assert.equal(result.key, 'value')
+    })
+
+    it('should throw an error if addresses is not an array', async () => {
+      try {
+        await uut.getUtxosBulk()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'addresses parameter must be an array')
+      }
+    })
+
+    it('should throw an error if addresses array is larger than 20 elements', async () => {
+      try {
+        const addrs = []
+        for (let i = 0; i < 25; i++) {
+          addrs.push(i)
+        }
+
+        await uut.getUtxosBulk(addrs)
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'addresses parameter must not exceed 20 elements')
+      }
+    })
+  })
+
   describe('#broadcast', () => {
     it('should broadcast a transaction', async () => {
       // Force connection to a wallet service
