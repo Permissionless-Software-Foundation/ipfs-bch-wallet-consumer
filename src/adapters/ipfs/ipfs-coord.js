@@ -214,7 +214,7 @@ class IpfsCoordAdapter {
   // providers. This method is called periodically by a timer-interval.
   pollForBchServices () {
     try {
-      console.log('pollForBchServices() polling for BCH service')
+      // console.log('pollForBchServices() polling for BCH service')
 
       // An array of IPFS IDs of other nodes in the coordination pubsub channel.
       const peers = _this.ipfsCoord.thisNode.peerList
@@ -257,7 +257,7 @@ class IpfsCoordAdapter {
             console.log(`---->BCH wallet service selected: ${thisPeer}`)
           }
 
-          console.log('preferredProvider: ', _this.config.preferredProvider)
+          // console.log('preferredProvider: ', _this.config.preferredProvider)
 
           // If a preferred provider is set in the config file, then connect
           // to the preferred provider when it's discovered.
@@ -268,7 +268,7 @@ class IpfsCoordAdapter {
             _this.state.selectedServiceProvider = thisPeer
           }
 
-          console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
+          // console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
 
           // Check if the peer has already been added to the list of providers.
           const alreadyExists = _this.state.serviceProviders.filter(
