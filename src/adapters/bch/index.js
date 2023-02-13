@@ -211,6 +211,8 @@ class BchAdapter {
   // Query the UTXOs associated with an array of up to 20 addresses.
   async getUtxosBulk (addrs) {
     try {
+      // console.log('getUtxosBulk() addrs: ', addrs)
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -229,7 +231,7 @@ class BchAdapter {
 
       const rpcData = {
         endpoint: 'utxosBulk',
-        address: addrs
+        addresses: addrs
       }
 
       // Generate a UUID for the call.
@@ -250,7 +252,7 @@ class BchAdapter {
 
       // Wait for data to come back from the wallet service.
       const data = await this.waitForRPCResponse(rpcId)
-      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      // console.log(`getUtxosBulk() data: ${JSON.stringify(data, null, 2)}`)
 
       return data
     } catch (err) {

@@ -325,7 +325,7 @@ class BchRESTControllerLib {
       const utxos = await this.adapters.bch.getUtxosBulk(addrs)
       // console.log(`utxos: ${JSON.stringify(utxos, null, 2)}`)
 
-      ctx.body = [utxos]
+      ctx.body = utxos
     } catch (err) {
       this.handleError(ctx, err)
     }
