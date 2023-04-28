@@ -84,6 +84,8 @@ module.exports = {
   preferredProvider: process.env.PREFERRED_PROVIDER
     ? process.env.PREFERRED_PROVIDER
     : '',
+  // If true, users will not be able to change the provider via a REST API call.
+  freezeProvider: process.env.FREEZE_PROVIDER ? true : false,
   //  : 'QmdBGB8S6sEr19gaAxJYjhRbz5ZmMiH5a1JyyMmaxcRKnY'
   // : 'QmUTx6KqYKVZbKpKxR7vGDUgZFYVvVVyEWDeCYq4GwBCff'
   // Used for development
