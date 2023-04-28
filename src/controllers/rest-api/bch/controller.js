@@ -65,7 +65,7 @@ class BchRESTControllerLib {
       const providerId = ctx.request.body.provider
 
       // Throw an error, if the provider has been set by an environment variable.
-      if (this.config.preferredProvider) {
+      if (this.config.freezeProvider) {
         throw new Error('Consumer has preferredProvider set in environment variable. Refusing to switch providers.')
       }
 
