@@ -706,6 +706,7 @@ class BchRESTControllerLib {
     *
     * @apiExample Example usage:
     * curl -H "Content-Type: application/json" -X POST -d '{ "tokenId": "43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d" }' https://bc01-ca-bch-consumer.fullstackcash.nl/bch/getTokenData2
+    * curl -H "Content-Type: application/json" -X POST -d '{ "tokenId": "43eddfb11c9941edffb8c8815574bb0a43969a7b1de39ad14cd043eaa24fd38d", "updateCache": true }' https://bc01-ca-bch-consumer.fullstackcash.nl/bch/getTokenData2
     */
   async getTokenData2 (ctx) {
     try {
