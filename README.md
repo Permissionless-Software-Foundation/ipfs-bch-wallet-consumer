@@ -6,6 +6,8 @@ This is a REST API server based on [Koa](https://koajs.com/). It's essentially a
 
 When started, this web server starts an [IPFS](https://ipfs.io) node and connects to an ipfs-bch-wallet-service server over the IPFS network. It then pipes that connection over its own localized REST API.
 
+More details are available at [CashStack.info](https://CashStack.info).
+
 ## Requirements
 
 - node **^14.18.2**
@@ -17,20 +19,18 @@ When started, this web server starts an [IPFS](https://ipfs.io) node and connect
 
 ### Development Environment
 
-**Note:** This software now uses an external go-ipfs IPFS node. The instructions below have not been updated to reflect this.
+To run this software, you must have an instance of go-ipfs running in daemon mode, with the `--enable-pubsub-experiment` flag set. [Here are instruction for installing go-ipfs](https://gist.github.com/christroutner/a39f656850dc022b60f25c9663dd1cdd#install-ipfs).
 
-A development environment will allow you modify the code on-the-fly and contribute to the code base of this repository. [PM2](https://www.npmjs.com/package/pm2) is recommended for running this code base as an IPFS Circuit Relay.
-
-- [Video: Installing ipfs-service-provider](https://youtu.be/Z0NsboIVN44)
-- [Step-by-step installation instructions](https://gist.github.com/christroutner/3304a71d4c12a3a3e1664a438f64d9d0)
+Clone this repository and install npm dependencies. You'll also need to install MongoDB if you don't already have it installed:
 
 ```bash
-git clone https://github.com/Permissionless-Software-Foundation/ipfs-service-provider
-cd ipfs-service-provider
+git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wallet-consumer
+cd ipfs-bch-wallet-consumer
 ./install-mongo-sh
 sudo npm install -g node-pre-gyp
 npm install
-./ipfs-service-provider.sh
+cd shell-script
+./local-external-ipfs-node.sh
 ```
 
 ### Production Environment
@@ -44,19 +44,9 @@ docker-compose up -d
 
 You can bring the containers back up with `docker-compose up -d`.
 
-### Operation Notes
+## Code Structure
 
-- There is a memory leak in the version of js-ipfs. The app is currently configured to shut down every 8 hours to flush memory. It relies on a process manager like pm2, Docker, or systemd to restart the app after it shuts down, in order to ensure continuous operation.
-
-- The PSF network operates as a private network. It does not connect or interact with the wider PSF network, relying instead on gateways to bridge the two networks, when they need to share content. This improves the performance and experience for everyone in the PSF network. To join the network, you'll need to add the [swarm.key](./swarm.key) file to the IPFS data folder.
-
-- [Instructions on setting up IPFS private networks.](https://github.com/ipfs/go-ipfs/blob/master/docs/experimental-features.md#private-networks)
-- For external installations, the swarm.key file will typically go in `~/.ipfs/swarm.key`
-- For production Docker containers, the key would go in `ipfs-service-provider/production/data/go-ipfs/data/swarm.key`
-
-## Structure
-
-The file layout of this repository differs from the koa-api-boilerplate. Instead, it follows the file layout of [Clean Architecture](troutsblog.com/blog/clean-architecture).
+The file layout of this repository differs from the koa-api-boilerplate. Instead, it follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture).
 
 ## Usage
 
@@ -76,19 +66,7 @@ There is additional developer documentation in the [dev-docs directory](./dev-do
 
 ## Dependencies
 
-- [koa2](https://github.com/koajs/koa/tree/v2.x)
-- [koa-router](https://github.com/alexmingoia/koa-router)
-- [koa-bodyparser](https://github.com/koajs/bodyparser)
-- [koa-generic-session](https://github.com/koajs/generic-session)
-- [koa-logger](https://github.com/koajs/logger)
-- [MongoDB](http://mongodb.org/)
-- [Mongoose](http://mongoosejs.com/)
-- [Passport](http://passportjs.org/)
-- [Nodemon](http://nodemon.io/)
-- [Mocha](https://mochajs.org/)
-- [apidoc](http://apidocjs.com/)
-- [ESLint](http://eslint.org/)
-- [ipfs-coord](https://www.npmjs.com/package/ipfs-coord)
+This repository is forked from [ipfs-service-provider](https://github.com/Permissionless-Software-Foundation/ipfs-service-provider).
 
 ## IPFS
 
