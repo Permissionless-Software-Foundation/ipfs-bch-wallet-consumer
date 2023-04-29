@@ -8,6 +8,8 @@ When started, this web server starts an [IPFS](https://ipfs.io) node and connect
 
 More details are available at [CashStack.info](https://CashStack.info).
 
+- [Video: Using ipfs-bch-wallet-consumer](https://youtu.be/7ntMPuqAX64)
+
 ## Requirements
 
 - node **^14.18.2**
