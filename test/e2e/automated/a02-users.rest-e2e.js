@@ -43,9 +43,9 @@ describe('Users', () => {
     context.id2 = testUser.user._id
 
     // Get the JWT used to log in as the admin 'system' user.
-    const adminJWT = await testUtils.getAdminJWT()
-    console.log(`adminJWT: ${adminJWT}`)
-    context.adminJWT = adminJWT
+    // const adminJWT = await testUtils.getAdminJWT()
+    // console.log(`adminJWT: ${adminJWT}`)
+    // context.adminJWT = adminJWT
 
     // const admin = await testUtils.loginAdminUser()
     // context.adminJWT = admin.token
