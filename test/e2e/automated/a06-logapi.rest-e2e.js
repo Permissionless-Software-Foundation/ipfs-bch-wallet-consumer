@@ -38,7 +38,7 @@ describe('LogsApi', () => {
     })
 
     // it('should return log', async () => {
-      
+
     //   const options = {
     //     method: 'post',
     //     url: `${LOCALHOST}/logs`,
@@ -54,7 +54,7 @@ describe('LogsApi', () => {
     //   assert.property(result.data.data[0], 'message')
     //   assert.property(result.data.data[0], 'level')
     //   assert.property(result.data.data[0], 'timestamp')
-  
+
     // })
 
     it('should return false if files are not found!', async () => {
