@@ -6,15 +6,15 @@
 
 // Public npm libraries.
 
-// Load the REST API Controllers.
-const AuthRESTController = require('./auth')
-const UserRouter = require('./users')
-const ContactRESTController = require('./contact')
-const LogsRESTController = require('./logs')
-const BchRESTController = require('./bch')
-const IpfsRESTController = require('./ipfs')
-const P2wdbRESTController = require('./p2wdb')
-const PriceRESTController = require('./price')
+// Local libraries
+import AuthRESTController from './auth/index.js'
+import UserRouter from './users/index.js'
+import ContactRESTController from './contact/index.js'
+import LogsRESTController from './logs/index.js'
+import BchRESTController from './bch/index.js'
+import IpfsRESTController from './ipfs/index.js'
+import P2wdbRESTController from './p2wdb/index.js'
+import PriceRESTController from './price/index.js'
 
 class RESTControllers {
   constructor (localConfig = {}) {
@@ -75,4 +75,4 @@ class RESTControllers {
   }
 }
 
-module.exports = RESTControllers
+export default RESTControllers

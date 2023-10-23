@@ -113,7 +113,8 @@ const peerData = [
   }
 ]
 
-module.exports = {
+// module.exports = {
+export default {
   peers,
   peerData
 }

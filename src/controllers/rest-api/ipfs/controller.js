@@ -2,7 +2,7 @@
   REST API Controller library for the /ipfs route
 */
 
-const { wlogger } = require('../../../adapters/wlogger')
+import wlogger from '../../../adapters/wlogger.js'
 
 let _this
 
@@ -95,4 +95,5 @@ class IpfsRESTControllerLib {
   }
 }
 
-module.exports = IpfsRESTControllerLib
+// module.exports = IpfsRESTControllerLib
+export default IpfsRESTControllerLib

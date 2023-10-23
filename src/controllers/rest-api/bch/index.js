@@ -3,11 +3,11 @@
 */
 
 // Public npm libraries.
-const Router = require('koa-router')
+import Router from 'koa-router'
 
 // Local libraries.
-const BchRESTControllerLib = require('./controller')
-const Validators = require('../middleware/validators')
+import BchRESTControllerLib from './controller.js'
+import Validators from '../middleware/validators.js'
 
 let _this
 
@@ -118,4 +118,5 @@ class BchRouter {
   }
 }
 
-module.exports = BchRouter
+// module.exports = BchRouter
+export default BchRouter

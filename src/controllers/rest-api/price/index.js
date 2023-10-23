@@ -3,11 +3,11 @@
 */
 
 // Public npm libraries.
-const Router = require('koa-router')
+import Router from 'koa-router'
 
 // Local libraries.
-const PriceRESTControllerLib = require('./controller')
-const Validators = require('../middleware/validators')
+import PriceRESTControllerLib from './controller.js'
+import Validators from '../middleware/validators.js'
 
 let _this
 
@@ -68,4 +68,5 @@ class PriceRouter {
   }
 }
 
-module.exports = PriceRouter
+// module.exports = PriceRouter
+export default PriceRouter

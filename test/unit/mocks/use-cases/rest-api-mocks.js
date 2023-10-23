@@ -206,7 +206,8 @@ const ipfsMockPeers = [
   }
 ]
 
-module.exports = {
+// module.exports = {
+export default {
   rpcData,
   mockRelayData,
   mockPeerData,
