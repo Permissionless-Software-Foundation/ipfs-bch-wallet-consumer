@@ -4,11 +4,11 @@
 */
 
 // Public npm libraries
-const { v4: uid } = require('uuid')
-const jsonrpc = require('jsonrpc-lite')
+import { v4 as uid } from 'uuid'
+import jsonrpc from 'jsonrpc-lite'
 
 // Local libraries
-const { wlogger } = require('../wlogger')
+import wlogger from '../wlogger.js'
 
 let _this
 
@@ -319,7 +319,7 @@ class BchAdapter {
 
       const rpcData = {
         endpoint: 'txHistory',
-        address: address,
+        address,
         sortOrder,
         page
       }
@@ -625,4 +625,5 @@ class BchAdapter {
   }
 }
 
-module.exports = BchAdapter
+// module.exports = BchAdapter
+export default BchAdapter

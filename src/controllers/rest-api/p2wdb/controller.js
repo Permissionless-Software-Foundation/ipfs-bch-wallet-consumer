@@ -2,7 +2,7 @@
   REST API Controller library for the /p2wdb route
 */
 
-const { wlogger } = require('../../../adapters/wlogger')
+import wlogger from '../../../adapters/wlogger.js'
 
 // let _this
 
@@ -135,4 +135,5 @@ class P2wdbRESTControllerLib {
   }
 }
 
-module.exports = P2wdbRESTControllerLib
+// module.exports = P2wdbRESTControllerLib
+export default P2wdbRESTControllerLib

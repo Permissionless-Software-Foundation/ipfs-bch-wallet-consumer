@@ -131,4 +131,4 @@ class BchUseCaseMock {
 }
 const bch = new BchUseCaseMock()
 
-module.exports = { ipfs, localdb, bch }
+export default { ipfs, localdb, bch }

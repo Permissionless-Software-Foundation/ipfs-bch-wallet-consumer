@@ -2,8 +2,8 @@
   REST API Controller library for the /bch route
 */
 
-const { wlogger } = require('../../../adapters/wlogger')
-const config = require('../../../../config')
+import wlogger from '../../../adapters/wlogger.js'
+import config from '../../../../config/index.js'
 
 // let _this
 
@@ -739,4 +739,5 @@ class BchRESTControllerLib {
   }
 }
 
-module.exports = BchRESTControllerLib
+// module.exports = BchRESTControllerLib
+export default BchRESTControllerLib

@@ -2,8 +2,8 @@
   REST API Controller library for the /bch route
 */
 
-const axios = require('axios')
-const { wlogger } = require('../../../adapters/wlogger')
+import axios from 'axios'
+import wlogger from '../../../adapters/wlogger.js'
 
 // let _this
 
@@ -105,4 +105,5 @@ class PriceRESTControllerLib {
   }
 }
 
-module.exports = PriceRESTControllerLib
+// module.exports = PriceRESTControllerLib
+export default PriceRESTControllerLib

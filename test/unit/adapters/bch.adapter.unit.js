@@ -5,19 +5,20 @@
 */
 
 // Public npm libraries
-const assert = require('chai').assert
-const sinon = require('sinon')
-const EventEmitter = require('events')
-const cloneDeep = require('lodash.clonedeep')
+import { assert } from 'chai'
+import sinon from 'sinon'
+import EventEmitter from 'events'
+import cloneDeep from 'lodash.clonedeep'
 
 // Local support libraries
 // const testUtils = require('../../utils/test-utils')
 
 // Unit under test (uut)
-const BchAdapter = require('../../../src/adapters/bch')
-const adapters = require('../mocks/adapters')
+import BchAdapter from '../../../src/adapters/bch/index.js'
+import adapters from '../mocks/adapters/index.js'
+import mockDataLib from '../mocks/use-cases/rest-api-mocks.js'
+
 const eventEmitter = new EventEmitter()
-const mockDataLib = require('../mocks/use-cases/rest-api-mocks')
 
 describe('#bch-use-case', () => {
   let uut
