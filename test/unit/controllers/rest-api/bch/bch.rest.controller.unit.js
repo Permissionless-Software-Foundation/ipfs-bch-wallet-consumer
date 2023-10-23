@@ -11,7 +11,7 @@ import adapters from '../../../mocks/adapters/index.js'
 import UseCasesMock from '../../../mocks/use-cases/index.js'
 
 import BchController from '../../../../../src/controllers/rest-api/bch/controller.js'
-// import { context } from '../../../../unit/mocks/ctx-mock.js'
+import { context } from '../../../../unit/mocks/ctx-mock.js'
 // import blah '../../../../unit/mocks/ctx-mock.js'
 // console.log('blah: ', blah)
 let uut
@@ -28,7 +28,7 @@ describe('#BCH-REST-Controller', () => {
     sandbox = sinon.createSandbox()
 
     // Mock the context object.
-    // ctx = mockContext()
+    ctx = context()
   })
 
   afterEach(() => sandbox.restore())

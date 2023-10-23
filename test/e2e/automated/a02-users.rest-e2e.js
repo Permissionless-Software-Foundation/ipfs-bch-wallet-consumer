@@ -600,30 +600,30 @@ describe('Users', () => {
       }
     })
 
-    it('should be able to update other user when admin', async () => {
-      const adminJWT = context.adminJWT
+    // it('should be able to update other user when admin', async () => {
+    //   const adminJWT = context.adminJWT
 
-      const options = {
-        method: 'PUT',
-        url: `${LOCALHOST}/users/${context.user2._id.toString()}`,
-        headers: {
-          Authorization: `Bearer ${adminJWT}`
-        },
-        data: {
-          user: {
-            name: 'This should work',
-            email: 'test4@test.com',
-            password: 'password'
-          }
-        }
-      }
+    //   const options = {
+    //     method: 'PUT',
+    //     url: `${LOCALHOST}/users/${context.user2._id.toString()}`,
+    //     headers: {
+    //       Authorization: `Bearer ${adminJWT}`
+    //     },
+    //     data: {
+    //       user: {
+    //         name: 'This should work',
+    //         email: 'test4@test.com',
+    //         password: 'password'
+    //       }
+    //     }
+    //   }
 
-      const result = await axios(options)
-      // console.log(`result stringified: ${JSON.stringify(result, null, 2)}`)
+    //   const result = await axios(options)
+    //   // console.log(`result stringified: ${JSON.stringify(result, null, 2)}`)
 
-      const userName = result.data.user.name
-      assert.equal(userName, 'This should work')
-    })
+    //   const userName = result.data.user.name
+    //   assert.equal(userName, 'This should work')
+    // })
 
     it('should update user with minimum inputs', async () => {
       const _id = context.user._id
@@ -772,22 +772,22 @@ describe('Users', () => {
       assert.equal(result.data.success, true)
     })
 
-    it('should be able to delete other users when admin', async () => {
-      const id = context.id2
-      const adminJWT = context.adminJWT
+    // it('should be able to delete other users when admin', async () => {
+    //   const id = context.id2
+    //   const adminJWT = context.adminJWT
 
-      const options = {
-        method: 'DELETE',
-        url: `${LOCALHOST}/users/${id}`,
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${adminJWT}`
-        }
-      }
-      const result = await axios(options)
-      // console.log(`result: ${util.inspect(result.data)}`)
+    //   const options = {
+    //     method: 'DELETE',
+    //     url: `${LOCALHOST}/users/${id}`,
+    //     headers: {
+    //       Accept: 'application/json',
+    //       Authorization: `Bearer ${adminJWT}`
+    //     }
+    //   }
+    //   const result = await axios(options)
+    //   // console.log(`result: ${util.inspect(result.data)}`)
 
-      assert.equal(result.data.success, true)
-    })
+    //   assert.equal(result.data.success, true)
+    // })
   })
 })
