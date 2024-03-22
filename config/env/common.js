@@ -1,6 +1,11 @@
 /*
   This file is used to store unsecure, application-specific data common to all
   environments.
+
+  Additional Environent Variables:
+  - CONNECT_PREF: should have a value of 'cr' (default), or 'direct'. This is
+    used by helia-coord to select a connection preference between peers. Servers
+    with an ip4 or ip6 address should use 'direct'.
 */
 
 /* eslint  no-unneeded-ternary:0 */
@@ -104,11 +109,20 @@ export default {
     : '',
 
   // Settings for production, using external go-ipfs node.
-  isProduction: process.env.CONSUMER_ENV === 'production' ? true : false,
+  isProduction: process.env.SVC_ENV === 'prod' ? true : false,
   ipfsHost: process.env.IPFS_HOST ? process.env.IPFS_HOST : 'localhost',
   ipfsApiPort: process.env.IPFS_API_PORT
     ? parseInt(process.env.IPFS_API_PORT)
     : 5001,
 
-  chatPubSubChan: 'psf-ipfs-chat-001'
+  chatPubSubChan: 'psf-ipfs-chat-001',
+
+  // This can add specific Circuit Relay v2 servers to connect to.
+  bootstrapRelays: [
+    // v2 Circuit Relay (Token Tiger)
+    // '/ip4/137.184.93.145/tcp/8001/p2p/12D3KooWGMEKkdJfyZbwdH9EafZbRTtMn7FnhWPrE4MhRty2763g',
+
+    // v2 Circuit Relay server (FullStack.cash)
+    // '/ip4/78.46.129.7/tcp/4001/p2p/12D3KooWFQ11GQ5NubsJGhYZ4X3wrAGimLevxfm6HPExCrMYhpSL'
+  ]
 }

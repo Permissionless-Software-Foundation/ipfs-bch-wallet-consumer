@@ -68,13 +68,10 @@ class IPFS {
   }
 
   // Get the status of this IPFS node.
+  // Create an object with different metrics about this IPFS node, then return
+  // the object.
   getStatus () {
     try {
-      // console.log(
-      //   'this.ipfsCoordAdapter.ipfsCoord.thisNode: ',
-      //   this.ipfsCoordAdapter.ipfsCoord.thisNode
-      // )
-
       const statusObj = {
         ipfsId: this.ipfsCoordAdapter.ipfsCoord.thisNode.ipfsId,
         multiAddrs: this.ipfsCoordAdapter.ipfsCoord.thisNode.ipfsMultiaddrs,
@@ -94,10 +91,10 @@ class IPFS {
 
   // Get details on the other peers this node is connected to.
   async getPeers (showAll) {
-    const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
-    // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
-
     try {
+      const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+
       let ipfsPeers =
         await this.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.getPeers()
       // console.log('ipfsPeers: ', ipfsPeers)
@@ -105,25 +102,30 @@ class IPFS {
       ipfsPeers = this._removeDuplicatePeers(ipfsPeers)
       // console.log('filtered ipfsPeers: ', ipfsPeers)
 
+      const peerDataOut = []
+
       // Loop through each IPFS peer and hydrate it with data from the peerData.
       for (let i = 0; i < ipfsPeers.length; i++) {
-        const thisPeer = ipfsPeers[i]
-
-        if (!showAll) {
-          // Delete properties that don't contain good info.
-          delete thisPeer.muxer
-          delete thisPeer.latency
-          delete thisPeer.streams
+        const thisPeer = {
+          peer: ipfsPeers[i]
         }
+
+        // if (!showAll) {
+        //   // Delete properties that don't contain good info.
+        //   delete thisPeer.muxer
+        //   delete thisPeer.latency
+        //   delete thisPeer.streams
+        // }
 
         // Get the ipfs-coord peer data for this peer.
         let thisPeerData = peerData.filter((x) =>
           x.from.includes(thisPeer.peer)
         )
         thisPeerData = thisPeerData[0]
+        // console.log('thisPeerData: ', thisPeerData)
 
         // Skip if peerData for this IPFS peer could not be found.
-        if (!thisPeerData) continue
+        // if (!thisPeerData) continue
 
         try {
           // console.log('thisPeerData: ', thisPeerData)
@@ -132,22 +134,34 @@ class IPFS {
           thisPeer.name = thisPeerData.data.jsonLd.name
           thisPeer.protocol = thisPeerData.data.jsonLd.protocol
           thisPeer.version = thisPeerData.data.jsonLd.version
+          thisPeer.connectionAddr = thisPeerData.data.connectionAddr
 
           if (showAll) {
             // Add all the peer data.
             thisPeer.peerData = thisPeerData
           }
         } catch (err) {
-          console.log(`Error trying to hydrate peer ${thisPeer.peer}: ${err}`)
-          console.log('peerData: ', peerData)
+          console.warn(
+            `warning: ${thisPeer.peer}: ${err.message}`
+          )
         }
+
+        peerDataOut.push(thisPeer)
       }
 
-      return ipfsPeers
+      return peerDataOut
     } catch (err) {
       console.error('Error in getPeers(): ', err)
       throw err
     }
+  }
+
+  // Expects an array of peers and returns an array of peers with duplicates
+  // removed.
+  // This function is used by getPeers()
+  _removeDuplicatePeers (arr) {
+    // https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
+    return arr.filter((v, i, a) => a.findIndex((t) => t === v) === i)
   }
 
   // Get data about the known Circuit Relays. Hydrate with data from peers list.
@@ -170,24 +184,21 @@ class IPFS {
         // If the peer couldn't be found, skip.
         if (!thisPeer.length) {
           thisRelay.name = ''
+          thisRelay.description = ''
           continue
         }
 
         thisRelay.name = thisPeer[0].data.jsonLd.name
+        thisRelay.description = thisPeer[0].data.jsonLd.description
       }
 
-      return relayData
+      const v1Relays = this.config.v1Relays
+
+      return { v2Relays: relayData, v1Relays }
     } catch (err) {
       console.error('Error in getRelays(): ', err)
       throw err
     }
-  }
-
-  // Expects an array of peers and returns an array of peers with duplicates
-  // removed.
-  _removeDuplicatePeers (arr) {
-    // https://stackoverflow.com/questions/2218999/how-to-remove-all-duplicates-from-an-array-of-objects
-    return arr.filter((v, i, a) => a.findIndex((t) => t.peer === v.peer) === i)
   }
 }
 
