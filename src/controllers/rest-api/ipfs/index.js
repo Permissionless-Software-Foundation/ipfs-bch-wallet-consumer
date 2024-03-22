@@ -11,7 +11,7 @@ import Validators from '../middleware/validators.js'
 
 // let _this
 
-class BchRouter {
+class IpfsRouter {
   constructor (localConfig = {}) {
     // Dependency Injection.
     this.adapters = localConfig.adapters
@@ -54,16 +54,14 @@ class BchRouter {
     this.router.get('/', this.ipfsRESTController.getStatus)
     this.router.post('/peers', this.ipfsRESTController.getPeers)
     this.router.post('/relays', this.ipfsRESTController.getRelays)
+    this.router.post('/connect', this.ipfsRESTController.connect)
+    this.router.get('/node', this.ipfsRESTController.getThisNode)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
     app.use(this.router.allowedMethods())
   }
-
-  // async getStatus (ctx, next) {
-  //   await _this.ipfsRESTController.getStatus(ctx, next)
-  // }
 }
 
 // module.exports = BchRouter
-export default BchRouter
+export default IpfsRouter
