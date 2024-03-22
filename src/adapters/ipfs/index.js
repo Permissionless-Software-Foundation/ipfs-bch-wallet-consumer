@@ -98,8 +98,6 @@ class IPFS {
     // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
 
     try {
-      
-
       let ipfsPeers =
         await this.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.getPeers()
       // console.log('ipfsPeers: ', ipfsPeers)
