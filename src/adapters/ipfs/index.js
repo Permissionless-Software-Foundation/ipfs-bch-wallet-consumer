@@ -94,9 +94,11 @@ class IPFS {
 
   // Get details on the other peers this node is connected to.
   async getPeers (showAll) {
+    const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
+    // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+
     try {
-      const peerData = this.ipfsCoordAdapter.ipfsCoord.thisNode.peerData
-      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+      
 
       let ipfsPeers =
         await this.ipfsCoordAdapter.ipfsCoord.adapters.ipfs.getPeers()
@@ -138,9 +140,8 @@ class IPFS {
             thisPeer.peerData = thisPeerData
           }
         } catch (err) {
-          console.log(
-            `Error trying to hydrate peer ${thisPeer.peer}: ${err.message}`
-          )
+          console.log(`Error trying to hydrate peer ${thisPeer.peer}: ${err}`)
+          console.log('peerData: ', peerData)
         }
       }
 
