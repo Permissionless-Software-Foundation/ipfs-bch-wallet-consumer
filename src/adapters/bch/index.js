@@ -102,7 +102,7 @@ class BchAdapter {
       return outObj
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getStatus()')
+      wlogger.error('Error in adapters/bch.js/getStatus()')
       throw err
     }
   }
@@ -115,7 +115,7 @@ class BchAdapter {
       return true
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getStatus()')
+      wlogger.error('Error in adapters/bch.js/getStatus()')
       throw err
     }
   }
@@ -160,7 +160,7 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getBalances()')
+      wlogger.error('Error in adapters/bch.js/getBalances()')
       throw err
     }
   }
@@ -203,7 +203,7 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getUtxos()')
+      wlogger.error('Error in adapters/bch.js/getUtxos()')
       throw err
     }
   }
@@ -257,7 +257,7 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getUtxosBulk()')
+      wlogger.error('Error in adapters/bch.js/getUtxosBulk()')
       throw err
     }
   }
@@ -608,8 +608,8 @@ class BchAdapter {
         }
 
         // Wait between loops.
-        // await this.sleep(1000)
-        await this.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
+        await this.sleep(2000)
+        // await this.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
 
         cnt++
 
@@ -619,9 +619,13 @@ class BchAdapter {
 
       return data
     } catch (err) {
-      console.error('Error in waitForRPCResponse()')
+      console.error('Error in waitForRPCResponse(): ', err)
       throw err
     }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 

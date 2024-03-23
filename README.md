@@ -47,6 +47,15 @@ docker-compose up -d
 - You can bring the containers down with `docker-compose down`
 - You can bring the containers back up with `docker-compose up -d`.
 
+## Configuration
+
+This program is intended to started with a Bash shell script. In that script, you can set the following environment variables:
+
+```bash
+# The IPFS ID of the service running ipfs-bch-wallet-service
+export PREFERRED_P2WDB_PROVIDER=12D3KooWCNpwHbHmkNSJsqu3CQVVe3iW8g6e1gn3kWTPahj2igiy
+```
+
 ## Code Structure
 
 The file layout of this repository differs from the koa-api-boilerplate. Instead, it follows the file layout of [Clean Architecture](https://christroutner.github.io/trouts-blog/blog/clean-architecture).
