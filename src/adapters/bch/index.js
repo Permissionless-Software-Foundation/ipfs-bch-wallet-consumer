@@ -102,7 +102,7 @@ class BchAdapter {
       return outObj
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getStatus()')
+      wlogger.error('Error in adapters/bch.js/getStatus()')
       throw err
     }
   }
@@ -115,7 +115,7 @@ class BchAdapter {
       return true
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getStatus()')
+      wlogger.error('Error in adapters/bch.js/getStatus()')
       throw err
     }
   }
@@ -160,13 +160,17 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getBalances()')
+      wlogger.error('Error in adapters/bch.js/getBalances()')
       throw err
     }
   }
 
   async getUtxos (addr) {
     try {
+      if (!addr) {
+        throw new Error('addr required when calling getUtxos')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -203,7 +207,7 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getUtxos()')
+      wlogger.error('Error in adapters/bch.js/getUtxos()')
       throw err
     }
   }
@@ -257,13 +261,17 @@ class BchAdapter {
       return data
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in use-cases/bch.js/getUtxosBulk()')
+      wlogger.error('Error in adapters/bch.js/getUtxosBulk()')
       throw err
     }
   }
 
   async broadcast (hex) {
     try {
+      if (!hex) {
+        throw new Error('hex required when calling broadcast')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -308,6 +316,10 @@ class BchAdapter {
   async getTransactions (address, sortOrder = 'DESCENDING', page = 0) {
     try {
       console.log('Executing getTransaction() bch adapter')
+
+      if (!address) {
+        throw new Error('address required when calling getTransactions()')
+      }
 
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
@@ -354,6 +366,10 @@ class BchAdapter {
   // Get details on an array of TXIDs.
   async getTransaction (txids) {
     try {
+      if (!txids) {
+        throw new Error('txids required when calling getTransaction()')
+      }
+
       console.log(
         `Getting txData on these txids: ${JSON.stringify(txids, null, 2)}`
       )
@@ -401,6 +417,10 @@ class BchAdapter {
 
   async getPubKey (address) {
     try {
+      if (!address) {
+        throw new Error('address required when calling getPubKey()')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -443,6 +463,10 @@ class BchAdapter {
 
   async utxoIsValid (utxo) {
     try {
+      if (!utxo) {
+        throw new Error('utxo required when calling utxoIsValid()')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -485,6 +509,10 @@ class BchAdapter {
 
   async getTokenData (tokenId, withTxHistory = false) {
     try {
+      if (!tokenId) {
+        throw new Error('tokenId required when calling getTokenData()')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -529,6 +557,10 @@ class BchAdapter {
   // Get token icon and other media associated with the token.
   async getTokenData2 (tokenId, updateCache) {
     try {
+      if (!tokenId) {
+        throw new Error('tokenId required when calling getTokenData2()')
+      }
+
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
@@ -573,6 +605,10 @@ class BchAdapter {
   // Returns a promise that resolves to data when the RPC response is recieved.
   async waitForRPCResponse (rpcId) {
     try {
+      if (!rpcId) {
+        throw new Error('rpcId can not be false or undefined')
+      }
+
       // Initialize variables for tracking the return data.
       let dataFound = false
       let cnt = 0
@@ -608,20 +644,24 @@ class BchAdapter {
         }
 
         // Wait between loops.
-        // await this.sleep(1000)
-        await this.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
+        await this.sleep(2000)
+        // await this.ipfs.ipfsCoordAdapter.bchjs.Util.sleep(2000)
 
         cnt++
 
         // Exit if data was returned, or the window for a response expires.
       } while (!dataFound && cnt < 10)
-      // console.log(`dataFound: ${dataFound}, cnt: ${cnt}`)
+      console.log(`dataFound: ${dataFound}, cnt: ${cnt}`)
 
       return data
     } catch (err) {
-      console.error('Error in waitForRPCResponse()')
+      console.error('Error in waitForRPCResponse(): ', err)
       throw err
     }
+  }
+
+  sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
 

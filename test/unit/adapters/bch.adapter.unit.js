@@ -94,25 +94,12 @@ describe('#bch-use-case', () => {
 
     it('should catch and throw an error', async () => {
       try {
-        // Force an error
-        uut.ipfs.ipfsCoordAdapter.bchjs = {
-          Util: {
-            sleep: () => {
-              throw new Error('test error')
-            }
-          }
-        }
-
-        // Mock data.
-        const rpcId = '123'
-        uut.rpcDataQueue.push(mockData.rpcData)
-
-        await uut.waitForRPCResponse(rpcId)
+        await uut.waitForRPCResponse()
 
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log('error: ', err)
-        assert.include(err.message, 'test error')
+        assert.include(err.message, 'rpcId can not be false or undefined')
       }
     })
   })
@@ -156,6 +143,9 @@ describe('#bch-use-case', () => {
 
     it('should catch and throw an error', async () => {
       try {
+        // Force an error
+        sandbox.stub(uut, 'uid').throws(new Error('test error'))
+
         await uut.getBalances()
 
         assert.fail('Unexpected code path')
@@ -191,7 +181,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'addr required when calling getUtxos')
       }
     })
   })
@@ -267,7 +257,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'hex required when calling broadcast')
       }
     })
   })
@@ -297,7 +287,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'address required when calling getTransactions()')
       }
     })
   })
@@ -327,7 +317,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'txids required when calling getTransaction()')
       }
     })
   })
@@ -357,7 +347,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'address required when calling getPubKey()')
       }
     })
   })
@@ -387,7 +377,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'utxo required when calling utxoIsValid()')
       }
     })
   })
@@ -417,7 +407,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'tokenId required when calling getTokenData()')
       }
     })
   })
@@ -447,7 +437,7 @@ describe('#bch-use-case', () => {
         assert.fail('Unexpected code path')
       } catch (err) {
         // console.log(err)
-        assert.equal(err.message, 'test error')
+        assert.equal(err.message, 'tokenId required when calling getTokenData2()')
       }
     })
   })
