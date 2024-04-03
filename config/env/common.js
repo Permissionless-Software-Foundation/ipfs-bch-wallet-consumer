@@ -111,10 +111,10 @@ export default {
     '@type': 'WebAPI',
     name: ipfsCoordName,
     version,
-    protocol: 'generic-service',
+    protocol: 'ipfs-bch-wallet-consumer',
     description:
-      'This is a generic IPFS Serivice Provider that uses JSON RPC over IPFS to communicate with it. This instance has not been customized. Source code: https://github.com/Permissionless-Software-Foundation/ipfs-service-provider',
-    documentation: 'https://ipfs-service-provider.fullstack.cash/',
+      'REST API gateway for accessing BCH blockchain services over the web3 Cash Stack (https://CashStack.info)',
+    documentation: 'https://ipfs-bch-wallet-consumer.fullstack.cash/',
     provider: {
       '@type': 'Organization',
       name: 'Permissionless Software Foundation',

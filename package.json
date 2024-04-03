@@ -1,6 +1,6 @@
 {
   "name": "ipfs-bch-wallet-consumer",
-  "version": "3.0.0",
+  "version": "3.1.1",
   "description": "A (local) REST API that proxies BCH wallet services delivered over IPFS (global).",
   "main": "index.js",
   "type": "module",
