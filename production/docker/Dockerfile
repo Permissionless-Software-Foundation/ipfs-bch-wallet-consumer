@@ -69,7 +69,7 @@ RUN npm run docs
 VOLUME /home/safeuser/keys
 
 # Expose the port the API will be served on.
-EXPOSE 5010
+#EXPOSE 5010
 
 # Start the application.
 #COPY start-production.sh start-production.sh
