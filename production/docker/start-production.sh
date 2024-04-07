@@ -20,17 +20,17 @@ export COORD_NAME=bch-consumer-generic
 
 
 # Production database connection string.
-export DBURL=mongodb://172.17.0.1:5555/ipfs-bch-consumer-prod
+export DBURL=mongodb://172.17.0.1:5558/ipfs-bch-consumer-prod
 
 # Configure REST API port
-export PORT=5010
+export PORT=5015
 
 # Production settings using external go-ipfs node.
 export SVC_ENV=prod
 export IPFS_HOST=172.17.0.1
 export IPFS_API_PORT=5001
-export IPFS_TCP_PORT=4001
-export IPFS_WS_PORT=4003
+export IPFS_TCP_PORT=4101
+export IPFS_WS_PORT=4103
 
 # Set the debug level for helia-coord. 0-3.
 # 0 = no debug logs. 3 = maximum debug logs.

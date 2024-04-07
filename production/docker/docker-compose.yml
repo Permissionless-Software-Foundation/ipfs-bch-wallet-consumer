@@ -7,7 +7,7 @@ services:
     image: mongo:4.2.0
     container_name: mongo-bch-consumer
     ports:
-      - '5555:27017' # <host port>:<container port>
+      - '5558:27017' # <host port>:<container port>
     volumes:
       - ../data/database:/data/db
     command: mongod --logpath=/dev/null # -- quiet
@@ -26,9 +26,9 @@ services:
     links:
       - mongo-bch-consumer
     ports:
-      - '5010:5010' # <host port>:<container port>
-      - '4001:4001'
-      - '4003:4003'
+      - '5015:5015' # <host port>:<container port>
+      - '4101:4101'
+      - '4103:4103'
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-consumer/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-consumer/start-production.sh
