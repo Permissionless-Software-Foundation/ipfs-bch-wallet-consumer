@@ -3,6 +3,7 @@
 */
 
 // Global npm libraries
+import mime from 'mime-types'
 
 // Local libraries
 import wlogger from '../../../adapters/wlogger.js'
@@ -34,6 +35,7 @@ class IpfsRESTControllerLib {
     this.handleError = this.handleError.bind(this)
     this.connect = this.connect.bind(this)
     this.getThisNode = this.getThisNode.bind(this)
+    this.viewFile = this.viewFile.bind(this)
   }
 
   /**
@@ -121,6 +123,46 @@ class IpfsRESTControllerLib {
     } catch (err) {
       wlogger.error('Error in ipfs/controller.js/getThisNode(): ')
       // ctx.throw(422, err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/view/:cid Retrieve and display a file via its IPFS CID
+   * @apiPermission public
+   * @apiName GetCidView
+   * @apiGroup REST BCH
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/view/bafkreieaqtdhfywyddomswogynzymukosqqgqo7lkt5lch2zwfnc55m6om
+   *
+   */
+  async viewFile (ctx) {
+    try {
+      const { cid } = ctx.params
+
+      // const file = await this.adapters.ipfs.ipfs.blockstore.get(cid)
+      // return file
+
+      // const cid = ctx.params.cid
+
+      const { filename, readStream } = await this.useCases.ipfs.downloadCid({ cid })
+
+      // ctx.body = ctx.req.pipe(readStream)
+
+      // Lookup the mime type from the filename.
+      const contentType = mime.lookup(filename)
+
+      ctx.set('Content-Type', contentType)
+      ctx.set(
+        'Content-Disposition',
+        // 'inline; filename="' + filename + '"'
+        `inline; filename="${filename}"`
+      )
+      ctx.body = readStream
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/viewFile(): ', err)
       this.handleError(ctx, err)
     }
   }
