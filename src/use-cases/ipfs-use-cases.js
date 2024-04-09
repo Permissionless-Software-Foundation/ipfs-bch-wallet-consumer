@@ -6,7 +6,7 @@
 // import Wallet from 'minimal-slp-wallet'
 // import { CID } from 'multiformats'
 // import RetryQueue from '@chris.troutner/retry-queue'
-import { exporter } from 'ipfs-unixfs-exporter'
+// import { exporter } from 'ipfs-unixfs-exporter'
 import { Duplex } from 'stream'
 
 // Local libraries
@@ -26,11 +26,11 @@ class IpfsUseCases {
     }
 
     // Encapsulate dependencies
-    this.exporter = exporter
+    // this.exporter = exporter
 
     // Bind 'this' object to all class subfunctions.
     this.downloadCid = this.downloadCid.bind(this)
-    this.downloadCid2 = this.downloadCid2.bind(this)
+    // this.downloadCid2 = this.downloadCid2.bind(this)
   }
 
   // Download a pinned file, given its CID.
@@ -81,56 +81,56 @@ class IpfsUseCases {
     }
   }
 
-  async downloadCid2 (inObj = {}) {
-    try {
-      const { cid } = inObj
-
-      // console.log(`downloadFile() retrieving this CID: ${cid}, with fileName: ${fileName}, and path: ${path}`)
-
-      const blockstore = this.adapters.ipfs.ipfs.blockstore
-      const entry = await this.exporter(cid, blockstore)
-
-      console.info(entry.cid) // Qmqux
-      console.log('entry: ', entry)
-      // console.info(entry.unixfs.fileSize()) // 4
-
-      // const filePath = `${path}/${fileName}`
-      // console.log(`filePath: ${filePath}`)
-      // const writableStream = this.fs.createWriteStream(filePath)
-      //
-      // writableStream.on('error', this.writeStreamError)
-      //
-      // writableStream.on('finish', this.writeStreamFinished)
-      //
-
-      const fileChunks = []
-      for await (const buf of entry.content()) {
-        fileChunks.push(buf)
-      }
-      const fileBuf = Buffer.concat(fileChunks)
-
-      //
-      // writableStream.end()
-
-      // Convert the Buffer into a readable stream
-      const bufferToStream = (myBuffer) => {
-        const tmp = new Duplex()
-        tmp.push(myBuffer)
-        tmp.push(null)
-        return tmp
-      }
-      const readStream = bufferToStream(fileBuf)
-
-      const filename = 'test.jpg'
-
-      return { filename, readStream }
-
-      // return { cid }
-    } catch (err) {
-      console.error('Error in ipfs-use-cases.js/downloadCid()')
-      throw err
-    }
-  }
+  // async downloadCid2 (inObj = {}) {
+  //   try {
+  //     const { cid } = inObj
+  //
+  //     // console.log(`downloadFile() retrieving this CID: ${cid}, with fileName: ${fileName}, and path: ${path}`)
+  //
+  //     const blockstore = this.adapters.ipfs.ipfs.blockstore
+  //     const entry = await this.exporter(cid, blockstore)
+  //
+  //     console.info(entry.cid) // Qmqux
+  //     console.log('entry: ', entry)
+  //     // console.info(entry.unixfs.fileSize()) // 4
+  //
+  //     // const filePath = `${path}/${fileName}`
+  //     // console.log(`filePath: ${filePath}`)
+  //     // const writableStream = this.fs.createWriteStream(filePath)
+  //     //
+  //     // writableStream.on('error', this.writeStreamError)
+  //     //
+  //     // writableStream.on('finish', this.writeStreamFinished)
+  //     //
+  //
+  //     const fileChunks = []
+  //     for await (const buf of entry.content()) {
+  //       fileChunks.push(buf)
+  //     }
+  //     const fileBuf = Buffer.concat(fileChunks)
+  //
+  //     //
+  //     // writableStream.end()
+  //
+  //     // Convert the Buffer into a readable stream
+  //     const bufferToStream = (myBuffer) => {
+  //       const tmp = new Duplex()
+  //       tmp.push(myBuffer)
+  //       tmp.push(null)
+  //       return tmp
+  //     }
+  //     const readStream = bufferToStream(fileBuf)
+  //
+  //     const filename = 'test.jpg'
+  //
+  //     return { filename, readStream }
+  //
+  //     // return { cid }
+  //   } catch (err) {
+  //     console.error('Error in ipfs-use-cases.js/downloadCid()')
+  //     throw err
+  //   }
+  // }
 }
 
 export default IpfsUseCases
