@@ -373,6 +373,7 @@ class IpfsCoordAdapter {
             thisPeer === _this.config.preferredIpfsFileProvider
           ) {
             _this.state.selectedIpfsFileProvider = thisPeer
+            console.log(`---->IPFS File service switched to preferred peer: ${thisPeer}`)
           }
 
           // console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)

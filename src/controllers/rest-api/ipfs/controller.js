@@ -36,6 +36,7 @@ class IpfsRESTControllerLib {
     this.connect = this.connect.bind(this)
     this.getThisNode = this.getThisNode.bind(this)
     this.viewFile = this.viewFile.bind(this)
+    this.getService = this.getService.bind(this)
   }
 
   /**
@@ -163,6 +164,33 @@ class IpfsRESTControllerLib {
     } catch (err) {
       // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/viewFile(): ', err)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/service Get the IPFS ID for the File Pin service
+   * @apiPermission public
+   * @apiName GetService
+   * @apiGroup REST BCH
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5020/ipfs/service
+   *
+   */
+  // Reports the ipfs-file-pin-service node that this app is using to retrieve
+  // file information.
+  async getService (ctx) {
+    try {
+      const selectedIpfsFileProvider = this.adapters.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+
+      ctx.body = {
+        success: true,
+        selectedIpfsFileProvider
+      }
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/getService(): ', err)
       this.handleError(ctx, err)
     }
   }
