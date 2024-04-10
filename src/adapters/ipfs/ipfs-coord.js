@@ -286,6 +286,10 @@ class IpfsCoordAdapter {
             _this.config.preferredProvider &&
             thisPeer === _this.config.preferredProvider
           ) {
+            if(_this.state.selectedServiceProvider !== thisPeer) {
+              console.log(`---->BCH wallet service switched to preferred peer: ${thisPeer}`)
+            }
+
             _this.state.selectedServiceProvider = thisPeer
           }
 
@@ -372,8 +376,11 @@ class IpfsCoordAdapter {
             _this.config.preferredIpfsFileProvider &&
             thisPeer === _this.config.preferredIpfsFileProvider
           ) {
+            if(_this.state.selectedIpfsFileProvider !== thisPeer) {
+              console.log(`---->IPFS File service switched to preferred peer: ${thisPeer}`)
+            }
+
             _this.state.selectedIpfsFileProvider = thisPeer
-            console.log(`---->IPFS File service switched to preferred peer: ${thisPeer}`)
           }
 
           // console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)

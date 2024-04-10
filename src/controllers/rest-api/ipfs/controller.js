@@ -43,7 +43,7 @@ class IpfsRESTControllerLib {
    * @api {get} /ipfs Get status on IPFS infrastructure
    * @apiPermission public
    * @apiName GetIpfsStatus
-   * @apiGroup REST BCH
+   * @apiGroup REST IPFS
    *
    * @apiExample Example usage:
    * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs
@@ -110,7 +110,7 @@ class IpfsRESTControllerLib {
    * @api {get} /ipfs/node Get a copy of the thisNode object from helia-coord
    * @apiPermission public
    * @apiName GetThisNode
-   * @apiGroup REST BCH
+   * @apiGroup REST IPFS
    *
    * @apiExample Example usage:
    * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/node
@@ -132,7 +132,7 @@ class IpfsRESTControllerLib {
    * @api {get} /ipfs/view/:cid Retrieve and display a file via its IPFS CID
    * @apiPermission public
    * @apiName GetCidView
-   * @apiGroup REST BCH
+   * @apiGroup REST IPFS
    *
    * @apiExample Example usage:
    * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/view/bafkreieaqtdhfywyddomswogynzymukosqqgqo7lkt5lch2zwfnc55m6om
@@ -172,14 +172,14 @@ class IpfsRESTControllerLib {
    * @api {get} /ipfs/service Get the IPFS ID for the File Pin service
    * @apiPermission public
    * @apiName GetService
-   * @apiGroup REST BCH
+   * @apiGroup REST IPFS
+   * @apiDescription Get the IPFS ID for the ipfs-file-pin-service node that
+   * this app is using to retrieve file data from.
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X GET localhost:5020/ipfs/service
+   * curl -H "Content-Type: application/json" -X GET localhost:5015/ipfs/service
    *
    */
-  // Reports the ipfs-file-pin-service node that this app is using to retrieve
-  // file information.
   async getService (ctx) {
     try {
       const selectedIpfsFileProvider = this.adapters.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
