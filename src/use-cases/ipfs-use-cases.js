@@ -54,6 +54,8 @@ class IpfsUseCases {
       //   throw new Error('File has not been pinned. Not available.')
       // }
 
+      await this.getCidMetadata({ cid })
+
       const helia = this.adapters.ipfs.ipfs
 
       // Convert the file to a Buffer.
@@ -77,6 +79,24 @@ class IpfsUseCases {
       return { filename, readStream }
     } catch (err) {
       console.error('Error in use-cases/ipfs.js/dowloadCid()')
+      throw err
+    }
+  }
+
+  // Given a CID, this function will retrieve file metadata from the
+  // ipfs-file-pin-service, using the IPFS JSON-RPC. This metadata includes
+  // the filename, which can be used to infer mime-type, so that it can be
+  // delivered to a web browser.
+  async getCidMetadata (inObj = {}) {
+    try {
+      const { cid } = inObj
+
+      const ipfsFiles = this.adapters.ipfsFiles
+
+      const metadata = await ipfsFiles.getFileMetadata({ cid })
+      console.log('getCidMetadata() metadata: ', metadata)
+    } catch (err) {
+      console.error('Error in getCidMetadata(): ', err)
       throw err
     }
   }

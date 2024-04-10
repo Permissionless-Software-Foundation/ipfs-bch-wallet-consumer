@@ -159,6 +159,11 @@ export default {
   // Preferred P2WDB provider
   preferredP2wdbProvider: process.env.PREFERRED_P2WDB_PROVIDER
     ? process.env.PREFERRED_P2WDB_PROVIDER
+    : '',
+
+  // Preferred P2WDB provider
+  preferredIpfsFileProvider: process.env.PREFERRED_IPFS_FILE_PROVIDER
+    ? process.env.PREFERRED_IPFS_FILE_PROVIDER
     : ''
 
 }

@@ -97,6 +97,7 @@ class JSONRPC {
         wlogger.info(
           `JSON RPC received from ${from}, ID: ${parsedData.payload.id}, type: ${parsedData.type}`
         )
+        // console.log('parsedData: ', JSON.stringify(parsedData, null, 2))
       }
       // console.log(`parsedData: ${JSON.stringify(parsedData, null, 2)}`)
 
@@ -112,6 +113,11 @@ class JSONRPC {
         if (parsedData.payload.result.method === 'bch') {
           console.log('routing to BCH adapter')
           retObj = await _this.adapters.bch.rpcHandler(parsedData)
+        }
+
+        if (parsedData.payload.result.method === 'file-pin') {
+          console.log('routing to IPFS Files adapter')
+          retObj = await _this.adapters.ipfsFiles.rpcHandler(parsedData)
         }
       } catch (err) {
         /* exit quietly */
