@@ -54,7 +54,7 @@ class IpfsUseCases {
       //   throw new Error('File has not been pinned. Not available.')
       // }
 
-      await this.getCidMetadata({ cid })
+      const filename = await this.getCidMetadata({ cid })
 
       const helia = this.adapters.ipfs.ipfs
 
@@ -74,7 +74,7 @@ class IpfsUseCases {
       }
       const readStream = bufferToStream(fileBuf)
 
-      const filename = 'test.jpg'
+      // const filename = 'test.jpg'
 
       return { filename, readStream }
     } catch (err) {
@@ -95,6 +95,10 @@ class IpfsUseCases {
 
       const metadata = await ipfsFiles.getFileMetadata({ cid })
       console.log('getCidMetadata() metadata: ', metadata)
+
+      const filename = metadata.fileMetadata.filename
+
+      return filename
     } catch (err) {
       console.error('Error in getCidMetadata(): ', err)
       throw err
