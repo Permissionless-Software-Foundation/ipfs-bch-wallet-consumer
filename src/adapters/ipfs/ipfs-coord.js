@@ -23,6 +23,8 @@ const MIN_BCH_WALLET_VERSION = '1.11.11'
 const WALLET_PROTOCOL = 'bch-wallet'
 const MIN_P2WDB_VERSION = '1.4.0'
 const P2WDB_PROTOCOL = 'p2wdb'
+const MIN_FILE_PIN_VERSION = '1.0.0'
+const FILE_PIN_PROTOCOL = 'ipfs-file-pin-service'
 
 let _this
 
@@ -56,9 +58,13 @@ class IpfsCoordAdapter {
 
     // Periodically poll services for available wallet service providers.
     this.pollBchServiceInterval = setInterval(this.pollForBchServices, 10000)
+    this.pollIpfsFileServiceInterval = setInterval(
+      this.pollForIpfsFileServices,
+      11000
+    )
     this.pollP2wdbServiceInterval = setInterval(
       this.pollForP2wdbServices,
-      11000
+      12000
     )
 
     // State object. TODO: Make this more robust.
@@ -66,7 +72,9 @@ class IpfsCoordAdapter {
       serviceProviders: [],
       selectedServiceProvider: '',
       p2wdbProviders: [],
-      selectedP2wdbProvider: ''
+      selectedP2wdbProvider: '',
+      ipfsFileProviders: [],
+      selectedIpfsFileProvider: ''
     }
 
     _this = this
@@ -278,6 +286,10 @@ class IpfsCoordAdapter {
             _this.config.preferredProvider &&
             thisPeer === _this.config.preferredProvider
           ) {
+            if (_this.state.selectedServiceProvider !== thisPeer) {
+              console.log(`---->BCH wallet service switched to preferred peer: ${thisPeer}`)
+            }
+
             _this.state.selectedServiceProvider = thisPeer
           }
 
@@ -304,6 +316,96 @@ class IpfsCoordAdapter {
       }
 
       console.error('Error in pollForBchServices(): ', err)
+      // Do not throw error. This is a top-level function.
+    }
+  }
+
+  // Poll the ipfs-coord coordination channel for available ipfs-file-pin-service
+  // providers. This method is called periodically by a timer-interval.
+  pollForIpfsFileServices () {
+    try {
+      // console.log('pollForIpfsFileServices() polling for BCH service')
+
+      // An array of IPFS IDs of other nodes in the coordination pubsub channel.
+      const peers = _this.ipfsCoord.thisNode.peerList
+      // console.log(`peers: ${JSON.stringify(peers, null, 2)}`)
+
+      // Array of objects. Each object is the IPFS ID of the peer and contains
+      // data about that peer.
+      const peerData = _this.ipfsCoord.thisNode.peerData
+      // console.log(`peerData: ${JSON.stringify(peerData, null, 2)}`)
+
+      for (let i = 0; i < peers.length; i++) {
+        const thisPeer = peers[i]
+        const thisData = peerData.filter((x) => x.from === thisPeer)
+        const thisPeerData = thisData[0]
+
+        // Create a 'fingerprint' that defines the wallet service.
+        const protocol = thisPeerData.data.jsonLd.protocol
+        const version = thisPeerData.data.jsonLd.version
+        // console.log(
+        //   `debug: peer ${thisPeer} uses protocol: ${protocol} v${version}`,
+        // )
+
+        let versionMatches = false
+        if (version) {
+          // versionMatches = _this.semver.gt(version, MIN_FILE_PIN_VERSION)
+          versionMatches = _this.semver.satisfies(version, `>=${MIN_FILE_PIN_VERSION}`)
+        }
+
+        // Ignore any peers that don't match the fingerprint for a BCH wallet
+        // service.
+        if (protocol && protocol.includes(FILE_PIN_PROTOCOL) && versionMatches) {
+          // console.log('Matching peer: ', thisPeerData)
+
+          // Temporary business logic.
+          // Use the first available wallet service detected.
+          if (_this.state.ipfsFileProviders.length === 0) {
+            _this.state.selectedIpfsFileProvider = thisPeer
+
+            // Persist the config setting, so it can be used by other commands.
+            // _this.conf.set('selectedService', thisPeer)
+            console.log(`---->IPFS File service selected: ${thisPeer}`)
+          }
+
+          // console.log('preferredProvider: ', _this.config.preferredProvider)
+
+          // If a preferred provider is set in the config file, then connect
+          // to the preferred provider when it's discovered.
+          if (
+            _this.config.preferredIpfsFileProvider &&
+            thisPeer === _this.config.preferredIpfsFileProvider
+          ) {
+            if (_this.state.selectedIpfsFileProvider !== thisPeer) {
+              console.log(`---->IPFS File service switched to preferred peer: ${thisPeer}`)
+            }
+
+            _this.state.selectedIpfsFileProvider = thisPeer
+          }
+
+          // console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
+
+          // Check if the peer has already been added to the list of providers.
+          const alreadyExists = _this.state.ipfsFileProviders.filter(
+            (x) => x === thisPeer
+          )
+
+          // Add the peer to the list of serviceProviders if it doesn't already
+          // exist in the list.
+          if (!alreadyExists.length) {
+            _this.state.ipfsFileProviders.push(thisPeer)
+          }
+        }
+      }
+    } catch (err) {
+      // catch and handle known failure mode.
+      if (
+        err.message.includes("Cannot read property 'peerList' of undefined")
+      ) {
+        return
+      }
+
+      console.error('Error in pollForIpfsFileServices(): ', err)
       // Do not throw error. This is a top-level function.
     }
   }

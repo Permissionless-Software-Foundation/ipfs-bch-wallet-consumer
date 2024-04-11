@@ -63,6 +63,7 @@ class BchRouter {
     this.router.post('/utxoIsValid', this.utxoIsValid)
     this.router.post('/getTokenData', this.getTokenData)
     this.router.post('/getTokenData2', this.getTokenData2)
+    this.router.get('/service', this.getService)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -115,6 +116,10 @@ class BchRouter {
 
   async getTokenData2 (ctx, next) {
     await _this.bchRESTController.getTokenData2(ctx, next)
+  }
+
+  async getService (ctx, next) {
+    await _this.bchRESTController.getService(ctx, next)
   }
 }
 

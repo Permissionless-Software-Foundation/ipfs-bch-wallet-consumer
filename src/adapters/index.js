@@ -15,6 +15,7 @@ import Passport from './passport.js'
 import Nodemailer from './nodemailer.js'
 import BCH from './bch/index.js'
 import P2WDB from './p2wdb/index.js'
+import IpfsFiles from './ipfs-files/index.js'
 
 // const { wlogger } = require('./wlogger')
 import JSONFiles from './json-files.js'
@@ -45,6 +46,7 @@ class Adapters {
     this.bch = new BCH(localConfig)
     this.p2wdb = new P2WDB(localConfig)
     this.wallet = new Wallet(localConfig)
+    this.ipfsFiles = new IpfsFiles(localConfig)
 
     // Get a valid JWT API key and instance bch-js.
     this.fullStackJwt = new FullStackJWT(config)

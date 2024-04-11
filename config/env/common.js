@@ -27,7 +27,7 @@ const ipfsCoordName = process.env.COORD_NAME
 
 export default {
   // Configure TCP port.
-  port: process.env.PORT || 5005,
+  port: process.env.PORT || 5015,
 
   // Password for HTML UI that displays logs.
   logPass: 'test',
@@ -159,6 +159,11 @@ export default {
   // Preferred P2WDB provider
   preferredP2wdbProvider: process.env.PREFERRED_P2WDB_PROVIDER
     ? process.env.PREFERRED_P2WDB_PROVIDER
+    : '',
+
+  // Preferred P2WDB provider
+  preferredIpfsFileProvider: process.env.PREFERRED_IPFS_FILE_PROVIDER
+    ? process.env.PREFERRED_IPFS_FILE_PROVIDER
     : ''
 
 }

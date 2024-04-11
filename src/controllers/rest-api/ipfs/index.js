@@ -56,6 +56,9 @@ class IpfsRouter {
     this.router.post('/relays', this.ipfsRESTController.getRelays)
     this.router.post('/connect', this.ipfsRESTController.connect)
     this.router.get('/node', this.ipfsRESTController.getThisNode)
+    this.router.get('/view/:cid', this.ipfsRESTController.viewFile)
+    this.router.get('/service', this.ipfsRESTController.getService)
+    this.router.get('/file-info/:cid', this.ipfsRESTController.getFileInfo)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())

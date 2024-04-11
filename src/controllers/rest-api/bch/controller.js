@@ -723,6 +723,33 @@ class BchRESTControllerLib {
     }
   }
 
+  /**
+   * @api {get} /bch/service Get the IPFS ID for the Wallet service
+   * @apiPermission public
+   * @apiName getService
+   * @apiGroup REST BCH
+   * @apiDescription Get the IPFS ID for the ipfs-bch-wallet-service node that
+   * this app is using to retrieve blockchain data from.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5015/bch/service
+   *
+   */
+  async getService (ctx) {
+    try {
+      const selectedServiceProvider = this.adapters.ipfs.ipfsCoordAdapter.state.selectedServiceProvider
+
+      ctx.body = {
+        success: true,
+        selectedServiceProvider
+      }
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/getService(): ', err)
+      this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
     // If an HTTP status is specified by the buisiness logic, use that.
