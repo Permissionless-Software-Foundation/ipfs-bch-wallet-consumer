@@ -37,6 +37,7 @@ class IpfsRESTControllerLib {
     this.getThisNode = this.getThisNode.bind(this)
     this.viewFile = this.viewFile.bind(this)
     this.getService = this.getService.bind(this)
+    this.getFileInfo = this.getFileInfo.bind(this)
   }
 
   /**
@@ -188,6 +189,34 @@ class IpfsRESTControllerLib {
         success: true,
         selectedIpfsFileProvider
       }
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/getService(): ', err)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/file-info/:cid Get file pin info about a CID
+   * @apiPermission public
+   * @apiName GetFileInfo
+   * @apiGroup REST IPFS
+   * @apiDescription Get file metadata and pin status information give a CID.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5015/ipfs/file-info/bafkreieaqtdhfywyddomswogynzymukosqqgqo7lkt5lch2zwfnc55m6om
+   *
+   */
+  async getFileInfo (ctx) {
+    try {
+      const { cid } = ctx.params
+
+      const ipfsFiles = this.adapters.ipfsFiles
+
+      const metadata = await ipfsFiles.getFileMetadata({ cid })
+      console.log('getCidMetadata() metadata: ', metadata)
+
+      ctx.body = metadata
     } catch (err) {
       // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/getService(): ', err)
