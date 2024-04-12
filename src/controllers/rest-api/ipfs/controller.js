@@ -38,6 +38,7 @@ class IpfsRESTControllerLib {
     this.viewFile = this.viewFile.bind(this)
     this.getService = this.getService.bind(this)
     this.getFileInfo = this.getFileInfo.bind(this)
+    this.getPins = this.getPins.bind(this)
   }
 
   /**
@@ -220,6 +221,34 @@ class IpfsRESTControllerLib {
     } catch (err) {
       // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/getService(): ', err)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/pins Get info on latest 20 pinned files
+   * @apiPermission public
+   * @apiName GetPins
+   * @apiGroup REST IPFS
+   * @apiDescription Returns an array of the latest 20 pinned files.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5015/ipfs/pins
+   *
+   */
+  async getPins (ctx) {
+    try {
+      // const { cid } = ctx.params
+
+      const ipfsFiles = this.adapters.ipfsFiles
+
+      const pinData = await ipfsFiles.getPins()
+      console.log('getPins() pinData: ', pinData)
+
+      ctx.body = pinData
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/getPins(): ', err)
       this.handleError(ctx, err)
     }
   }
