@@ -176,6 +176,48 @@ class IpfsFilesAdapter {
     }
   }
 
+  // Get an array of the latest 20 pinned files.
+  async getPins (inObj = {}) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // wallet service provider.
+      const selectedProvider =
+      this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+      if (!selectedProvider) {
+        throw new Error('No IPFS File Pin Service provider available yet.')
+      }
+
+      const rpcData = {
+        endpoint: 'getPins'
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'file-pin', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+      // console.log('getFileMetadata() data: ', data)
+
+      return data
+    } catch (err) {
+      wlogger.error('Error in adapters/files/getPins()')
+      throw err
+    }
+  }
+
   // Returns a promise that resolves to data when the RPC response is recieved.
   async waitForRPCResponse (rpcId) {
     try {
