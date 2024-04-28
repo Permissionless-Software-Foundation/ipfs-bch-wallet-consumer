@@ -20,7 +20,7 @@ import config from '../../../config/index.js'
 
 // The minimum version of ipfs-bch-wallet-service that this wallet can work with.
 const MIN_BCH_WALLET_VERSION = '1.11.11'
-const WALLET_PROTOCOL = 'bch-wallet'
+const WALLET_PROTOCOL = 'bch-wallet-service'
 const MIN_P2WDB_VERSION = '1.4.0'
 const P2WDB_PROTOCOL = 'p2wdb'
 const MIN_FILE_PIN_VERSION = '1.0.0'
