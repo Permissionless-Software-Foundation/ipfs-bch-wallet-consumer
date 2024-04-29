@@ -96,6 +96,10 @@ class IpfsUseCases {
       const metadata = await ipfsFiles.getFileMetadata({ cid })
       console.log('getCidMetadata() metadata: ', metadata)
 
+      if (metadata.success === false) {
+        throw new Error(metadata.message)
+      }
+
       const filename = metadata.fileMetadata.filename
 
       return filename

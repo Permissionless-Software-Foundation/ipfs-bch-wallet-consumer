@@ -47,7 +47,7 @@ const peerData = [
         '@type': 'WebAPI',
         name: 'trout-bch-wallet-service-dev',
         version: '1.11.12',
-        protocol: 'bch-wallet',
+        protocol: 'bch-wallet-service',
         description:
           'IPFS service providing BCH blockchain access needed by a wallet.',
         documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
