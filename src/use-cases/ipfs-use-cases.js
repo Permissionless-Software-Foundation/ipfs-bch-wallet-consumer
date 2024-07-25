@@ -8,6 +8,7 @@
 // import RetryQueue from '@chris.troutner/retry-queue'
 // import { exporter } from 'ipfs-unixfs-exporter'
 import { Duplex } from 'stream'
+import PSFFPP from 'psffpp'
 
 // Local libraries
 // import PinEntity from '../entities/pin.js'
@@ -31,6 +32,7 @@ class IpfsUseCases {
     // Bind 'this' object to all class subfunctions.
     this.downloadCid = this.downloadCid.bind(this)
     // this.downloadCid2 = this.downloadCid2.bind(this)
+    this.getWritePrice = this.getWritePrice.bind(this)
   }
 
   // Download a pinned file, given its CID.
@@ -79,6 +81,25 @@ class IpfsUseCases {
       return { filename, readStream }
     } catch (err) {
       console.error('Error in use-cases/ipfs.js/dowloadCid()')
+      throw err
+    }
+  }
+
+  // Get the price (in PSF tokens) to pin 1MB to the PSFFPP network. This price
+  // is set on-chain by the PSF Minting Council. PSFoundation.cash
+  async getWritePrice (inObj = {}) {
+    try {
+      console.log('getWritePrice() called')
+
+      const wallet = this.adapters.wallet
+
+      const psffpp = new PSFFPP({ wallet })
+
+      const writePrice = await psffpp.getMcWritePrice()
+
+      return writePrice
+    } catch (err) {
+      console.error('Error in use-cases/ipfs.js/getWritePrice()')
       throw err
     }
   }

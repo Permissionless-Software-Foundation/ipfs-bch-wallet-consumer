@@ -28,7 +28,10 @@ class PriceRESTControllerLib {
     // this.UserModel = this.adapters.localdb.Users
     // this.userUseCases = this.useCases.user
 
-    // _this = this
+    // Bind 'this' object to all subfunctions
+    this.getUSD = this.getUSD.bind(this)
+    this.getXecPrice = this.getXecPrice.bind(this)
+    this.getPsffppWritePrice = this.getPsffppWritePrice.bind(this)
   }
 
   /**
@@ -84,6 +87,22 @@ class PriceRESTControllerLib {
     } catch (err) {
       // Write out error to error log.
       wlogger.error('Error in GET /price/xecusd.', err)
+
+      this.handleError(ctx, err)
+    }
+  }
+
+  // Get the write price in PSF tokens to pin 1MB to the PSFFPP.
+  // TODO: Add API docs.
+  // curl -X GET http://localhost:5015/price/psffpp
+  async getPsffppWritePrice (ctx) {
+    try {
+      const psfPrice = await this.useCases.ipfs.getWritePrice()
+
+      ctx.body = { psfPrice }
+    } catch (err) {
+      // Write out error to error log.
+      wlogger.error('Error in GET /price/getPsffppWritePrice', err)
 
       this.handleError(ctx, err)
     }
