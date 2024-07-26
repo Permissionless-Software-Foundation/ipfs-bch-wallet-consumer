@@ -109,8 +109,8 @@ class IpfsUseCases {
       // Periodically re-validate the write-price (by re-instantiating the
       // PSFFPP library) in case it's changed.
       const now = new Date()
-      const sixHours = now.getTime() * 1000*60*60*6
-      if(this.lastWritePriceUpdate + sixHours < now.getTime()) {
+      const sixHours = now.getTime() * 1000 * 60 * 60 * 6
+      if (this.lastWritePriceUpdate + sixHours < now.getTime()) {
         this.psffpp = new PSFFPP({ wallet })
 
         this.lastWritePriceUpdate = now.getTime()
