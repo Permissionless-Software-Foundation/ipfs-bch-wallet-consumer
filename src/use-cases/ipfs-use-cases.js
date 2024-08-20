@@ -8,6 +8,7 @@
 // import RetryQueue from '@chris.troutner/retry-queue'
 // import { exporter } from 'ipfs-unixfs-exporter'
 import { Duplex } from 'stream'
+import PSFFPP from 'psffpp'
 
 // Local libraries
 // import PinEntity from '../entities/pin.js'
@@ -26,11 +27,15 @@ class IpfsUseCases {
     }
 
     // Encapsulate dependencies
-    // this.exporter = exporter
+    this.psffpp = null // placeholder
 
     // Bind 'this' object to all class subfunctions.
     this.downloadCid = this.downloadCid.bind(this)
     // this.downloadCid2 = this.downloadCid2.bind(this)
+    this.getWritePrice = this.getWritePrice.bind(this)
+
+    // State
+    this.lastWritePriceUpdate = null // Used to periodically update write price.
   }
 
   // Download a pinned file, given its CID.
@@ -79,6 +84,43 @@ class IpfsUseCases {
       return { filename, readStream }
     } catch (err) {
       console.error('Error in use-cases/ipfs.js/dowloadCid()')
+      throw err
+    }
+  }
+
+  // Get the price (in PSF tokens) to pin 1MB to the PSFFPP network. This price
+  // is set on-chain by the PSF Minting Council. PSFoundation.cash
+  async getWritePrice (inObj = {}) {
+    try {
+      const wallet = this.adapters.wallet.bchWallet
+      // console.log('getWritePrice() wallet: ', wallet)
+
+      // Instantiate the psffpp library if it hasn't already been.
+      // Dev Note: Important to only instantiate once, since the write price
+      // is cached by the psffpp library. Instantiating only once improves
+      // performance of price lookup.
+      if (!this.psffpp) {
+        this.psffpp = new PSFFPP({ wallet })
+
+        const now = new Date()
+        this.lastWritePriceUpdate = now.getTime()
+      }
+
+      // Periodically re-validate the write-price (by re-instantiating the
+      // PSFFPP library) in case it's changed.
+      const now = new Date()
+      const sixHours = now.getTime() * 1000 * 60 * 60 * 6
+      if (this.lastWritePriceUpdate + sixHours < now.getTime()) {
+        this.psffpp = new PSFFPP({ wallet })
+
+        this.lastWritePriceUpdate = now.getTime()
+      }
+
+      const writePrice = await this.psffpp.getMcWritePrice()
+
+      return writePrice
+    } catch (err) {
+      console.error('Error in use-cases/ipfs-use-cases.js/getWritePrice()')
       throw err
     }
   }

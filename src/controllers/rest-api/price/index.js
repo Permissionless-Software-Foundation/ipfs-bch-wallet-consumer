@@ -53,6 +53,7 @@ class PriceRouter {
     // Define the routes and attach the controller.
     this.router.get('/usd', this.getPrice)
     this.router.get('/xecusd', this.getXecPrice)
+    this.router.get('/psffpp', this.getPsffppWritePrice)
 
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
@@ -65,6 +66,10 @@ class PriceRouter {
 
   async getXecPrice (ctx, next) {
     await _this.priceRESTController.getXecPrice(ctx, next)
+  }
+
+  async getPsffppWritePrice (ctx, next) {
+    await _this.priceRESTController.getPsffppWritePrice(ctx, next)
   }
 }
 
