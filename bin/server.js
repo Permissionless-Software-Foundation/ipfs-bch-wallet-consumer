@@ -83,7 +83,10 @@ class Server {
       // Enable CORS for testing
       // THIS IS A SECURITY RISK. COMMENT OUT FOR PRODUCTION
       // Dev Note: This line must come BEFORE controllers.attachRESTControllers()
-      app.use(cors({ origin: '*' }))
+      app.use(cors({
+        origin: '*',
+        allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+      }))
 
       // Wait for any adapters to initialize.
       await this.controllers.initAdapters()
