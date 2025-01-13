@@ -20,7 +20,7 @@ import { yamux } from '@chainsafe/libp2p-yamux'
 // import { bootstrap } from '@libp2p/bootstrap'
 // import { identifyService } from 'libp2p/identify'
 import { identify } from '@libp2p/identify'
-// import { circuitRelayServer, circuitRelayTransport } from 'libp2p/circuit-relay'
+// import { circuitRelayServer, circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { circuitRelayServer } from '@libp2p/circuit-relay-v2'
 import { gossipsub } from '@chainsafe/libp2p-gossipsub'
 import { webSockets } from '@libp2p/websockets'
@@ -193,8 +193,8 @@ class IpfsAdapter {
           listen: [
             '/ip4/127.0.0.1/tcp/0',
             `/ip4/0.0.0.0/tcp/${this.config.ipfsTcpPort}`,
-            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`,
-            '/webrtc'
+            `/ip4/0.0.0.0/tcp/${this.config.ipfsWsPort}/ws`
+            // '/webrtc'
           ]
         },
         transports,
