@@ -177,27 +177,41 @@ class IpfsUseCases {
       if (!fileMetadata.dataPinned) {
         throw new Error(`CID ${cid} has not been pinned by ipfs-file-pin-service instance ${ipfsFileProvider}`)
       }
-      console.log('fileMetadata: ', fileMetadata)
+      // console.log('fileMetadata: ', fileMetadata)
 
       // Throw an error if this is not a JSON file
       const filename = fileMetadata.filename
       if (!filename.endsWith('.json')) {
         throw new Error(`CID ${cid} does not resolve to a JSON file.`)
       }
-      console.log('ping01')
       // Retrieve the CID content and store it in a Buffer.
       const helia = this.adapters.ipfs.ipfs
       const fileChunks = []
-      console.log('ping02')
-      for await (const chunk of helia.fs.cat(cid)) {
-        fileChunks.push(chunk)
+
+      // list cid content. This is used to determine if the CID is a file or a directory.
+      const contentArray = []
+      for await (const file of helia.fs.ls(cid)) {
+        contentArray.push(file)
       }
-      console.log('ping03')
+      // console.log('contentArray: ', contentArray)
+
+      try {
+        // Handle CIDs that are files.
+        for await (const chunk of helia.fs.cat(cid)) {
+          fileChunks.push(chunk)
+        }
+      } catch (err) {
+        // Handle CIDs that are directorys containing a JSON file. (TokenTiger.com tokens)
+        for await (const chunk of helia.fs.cat(`${cid}/${contentArray[0].name}`)) {
+          fileChunks.push(chunk)
+        }
+      }
+
       const fileBuf = Buffer.concat(fileChunks)
-      console.log('ping04')
+
       // Convert the Buffer into a string.
       const jsonStr = fileBuf.toString()
-      console.log('ping05')
+
       // Parse the string into a JSON object.
       let json = null
       try {
