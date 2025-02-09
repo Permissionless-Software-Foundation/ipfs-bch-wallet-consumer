@@ -33,6 +33,7 @@ class IpfsUseCases {
     this.downloadCid = this.downloadCid.bind(this)
     // this.downloadCid2 = this.downloadCid2.bind(this)
     this.getWritePrice = this.getWritePrice.bind(this)
+    this.cid2json = this.cid2json.bind(this)
 
     // State
     this.lastWritePriceUpdate = null // Used to periodically update write price.
@@ -147,6 +148,70 @@ class IpfsUseCases {
       return filename
     } catch (err) {
       console.error('Error in getCidMetadata(): ', err)
+      throw err
+    }
+  }
+
+  // Given a CID, this function will retrieve a JSON object from the
+  // ipfs-file-pin-service, using the IPFS JSON-RPC.
+  async cid2json (inObj = {}) {
+    try {
+      const { cid } = inObj
+      console.log('cid2json() cid: ', cid)
+
+      // Throw an error if ipfs-bch-wallet-consumer has not yet connected to an instance of ipfs-file-pin-service.
+      const ipfsFileProvider = this.adapters.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+      if (!ipfsFileProvider) {
+        throw new Error('No IPFS File Provider Service is available yet. Try again in a few seconds.')
+      }
+
+      // Throw an error if ipfs-bch-wallet-consumer can not communicate with the ipfs-file-pin-service.
+      const ipfsFiles = this.adapters.ipfsFiles
+      const metadata = await ipfsFiles.getFileMetadata({ cid })
+      if (metadata.success === false) {
+        throw new Error(`Could not communicate with instance of ipfs-file-pin-service ${ipfsFileProvider}. Try again in a few seconds.`)
+      }
+
+      // Throw an error if the file is not pinned.
+      const fileMetadata = metadata.fileMetadata
+      if (!fileMetadata.dataPinned) {
+        throw new Error(`CID ${cid} has not been pinned by ipfs-file-pin-service instance ${ipfsFileProvider}`)
+      }
+      console.log('fileMetadata: ', fileMetadata)
+
+      // Throw an error if this is not a JSON file
+      const filename = fileMetadata.filename
+      if (!filename.endsWith('.json')) {
+        throw new Error(`CID ${cid} does not resolve to a JSON file.`)
+      }
+      console.log('ping01')
+      // Retrieve the CID content and store it in a Buffer.
+      const helia = this.adapters.ipfs.ipfs
+      const fileChunks = []
+      console.log('ping02')
+      for await (const chunk of helia.fs.cat(cid)) {
+        fileChunks.push(chunk)
+      }
+      console.log('ping03')
+      const fileBuf = Buffer.concat(fileChunks)
+      console.log('ping04')
+      // Convert the Buffer into a string.
+      const jsonStr = fileBuf.toString()
+      console.log('ping05')
+      // Parse the string into a JSON object.
+      let json = null
+      try {
+        json = JSON.parse(jsonStr)
+      } catch (err) {
+        throw new Error(`CID ${cid} does not resolve to a valid JSON object.`)
+      }
+
+      return {
+        success: true,
+        json
+      }
+    } catch (err) {
+      console.error('Error in ipfs-use-cases.js/cid2json(): ', err.message)
       throw err
     }
   }
