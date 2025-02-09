@@ -39,6 +39,7 @@ class IpfsRESTControllerLib {
     this.getService = this.getService.bind(this)
     this.getFileInfo = this.getFileInfo.bind(this)
     this.getPins = this.getPins.bind(this)
+    this.cid2json = this.cid2json.bind(this)
   }
 
   /**
@@ -220,7 +221,7 @@ class IpfsRESTControllerLib {
       ctx.body = metadata
     } catch (err) {
       // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
-      console.log('Error in ipfs/controller.js/getService(): ', err)
+      console.log('Error in ipfs/controller.js/getFileInfo(): ', err)
       this.handleError(ctx, err)
     }
   }
@@ -253,8 +254,37 @@ class IpfsRESTControllerLib {
     }
   }
 
+  /**
+   * @api {get} /ipfs/cid2json/:cid Given a CID, retrieve a JSON object
+   * @apiPermission public
+   * @apiName GetCid2Json
+   * @apiGroup REST IPFS
+   * @apiDescription Given a CID, retrieve a JSON object.
+   * If the CID does not resolves to a JSON file, then an error is thrown.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5015/ipfs/cid2json/bafkreigbgrvpagnmrqz2vhofifrqobigsxkdvnvikf5iqrkrbwrzirazhm
+   *
+   */
+  async cid2json (ctx) {
+    try {
+      const { cid } = ctx.params
+
+      const json = await this.useCases.ipfs.cid2json({ cid })
+
+      ctx.body = json
+    } catch (err) {
+      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      console.log('Error in ipfs/controller.js/cid2json(): ', err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
   // DRY error handler
   handleError (ctx, err) {
+    // console.log('handleError() err.status: ', err.status)
+    // console.log('handleError() err.message: ', err.message)
+
     // If an HTTP status is specified by the buisiness logic, use that.
     if (err.status) {
       if (err.message) {
@@ -263,6 +293,7 @@ class IpfsRESTControllerLib {
         ctx.throw(err.status)
       }
     } else {
+      // console.log(`handleError() err.message: ${err.message}`)
       // By default use a 422 error if the HTTP status is not specified.
       ctx.throw(422, err.message)
     }
