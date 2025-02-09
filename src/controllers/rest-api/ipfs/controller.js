@@ -282,8 +282,9 @@ class IpfsRESTControllerLib {
 
   // DRY error handler
   handleError (ctx, err) {
-    console.log('handleError() err.status: ', err.status)
-    console.log('handleError() err.message: ', err.message)
+    // console.log('handleError() err.status: ', err.status)
+    // console.log('handleError() err.message: ', err.message)
+
     // If an HTTP status is specified by the buisiness logic, use that.
     if (err.status) {
       if (err.message) {
@@ -292,7 +293,7 @@ class IpfsRESTControllerLib {
         ctx.throw(err.status)
       }
     } else {
-      console.log(`handleError() err.message: ${err.message}`)
+      // console.log(`handleError() err.message: ${err.message}`)
       // By default use a 422 error if the HTTP status is not specified.
       ctx.throw(422, err.message)
     }

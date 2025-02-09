@@ -201,8 +201,15 @@ class IpfsUseCases {
           fileChunks.push(chunk)
         }
       } catch (err) {
+        // Extra logic here to look at the filename of the first file and make sure
+        // it ends in .json.
+        const name = contentArray[0].name
+        if (!name.endsWith('.json')) {
+          throw new Error(`CID ${cid} is a directory and its first file does not resolve to a valid JSON file.`)
+        }
+
         // Handle CIDs that are directorys containing a JSON file. (TokenTiger.com tokens)
-        for await (const chunk of helia.fs.cat(`${cid}/${contentArray[0].name}`)) {
+        for await (const chunk of helia.fs.cat(`${cid}/${name}`)) {
           fileChunks.push(chunk)
         }
       }
