@@ -26,10 +26,12 @@ services:
     links:
       - mongo-bch-consumer
     ports:
-      - '5015:5015' # <host port>:<container port>
-      - '4101:4101'
-      - '4103:4103'
-      - '4105:4105'
+      # <host port>:<container port>
+      - '5015:5015' # REST API
+      - '4101:4101' # TCP
+      - '4103:4103' # Websockets
+      - '4105:4105' # WebRTC
+
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-consumer/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-consumer/start-production.sh
