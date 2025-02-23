@@ -29,6 +29,7 @@ services:
       - '5015:5015' # <host port>:<container port>
       - '4101:4101'
       - '4103:4103'
+      - '4105:4105'
     volumes:
       - ../data/ipfsdata:/home/safeuser/ipfs-bch-wallet-consumer/.ipfsdata
       - ./start-production.sh:/home/safeuser/ipfs-bch-wallet-consumer/start-production.sh

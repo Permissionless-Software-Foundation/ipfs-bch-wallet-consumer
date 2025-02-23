@@ -56,7 +56,7 @@ RUN git clone https://github.com/Permissionless-Software-Foundation/ipfs-bch-wal
 WORKDIR /home/safeuser/ipfs-bch-wallet-consumer
 
 # For development: switch to unstable branch
-RUN git checkout ct-unstable
+RUN git checkout master
 
 # Install dependencies
 #RUN mkdir .ipfsdata
