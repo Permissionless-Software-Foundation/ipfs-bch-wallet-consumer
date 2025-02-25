@@ -45,6 +45,9 @@ class IpfsFilesAdapter {
     this.rpcHandler = this.rpcHandler.bind(this)
     this.getStatus = this.getStatus.bind(this)
     this.selectProvider = this.selectProvider.bind(this)
+    this.getFileMetadata = this.getFileMetadata.bind(this)
+    this.getPins = this.getPins.bind(this)
+    this.waitForRPCResponse = this.waitForRPCResponse.bind(this)
   }
 
   // This handler is triggered when RPC data comes in over IPFS.
@@ -120,7 +123,7 @@ class IpfsFilesAdapter {
       return true
     } catch (err) {
       // console.log('createUser() error: ', err)
-      wlogger.error('Error in adapters/files/getStatus()')
+      wlogger.error('Error in adapters/files/selectProvider()')
       throw err
     }
   }
