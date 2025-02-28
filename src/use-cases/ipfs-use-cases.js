@@ -9,6 +9,7 @@
 // import { exporter } from 'ipfs-unixfs-exporter'
 import { Duplex } from 'stream'
 import PSFFPP from 'psffpp'
+import { CID } from 'multiformats'
 
 // Local libraries
 // import PinEntity from '../entities/pin.js'
@@ -28,11 +29,13 @@ class IpfsUseCases {
 
     // Encapsulate dependencies
     this.psffpp = null // placeholder
+    this.CID = CID
 
     // Bind 'this' object to all class subfunctions.
     this.downloadCid = this.downloadCid.bind(this)
     // this.downloadCid2 = this.downloadCid2.bind(this)
     this.getWritePrice = this.getWritePrice.bind(this)
+    this.getCidMetadata = this.getCidMetadata.bind(this)
     this.cid2json = this.cid2json.bind(this)
 
     // State
@@ -43,7 +46,7 @@ class IpfsUseCases {
   // Returns a readable stream.
   async downloadCid (inObj = {}) {
     try {
-      const { cid } = inObj
+      let { cid } = inObj
 
       if (!cid) throw new Error('CID is undefined')
 
@@ -63,6 +66,47 @@ class IpfsUseCases {
       const filename = await this.getCidMetadata({ cid })
 
       const helia = this.adapters.ipfs.ipfs
+
+      const cidClass = this.CID.parse(cid)
+
+      // Download the file from other nodes.
+      await helia.blockstore.get(cidClass)
+
+      // list cid content, to dermine if this is a file-based or directory-based CID.
+      const contentArray = []
+      for await (const file of helia.fs.ls(cid)) {
+        contentArray.push(file)
+      }
+
+      // Handle directory-based CIDs. This is used by Token Tiger for mutable and immutable token data.
+      /**
+      *  If the cid is a directory
+       * The next block of code sends a html page with a list of links with the file names into the directory.
+       * Skipping this code delivers directly the first file detected in the directory.
+       */
+      const isDir = contentArray[0].path.match('/') // TODO : looking for a better way to detect if is a directory
+      // 'listDir' is a flag to ignore this code on /download endpoint.
+      if (isDir) {
+        console.log('This CID is a directory. contentArray[0]: ', contentArray[0])
+        cid = `${cid}/${contentArray[0].name}`
+
+        // throw new Error('CID is a directory. Not supported yet.')
+        // const stream = new Stream.Readable({ read () { } })
+        // for (let i = 0; i < contentArray.length; i++) {
+        //   const cont = contentArray[i]
+        //   // List all paths excluding root path.
+        //   if (cont.path !== cid) {
+        //     // Add links to the gateway with the format  cid/:filename
+        //     stream.push(`<a href='${this.config.domainName}/ipfs/view/${cid}/${cont.name}' >/${cont.name} ( CID:  ${cont.cid} )</a><hr />`)
+        //   }
+        // }
+
+        // stream.push(null)
+        // // return fileName as html because the controller the library <mime.lookup> sends it as html
+        // return { readStream: stream }
+      } else {
+        console.log('This CID is not a directory.')
+      }
 
       // Convert the file to a Buffer.
       const fileChunks = []

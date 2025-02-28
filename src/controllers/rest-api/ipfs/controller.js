@@ -40,6 +40,7 @@ class IpfsRESTControllerLib {
     this.getFileInfo = this.getFileInfo.bind(this)
     this.getPins = this.getPins.bind(this)
     this.cid2json = this.cid2json.bind(this)
+    this.downloadFile = this.downloadFile.bind(this)
   }
 
   /**
@@ -165,8 +166,30 @@ class IpfsRESTControllerLib {
       )
       ctx.body = readStream
     } catch (err) {
-      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/viewFile(): ', err)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {get} /ipfs/download/:cid Download a file via its IPFS CID
+   * @apiPermission public
+   * @apiName GetCidDownload
+   * @apiGroup REST IPFS
+   * @apiDescription Download a file via its IPFS CID. Returns a readable stream.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X GET localhost:5001/ipfs/download/bafkreieaqtdhfywyddomswogynzymukosqqgqo7lkt5lch2zwfnc55m6om
+   */
+  async downloadFile (ctx) {
+    try {
+      const { cid } = ctx.params
+
+      const { readStream } = await this.useCases.ipfs.downloadCid({ cid })
+
+      ctx.body = readStream
+    } catch (err) {
+      console.log('Error in ipfs/controller.js/downloadFile(): ', err)
       this.handleError(ctx, err)
     }
   }
@@ -192,7 +215,7 @@ class IpfsRESTControllerLib {
         selectedIpfsFileProvider
       }
     } catch (err) {
-      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
+      // wlogger.error('Error in ipfs/controller.js/getService(): ', err)
       console.log('Error in ipfs/controller.js/getService(): ', err)
       this.handleError(ctx, err)
     }
@@ -220,7 +243,6 @@ class IpfsRESTControllerLib {
 
       ctx.body = metadata
     } catch (err) {
-      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/getFileInfo(): ', err)
       this.handleError(ctx, err)
     }
@@ -248,7 +270,6 @@ class IpfsRESTControllerLib {
 
       ctx.body = pinData
     } catch (err) {
-      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/getPins(): ', err)
       this.handleError(ctx, err)
     }
@@ -274,7 +295,6 @@ class IpfsRESTControllerLib {
 
       ctx.body = json
     } catch (err) {
-      // wlogger.error('Error in ipfs/controller.js/viewFile(): ', err)
       console.log('Error in ipfs/controller.js/cid2json(): ', err.message)
       this.handleError(ctx, err)
     }

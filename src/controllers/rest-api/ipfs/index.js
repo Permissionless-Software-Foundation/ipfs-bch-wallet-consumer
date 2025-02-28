@@ -57,6 +57,7 @@ class IpfsRouter {
     this.router.post('/connect', this.ipfsRESTController.connect)
     this.router.get('/node', this.ipfsRESTController.getThisNode)
     this.router.get('/view/:cid', this.ipfsRESTController.viewFile)
+    this.router.get('/download/:cid', this.ipfsRESTController.downloadFile)
     this.router.get('/service', this.ipfsRESTController.getService)
     this.router.get('/file-info/:cid', this.ipfsRESTController.getFileInfo)
     this.router.get('/pins', this.ipfsRESTController.getPins)
