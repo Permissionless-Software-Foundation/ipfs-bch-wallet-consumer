@@ -41,6 +41,7 @@ class IpfsRESTControllerLib {
     this.getPins = this.getPins.bind(this)
     this.cid2json = this.cid2json.bind(this)
     this.downloadFile = this.downloadFile.bind(this)
+    this.pinClaim = this.pinClaim.bind(this)
   }
 
   /**
@@ -294,6 +295,29 @@ class IpfsRESTControllerLib {
       const json = await this.useCases.ipfs.cid2json({ cid })
 
       ctx.body = json
+    } catch (err) {
+      console.log('Error in ipfs/controller.js/cid2json(): ', err.message)
+      this.handleError(ctx, err)
+    }
+  }
+
+  /**
+   * @api {post} /ipfs/pin-claim Process pin claim.
+   * @apiPermission public
+   * @apiName PinClaim
+   * @apiGroup REST IPFS
+   * @apiDescription Process pin claim.
+   *
+   * @apiExample Example usage:
+   * curl -H "Content-Type: application/json" -X POST -d '{ "proofOfBurnTxid": "be4b63156c93f58ed311d403d9f756deda9abbc81d0fef8fbe5d769538b4261c", "cid": "bafybeied3zdwdiro7fqytyha2yfband4lwcrtozmf6shynylt3kexh26dq", "claimTxid": "c71e2f2cdf8658d90c61ac6183b8ffeeb359779807b317386044705d8352f0f2", "filename": "mutable-67ccefcca67097473e78ca10.json", "address": "bitcoincash:qqs2wrahl6azn9qdyrmp9ygeejqvzr8ruv7e9m30fr" }' http://localhost:5001/ipfs/pin-claim   *
+   */
+  async pinClaim (ctx) {
+    try {
+      const body = ctx.request.body
+
+      const result = await this.useCases.ipfs.pinClaim(body)
+
+      ctx.body = result
     } catch (err) {
       console.log('Error in ipfs/controller.js/cid2json(): ', err.message)
       this.handleError(ctx, err)

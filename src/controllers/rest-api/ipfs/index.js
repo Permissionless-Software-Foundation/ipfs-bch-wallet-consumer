@@ -62,7 +62,7 @@ class IpfsRouter {
     this.router.get('/file-info/:cid', this.ipfsRESTController.getFileInfo)
     this.router.get('/pins', this.ipfsRESTController.getPins)
     this.router.get('/cid2json/:cid', this.ipfsRESTController.cid2json)
-
+    this.router.post('/pin-claim', this.ipfsRESTController.pinClaim)
     // Attach the Controller routes to the Koa app.
     app.use(this.router.routes())
     app.use(this.router.allowedMethods())

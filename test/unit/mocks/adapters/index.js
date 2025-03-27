@@ -1,10 +1,26 @@
 /*
   Mocks for the Adapter library.
 */
-
+class BlockstoreMock {
+  constructor () {
+    this.get = async () => {}
+  }
+}
+class FsMock {
+  constructor () {
+    this.ls = async function* () {
+      yield { path: 'test.txt', cid: 'QmS4ghgMgfFvqPjB4WKXHaN15ZyT4K4JYZxY5X5x5x5x5' }
+    }
+    this.cat = async function* () {
+      yield Buffer.from('test data')
+    }
+  }
+}
 class IpfsAdapter {
   constructor () {
     this.ipfs = {
+      blockstore: new BlockstoreMock(),
+      fs: new FsMock(),
       files: {
         stat: () => {}
       }
@@ -34,7 +50,9 @@ class IpfsCoordAdapter {
     this.peerInputHandler = () => {}
 
     this.state = {
-      serviceProviders: []
+      serviceProviders: [],
+      serviceProvidersByType: '',
+      selectedIpfsFileProvider:''
     }
   }
 }
@@ -138,5 +156,29 @@ class BchUseCaseMock {
   }
 }
 const bch = new BchUseCaseMock()
+const wallet = {
+  bchWallet: bch
 
-export default { ipfs, localdb, bch }
+}
+
+const ipfsFiles = {
+  pinClaim: () => {
+    return {
+      success: true,
+      message: 'Pin claimed'
+    }
+  },
+  getFileMetadata: () => {
+    return {
+      success: true,
+      message: 'Files metadata'
+    }
+  },
+  getPins: () => {
+    return {
+      success: true,
+      message: 'Pins'
+    }
+  }
+}
+export default { ipfs, localdb, bch, wallet, ipfsFiles }

@@ -248,4 +248,243 @@ describe('#IPFS REST API', () => {
       assert.property(ctx.body, 'thisNode')
     })
   })
+  describe('#viewFile', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        // Force an error
+        ctx.params = {
+          cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+        }
+        sandbox.stub(uut.useCases.ipfs, 'downloadCid').throws(new Error('test error'))
+        uut.adapters.ipfs.ipfsCoordAdapter = {}
+
+        ctx.request.body = {}
+
+        await uut.viewFile(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      ctx.params = {
+        cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+      }
+      // Mock dependencies
+      sandbox.stub(uut.useCases.ipfs, 'downloadCid').resolves({ success: true, readStream: 'readStream' })
+
+      uut.adapters.ipfs.ipfsCoordAdapter = {
+        ipfsCoord: {
+          thisNode: {}
+        }
+      }
+
+      ctx.request.body = {}
+
+      await uut.viewFile(ctx)
+
+      assert.exists(ctx.body)
+    })
+  })
+  describe('#downloadFile', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        ctx.params = {
+          cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+        }
+        // Force an error
+        sandbox.stub(uut.useCases.ipfs, 'downloadCid').throws(new Error('test error'))
+        uut.adapters.ipfs.ipfsCoordAdapter = {}
+
+        ctx.request.body = {}
+
+        await uut.downloadFile(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      ctx.params = {
+        cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+      }
+      // Mock dependencies
+      sandbox.stub(uut.useCases.ipfs, 'downloadCid').resolves({ success: true, readStream: 'readStream' })
+
+      uut.adapters.ipfs.ipfsCoordAdapter = {
+        ipfsCoord: {
+          thisNode: {}
+        }
+      }
+
+      ctx.request.body = {}
+
+      await uut.downloadFile(ctx)
+
+      assert.exists(ctx.body)
+    })
+  })
+  describe('#getService', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        // Force an error
+        uut.adapters.ipfs.ipfsCoordAdapter = {}
+
+        ctx.request.body = {}
+
+        await uut.getService(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'Cannot read properties of undefined')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      // Mock dependencies
+
+      uut.adapters.ipfs.ipfsCoordAdapter = {
+        state: {
+          selectedIpfsFileProvider: 'provider'
+        }
+      }
+
+      ctx.request.body = {}
+
+      await uut.getService(ctx)
+
+      assert.isTrue(ctx.body.success)
+    })
+  })
+  describe('#getFileInfo', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        ctx.params = {
+          cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+        }
+        sandbox.stub(uut.adapters.ipfsFiles, 'getFileMetadata').throws(new Error('test error'))
+
+        ctx.request.body = {}
+
+        await uut.getFileInfo(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        // console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      ctx.params = {
+        cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+      }
+      // Mock dependencies
+      sandbox.stub(uut.adapters.ipfsFiles, 'getFileMetadata').resolves({ success: true, filename: 'filename' })
+
+      ctx.request.body = {}
+
+      await uut.getFileInfo(ctx)
+
+      assert.isTrue(ctx.body.success)
+    })
+  })
+  describe('#getPins', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        sandbox.stub(uut.adapters.ipfsFiles, 'getPins').throws(new Error('test error'))
+
+        ctx.request.body = {}
+
+        await uut.getPins(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.adapters.ipfsFiles, 'getPins').resolves({ success: true })
+
+      ctx.request.body = {}
+
+      await uut.getPins(ctx)
+
+      assert.isTrue(ctx.body.success)
+    })
+  })
+  describe('#cid2json', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        ctx.params = {
+          cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+        }
+        sandbox.stub(uut.useCases.ipfs, 'cid2json').throws(new Error('test error'))
+
+        ctx.request.body = {}
+
+        await uut.cid2json(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      ctx.params = {
+        cid: 'bafybeib2rphswe7clvclverw7xi7nejkpkh4mdfcurdmcgw7wcup7za6wy'
+      }
+      // Mock dependencies
+      sandbox.stub(uut.useCases.ipfs, 'cid2json').resolves({ success: true })
+
+      ctx.request.body = {}
+
+      await uut.cid2json(ctx)
+
+      assert.isTrue(ctx.body.success)
+    })
+  })
+  describe('#pinClaim', () => {
+    it('should return 422 status on biz logic error', async () => {
+      try {
+        sandbox.stub(uut.useCases.ipfs, 'pinClaim').throws(new Error('test error'))
+
+        ctx.request.body = {}
+
+        await uut.pinClaim(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'test error')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      // Mock dependencies
+      sandbox.stub(uut.useCases.ipfs, 'pinClaim').resolves({ success: true })
+
+      ctx.request.body = {}
+
+      await uut.pinClaim(ctx)
+
+      assert.isTrue(ctx.body.success)
+    })
+  })
 })
