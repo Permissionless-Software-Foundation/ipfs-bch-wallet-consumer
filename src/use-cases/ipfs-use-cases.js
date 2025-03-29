@@ -37,6 +37,7 @@ class IpfsUseCases {
     this.getWritePrice = this.getWritePrice.bind(this)
     this.getCidMetadata = this.getCidMetadata.bind(this)
     this.cid2json = this.cid2json.bind(this)
+    this.pinClaim = this.pinClaim.bind(this)
 
     // State
     this.lastWritePriceUpdate = null // Used to periodically update write price.
@@ -225,9 +226,11 @@ class IpfsUseCases {
 
       // Throw an error if this is not a JSON file
       const filename = fileMetadata.filename
+
       if (!filename.endsWith('.json')) {
         throw new Error(`CID ${cid} does not resolve to a JSON file.`)
       }
+
       // Retrieve the CID content and store it in a Buffer.
       const helia = this.adapters.ipfs.ipfs
       const fileChunks = []
@@ -281,6 +284,20 @@ class IpfsUseCases {
     }
   }
 
+  async pinClaim (inObj = {}) {
+    try {
+      // Throw an error if ipfs-bch-wallet-consumer can not communicate with the ipfs-file-pin-service.
+      const metadata = await this.adapters.ipfsFiles.pinClaim(inObj)
+
+      return {
+        success: metadata.success,
+        message: metadata.message
+      }
+    } catch (err) {
+      console.error('Error in ipfs-use-cases.js/pinClaim(): ', err)
+      throw err
+    }
+  }
   // async downloadCid2 (inObj = {}) {
   //   try {
   //     const { cid } = inObj

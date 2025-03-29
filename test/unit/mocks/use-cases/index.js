@@ -67,6 +67,28 @@ class UsageUseCaseMock {
   }
 }
 
+class IpfsUseCaseMock {
+  async downloadCid() {
+    return {}
+  }
+
+  async cid2json() {
+    return {}
+  } 
+
+  async getCidMetadata() {
+    return {}
+  }
+
+  async getService() {
+    return {}
+  } 
+
+  async pinClaim() {
+    return {}
+  }
+}
+
 class UseCasesMock {
   constuctor(localConfig = {}) {
     // this.user = new UserUseCaseMock(localConfig)
@@ -77,6 +99,7 @@ class UseCasesMock {
   user = new UserUseCaseMock()
   bch = new BchUseCaseMock()
   usage = new UsageUseCaseMock()
+  ipfs = new IpfsUseCaseMock()
 }
 
 export default UseCasesMock;

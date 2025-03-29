@@ -48,6 +48,7 @@ class IpfsFilesAdapter {
     this.getFileMetadata = this.getFileMetadata.bind(this)
     this.getPins = this.getPins.bind(this)
     this.waitForRPCResponse = this.waitForRPCResponse.bind(this)
+    this.pinClaim = this.pinClaim.bind(this)
   }
 
   // This handler is triggered when RPC data comes in over IPFS.
@@ -63,7 +64,7 @@ class IpfsFilesAdapter {
       this.rpcDataQueue.push(data)
     } catch (err) {
       console.error('Error in files/rpcHandler(): ', err)
-    // Do not throw error. This is a top-level function.
+      // Do not throw error. This is a top-level function.
     }
   }
 
@@ -80,7 +81,7 @@ class IpfsFilesAdapter {
 
       // Add names to the IPFS IDs for each provider.
       const initialServiceProviders =
-      this.ipfs.ipfsCoordAdapter.state.ipfsFileProviders
+        this.ipfs.ipfsCoordAdapter.state.ipfsFileProviders
       const serviceProviders = []
       for (let i = 0; i < initialServiceProviders.length; i++) {
         const thisProvider = initialServiceProviders[i]
@@ -142,7 +143,7 @@ class IpfsFilesAdapter {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
-      this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+        this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
       if (!selectedProvider) {
         throw new Error('No IPFS File Pin Service provider available yet.')
       }
@@ -185,7 +186,7 @@ class IpfsFilesAdapter {
       // Throw an error if this IPFS node has not yet made a connection to a
       // wallet service provider.
       const selectedProvider =
-      this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+        this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
       if (!selectedProvider) {
         throw new Error('No IPFS File Pin Service provider available yet.')
       }
@@ -261,13 +262,60 @@ class IpfsFilesAdapter {
 
         cnt++
 
-      // Exit if data was returned, or the window for a response expires.
+        // Exit if data was returned, or the window for a response expires.
       } while (!dataFound && cnt < 10)
       // console.log(`dataFound: ${dataFound}, cnt: ${cnt}`)
 
       return data
     } catch (err) {
       console.error('Error in waitForRPCResponse()')
+      throw err
+    }
+  }
+
+  async pinClaim (inObj = {}) {
+    try {
+      // Throw an error if this IPFS node has not yet made a connection to a
+      // ipfs service provider.
+      const selectedProvider =
+        this.ipfs.ipfsCoordAdapter.state.selectedIpfsFileProvider
+      if (!selectedProvider) {
+        throw new Error('No IPFS File Provider Service is available yet. Try again in a few seconds.')
+      }
+
+      const { proofOfBurnTxid, cid, claimTxid, filename, address } = inObj
+
+      const rpcData = {
+        endpoint: 'pinClaim',
+        proofOfBurnTxid,
+        cid,
+        claimTxid,
+        filename,
+        address
+      }
+
+      // Generate a UUID for the call.
+      const rpcId = this.uid()
+
+      // Generate a JSON RPC command.
+      const cmd = this.jsonrpc.request(rpcId, 'file-pin', rpcData)
+      const cmdStr = JSON.stringify(cmd)
+      // console.log('cmdStr: ', cmdStr)
+
+      // Send the RPC command to selected wallet service.
+      const thisNode = this.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode
+      await this.ipfs.ipfsCoordAdapter.ipfsCoord.useCases.peer.sendPrivateMessage(
+        selectedProvider,
+        cmdStr,
+        thisNode
+      )
+
+      // Wait for data to come back from the wallet service.
+      const data = await this.waitForRPCResponse(rpcId)
+
+      return data
+    } catch (err) {
+      console.error('Error in pinClaim()')
       throw err
     }
   }
