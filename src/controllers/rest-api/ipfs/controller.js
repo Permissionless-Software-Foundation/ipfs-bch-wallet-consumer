@@ -262,11 +262,11 @@ class IpfsRESTControllerLib {
    */
   async getPins (ctx) {
     try {
-      // const { cid } = ctx.params
+      const { page } = ctx.params
 
       const ipfsFiles = this.adapters.ipfsFiles
 
-      const pinData = await ipfsFiles.getPins()
+      const pinData = await ipfsFiles.getPins({ page })
       console.log('getPins() pinData: ', pinData)
 
       ctx.body = pinData

@@ -191,8 +191,11 @@ class IpfsFilesAdapter {
         throw new Error('No IPFS File Pin Service provider available yet.')
       }
 
+      const { page } = inObj
+
       const rpcData = {
-        endpoint: 'getPins'
+        endpoint: 'getPins',
+        page
       }
 
       // Generate a UUID for the call.

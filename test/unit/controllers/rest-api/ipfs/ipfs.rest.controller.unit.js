@@ -400,12 +400,14 @@ describe('#IPFS REST API', () => {
       assert.isTrue(ctx.body.success)
     })
   })
+
   describe('#getPins', () => {
     it('should return 422 status on biz logic error', async () => {
       try {
         sandbox.stub(uut.adapters.ipfsFiles, 'getPins').throws(new Error('test error'))
 
         ctx.request.body = {}
+        ctx.params = { page: 1}
 
         await uut.getPins(ctx)
 
@@ -421,12 +423,14 @@ describe('#IPFS REST API', () => {
       sandbox.stub(uut.adapters.ipfsFiles, 'getPins').resolves({ success: true })
 
       ctx.request.body = {}
+      ctx.params = { page: 1}
 
       await uut.getPins(ctx)
 
       assert.isTrue(ctx.body.success)
     })
   })
+  
   describe('#cid2json', () => {
     it('should return 422 status on biz logic error', async () => {
       try {
