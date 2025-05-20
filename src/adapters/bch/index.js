@@ -405,7 +405,7 @@ class BchAdapter {
 
       // Wait for data to come back from the wallet service.
       const data = await this.waitForRPCResponse(rpcId)
-      console.log(`data: ${JSON.stringify(data, null, 2)}`)
+      // console.log(`data: ${JSON.stringify(data, null, 2)}`)
 
       return data
     } catch (err) {
