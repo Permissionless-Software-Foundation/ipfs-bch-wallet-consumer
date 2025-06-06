@@ -140,11 +140,6 @@ class UsageUseCases {
       for (let i = 0; i < restCalls.length; i++) {
         const thisRestCall = restCalls[i]
 
-        // Debugging: delete this code after debugging
-        if (i === 5) {
-          console.log('saveUsage() thisRestCall: ', thisRestCall)
-        }
-
         const usageData = {
           ip: thisRestCall.ip,
           url: thisRestCall.url,
@@ -166,10 +161,6 @@ class UsageUseCases {
     try {
       const usage = await this.UsageModel.find({})
       // console.log('usage: ', usage)
-
-      if (usage[5]) {
-        console.log('loadUsage() usage[5]: ', usage[5])
-      }
 
       restCalls = usage
     } catch (err) {
