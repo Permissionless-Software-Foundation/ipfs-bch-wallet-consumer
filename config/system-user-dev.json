@@ -1,6 +1,8 @@
 {
-  "password": "YsFhsCVCqussWyyLYUjM",
   "email": "system@system.com",
-  "id": "67ffbea61a8de3388f82c401",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmZiZWE2MWE4ZGUzMzg4ZjgyYzQwMSIsImlhdCI6MTc0NDgxMzczNH0.a4wM-CfGudF40yi4lwTsnd_aDZHrRn87zjHYxFZmeC4"
+  "name": "admin",
+  "password": "O52nYamPmP7zE9Jfwgxo",
+  "type": "admin",
+  "id": "684246cf4e94f2261caf9848",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDI0NmNmNGU5NGYyMjYxY2FmOTg0OCIsImlhdCI6MTc0OTE3NDAyMX0.9GAS6q_xFz5Bwi7RwIqrqM3Q48DFlz_A-S0_r_L2pTQ"
 }

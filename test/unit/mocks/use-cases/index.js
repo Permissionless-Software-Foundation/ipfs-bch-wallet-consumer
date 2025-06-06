@@ -65,6 +65,14 @@ class UsageUseCaseMock {
   async getTopEndpoints(existingUser, newData) {
     return true
   }
+
+  async clearUsage() {
+    return true
+  }
+
+  async saveUsage() {
+    return true
+  }
 }
 
 class IpfsUseCaseMock {

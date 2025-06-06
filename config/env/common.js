@@ -172,6 +172,11 @@ export default {
   // Preferred P2WDB provider
   preferredIpfsFileProvider: process.env.PREFERRED_IPFS_FILE_PROVIDER
     ? process.env.PREFERRED_IPFS_FILE_PROVIDER
-    : ''
+    : '',
 
+  // Account Configuration
+  disableNewAccounts: process.env.DISABLE_NEW_ACCOUNTS ? true : false,
+
+  // Admin password
+  adminPassword: process.env.ADMIN_PASSWORD
 }
