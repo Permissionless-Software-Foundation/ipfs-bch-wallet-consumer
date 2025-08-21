@@ -28,6 +28,7 @@ describe('#usage-use-case', () => {
     sandbox = sinon.createSandbox()
     uut = new UsageUseCases({ adapters })
 
+    console.log('restCalls: ', restCalls)
     // Set as empty array
     restCalls.splice(0, restCalls.length)
 
@@ -253,6 +254,69 @@ describe('#usage-use-case', () => {
         assert.equal(ctx.status, 500)
         assert.equal(restCalls.length, 0)
       }
+    })
+  })
+  describe('#clearUsage', () => {
+    it('should clear the usage database data', async () => {
+      const res = await uut.clearUsage()
+      assert.isTrue(res)
+    })
+
+    it('should handle error', async () => {
+      try {
+        sandbox.stub(uut.UsageModel, 'deleteMany').throws(new Error('uut error'))
+        await uut.clearUsage()
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        assert.equal(error.message, 'uut error')
+      }
+    })
+  })
+
+  describe('#saveUsage', () => {
+    it('should save usage', async () => {
+      // Set mock data
+      restCalls.push({
+        timestamp: new Date().getTime(),
+        ip: 'localhost',
+        url: 'fakeUrl',
+        method: 'unit test'
+      })
+      const res = await uut.saveUsage()
+      assert.isTrue(res)
+    })
+
+    it('should handle error', async () => {
+      try {
+        restCalls.push(null)
+        await uut.saveUsage()
+        assert.fail('Unexpected code path')
+      } catch (error) {
+        console.log(error)
+        assert.include(error.message, 'Cannot read properties')
+      }
+    })
+  })
+
+  describe('#loadUsage', () => {
+    it('should load usage', async () => {
+      // Set mock data
+      const mockObj = {
+        timestamp: new Date().getTime(),
+        ip: 'localhost',
+        url: 'fakeUrl',
+        method: 'unit test'
+      }
+      sandbox.stub(uut.UsageModel, 'find').returns(new Array(10).fill(null).map((_, i) => (mockObj)))
+      const res = await uut.loadUsage()
+      assert.equal(restCalls.length, 10)
+      assert.equal(res.length, 10)
+    })
+
+    it('should skip error', async () => {
+      sandbox.stub(uut.UsageModel, 'find').throws(new Error('uut error'))
+      const res = await uut.loadUsage()
+      assert.isFalse(res)
     })
   })
 })
