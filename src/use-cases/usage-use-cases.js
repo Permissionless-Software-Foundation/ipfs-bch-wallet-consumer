@@ -51,6 +51,8 @@ class UsageUseCases {
       restCalls = restCalls.filter(x => x.timestamp > twentyFourHoursAgo)
       console.log('cleanUsage() restCalls.length after filtering: ', restCalls.length)
 
+      if (!restCalls) restCalls = []
+
       return restCalls
     } catch (err) {
       console.error('Error in usage-use-cases.js/cleanUsage()')
@@ -128,6 +130,7 @@ class UsageUseCases {
       // Delete this code after debugging
       const usage = await this.UsageModel.find({})
       console.log('clearUsage() usage: ', usage)
+      return true
     } catch (err) {
       console.error('Error in usage-use-cases.js/clearUsage()')
       throw err
@@ -150,6 +153,7 @@ class UsageUseCases {
         const usage = new this.UsageModel(usageData)
         await usage.save()
       }
+      return true
     } catch (err) {
       console.error('Error in usage-use-cases.js/saveUsage()')
       throw err
@@ -163,8 +167,12 @@ class UsageUseCases {
       // console.log('usage: ', usage)
 
       restCalls = usage
+      if (!restCalls) restCalls = []
+
+      return usage
     } catch (err) {
       console.error('Error in usage-use-cases.js/loadUsage(): ', err)
+      return false
       // throw err
     }
   }
