@@ -51,7 +51,7 @@ class UsageUseCases {
       restCalls = restCalls.filter(x => x.timestamp > twentyFourHoursAgo)
       console.log('cleanUsage() restCalls.length after filtering: ', restCalls.length)
 
-      if(!restCalls) restCalls = []
+      if (!restCalls) restCalls = []
 
       return restCalls
     } catch (err) {
@@ -167,7 +167,7 @@ class UsageUseCases {
       // console.log('usage: ', usage)
 
       restCalls = usage
-      if(!restCalls) restCalls = []
+      if (!restCalls) restCalls = []
 
       return usage
     } catch (err) {
