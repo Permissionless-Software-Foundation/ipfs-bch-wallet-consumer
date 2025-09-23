@@ -110,6 +110,9 @@ class BchAdapter {
   // Choose the BCH wallet service to use.
   async selectProvider (providerId) {
     try {
+      if (!providerId || typeof providerId !== 'string') {
+        throw new Error('providerId  must be a string!')
+      }
       this.ipfs.ipfsCoordAdapter.config.preferredProvider = providerId
 
       return true

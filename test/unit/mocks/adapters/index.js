@@ -30,7 +30,7 @@ class IpfsAdapter {
 
 class IpfsCoordAdapter {
   constructor () {
-
+    this.config = {}
     this.ipfsCoord = {
       adapters: {
         ipfs: {

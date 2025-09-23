@@ -17,6 +17,7 @@ import cloneDeep from 'lodash.clonedeep'
 import BchAdapter from '../../../src/adapters/bch/index.js'
 import adapters from '../mocks/adapters/index.js'
 import mockDataLib from '../mocks/use-cases/rest-api-mocks.js'
+import ipfsCoordMocks from '../mocks/adapters/ipfs-coord-mocks.js'
 
 const eventEmitter = new EventEmitter()
 
@@ -91,7 +92,30 @@ describe('#bch-use-case', () => {
       assert.property(result, 'balances')
       assert.isArray(result.balances)
     })
+    it('should return false if data is not found', async () => {
+      // Mock dependencies
+      uut.ipfs.ipfsCoordAdapter.wallet = {
+        bchjs: {
+          Util: {
+            sleep: () => {}
+          }
+        }
+      }
 
+      // Mock data.
+      const rpcId = '123'
+      // Fill the queue with false values.
+      for (let i = 0; i < 10; i++) {
+        uut.rpcDataQueue.push({ payload: { id: '1234567890' } })
+      }
+      sandbox.stub(uut, 'sleep').resolves()
+
+      const result = await uut.waitForRPCResponse(rpcId)
+      // console.log('result: ', result)
+
+      assert.property(result, 'success')
+      assert.isFalse(result.success)
+    })
     it('should catch and throw an error', async () => {
       try {
         await uut.waitForRPCResponse()
@@ -114,12 +138,46 @@ describe('#bch-use-case', () => {
 
       uut.rpcHandler(data)
     })
+    it('should skip errors', async () => {
+      try {
+        sandbox.stub(uut, 'rpcDataQueue').throws(new Error('test error'))
+        await uut.rpcHandler()
+      } catch (err) {
+        assert.fail('Unexpected code path')
+      }
+    })
   })
 
   describe('#getStatus', () => {
     it('should get the status from ipfs-coord', async () => {
+      uut.ipfs.ipfsCoordAdapter.state.serviceProviders = ipfsCoordMocks.peers
+      uut.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode.peerData = ipfsCoordMocks.peerData
       const result = await uut.getStatus()
       console.log('result: ', result)
+      assert.isObject(result)
+    })
+    it('should handle error', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.ipfsCoord.thisNode = null
+        await uut.getStatus()
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'Cannot read')
+      }
+    })
+  })
+  describe('#selectProvider', () => {
+    it('should select provider', async () => {
+      await uut.selectProvider('providerId to select')
+      assert.equal(uut.ipfs.ipfsCoordAdapter.config.preferredProvider, 'providerId to select')
+    })
+    it('should handle error', async () => {
+      try {
+        await uut.selectProvider()
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        assert.include(err.message, 'providerId  must be a string!')
+      }
     })
   })
 
@@ -154,6 +212,18 @@ describe('#bch-use-case', () => {
         assert.equal(err.message, 'test error')
       }
     })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        await uut.getBalances()
+
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
+      }
+    })
   })
 
   describe('#getUtxos', () => {
@@ -182,6 +252,19 @@ describe('#bch-use-case', () => {
       } catch (err) {
         // console.log(err)
         assert.equal(err.message, 'addr required when calling getUtxos')
+      }
+    })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const addr = 'addr'
+
+        await uut.getUtxos(addr)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
       }
     })
   })
@@ -230,6 +313,19 @@ describe('#bch-use-case', () => {
         assert.equal(err.message, 'addresses parameter must not exceed 20 elements')
       }
     })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const addrs = ['addr']
+
+        await uut.getUtxosBulk(addrs)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
+      }
+    })
   })
 
   describe('#broadcast', () => {
@@ -258,6 +354,19 @@ describe('#bch-use-case', () => {
       } catch (err) {
         // console.log(err)
         assert.equal(err.message, 'hex required when calling broadcast')
+      }
+    })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const hex = 'abc123'
+
+        await uut.broadcast(hex)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
       }
     })
   })
@@ -290,6 +399,19 @@ describe('#bch-use-case', () => {
         assert.equal(err.message, 'address required when calling getTransactions()')
       }
     })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const addr = 'abc123'
+
+        await uut.getTransactions(addr)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
+      }
+    })
   })
 
   describe('#getTransaction', () => {
@@ -318,6 +440,19 @@ describe('#bch-use-case', () => {
       } catch (err) {
         // console.log(err)
         assert.equal(err.message, 'txids required when calling getTransaction()')
+      }
+    })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const txid = 'abc123'
+
+        await uut.getTransaction(txid)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
       }
     })
   })
@@ -350,6 +485,19 @@ describe('#bch-use-case', () => {
         assert.equal(err.message, 'address required when calling getPubKey()')
       }
     })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const addr = 'abc123'
+
+        await uut.getPubKey(addr)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
+      }
+    })
   })
 
   describe('#utxoIsValid', () => {
@@ -378,6 +526,18 @@ describe('#bch-use-case', () => {
       } catch (err) {
         // console.log(err)
         assert.equal(err.message, 'utxo required when calling utxoIsValid()')
+      }
+    })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const utxo = { a: 'b' }
+        await uut.utxoIsValid(utxo)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
       }
     })
   })
@@ -410,6 +570,19 @@ describe('#bch-use-case', () => {
         assert.equal(err.message, 'tokenId required when calling getTokenData()')
       }
     })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const tokenId = 'blah'
+
+        await uut.getTokenData(tokenId)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
+      }
+    })
   })
 
   describe('#getTokenData2', () => {
@@ -438,6 +611,19 @@ describe('#bch-use-case', () => {
       } catch (err) {
         // console.log(err)
         assert.equal(err.message, 'tokenId required when calling getTokenData2()')
+      }
+    })
+    it('should throw an error if selected provider is not defined', async () => {
+      try {
+        uut.ipfs.ipfsCoordAdapter.state.selectedServiceProvider = null
+
+        const tokenId = 'blah'
+
+        await uut.getTokenData2(tokenId)
+        assert.fail('Unexpected code path')
+      } catch (err) {
+        // console.log(err)
+        assert.equal(err.message, 'No BCH Wallet Service provider available yet.')
       }
     })
   })

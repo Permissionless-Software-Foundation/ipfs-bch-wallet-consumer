@@ -4,7 +4,9 @@
 
 const peers = [
   'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
-  'QmQqjVVD3CS6zaJmoSdt6GwX1c1tD5T9FZas4qxLbru8xN'
+  'QmQqjVVD3CS6zaJmoSdt6GwX1c1tD5T9FZas4qxLbru8xN',
+  'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mT3',
+  'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mD4'
 ]
 
 const peerData = [
@@ -110,7 +112,113 @@ const peerData = [
       },
       updatedAt: '2021-08-24T23:13:20.411Z'
     }
-  }
+  },
+  {
+    from: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mT3',
+    channel: 'psf-ipfs-coordination-001',
+    data: {
+      apiName: 'ipfs-coord-announce',
+      apiVersion: '1.3.2',
+      apiInfo:
+        'You should put an IPFS hash or web URL here to your documentation.',
+      ipfsId: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+      type: 'node.js',
+      ipfsMultiaddrs: [
+        '/ip4/127.0.0.1/tcp/5701/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/127.0.0.1/tcp/5702/ws/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/192.168.0.2/tcp/5701/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/192.168.0.2/tcp/5702/ws/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
+      ],
+      orbitdb:
+        '/orbitdb/zdpuAntCMCcmZuFy2hq5F7kpcti3yHa34LLZHzyVqorkoSpAJ/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ221082417',
+      circuitRelays: [],
+      isCircuitRelay: false,
+      cryptoAddresses: [
+        {
+          blockchain: 'BCH',
+          type: 'cashAddr',
+          address: 'bitcoincash:qru6kq3p4tv6z2lmy0n560lyhh3z2feay5gjzggc37'
+        },
+        {
+          blockchain: 'BCH',
+          type: 'slpAddr',
+          address: 'simpleledger:qru6kq3p4tv6z2lmy0n560lyhh3z2feay5yffnac0q'
+        }
+      ],
+      encryptPubKey:
+        '021db6e97650659653ba61dd493dc348a7429cdcbafd4fb73b08b1223bf5bd98df',
+      jsonLd: {
+        '@context': 'https://schema.org/',
+        '@type': 'WebAPI',
+        name: 'trout-bch-wallet-service-dev',
+        version: '1.11.12',
+        protocol: 'p2wdb',
+        description:
+          'IPFS service providing BCH blockchain access needed by a wallet.',
+        documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
+        provider: {
+          '@type': 'Organization',
+          name: 'Permissionless Software Foundation',
+          url: 'https://PSFoundation.cash'
+        },
+        identifier: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
+      },
+      updatedAt: '2021-08-24T23:13:19.306Z'
+    }
+  },
+  {
+    from: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mD4',
+    channel: 'psf-ipfs-coordination-001',
+    data: {
+      apiName: 'ipfs-coord-announce',
+      apiVersion: '1.3.2',
+      apiInfo:
+        'You should put an IPFS hash or web URL here to your documentation.',
+      ipfsId: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+      type: 'node.js',
+      ipfsMultiaddrs: [
+        '/ip4/127.0.0.1/tcp/5701/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/127.0.0.1/tcp/5702/ws/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/192.168.0.2/tcp/5701/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2',
+        '/ip4/192.168.0.2/tcp/5702/ws/p2p/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
+      ],
+      orbitdb:
+        '/orbitdb/zdpuAntCMCcmZuFy2hq5F7kpcti3yHa34LLZHzyVqorkoSpAJ/QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ221082417',
+      circuitRelays: [],
+      isCircuitRelay: false,
+      cryptoAddresses: [
+        {
+          blockchain: 'BCH',
+          type: 'cashAddr',
+          address: 'bitcoincash:qru6kq3p4tv6z2lmy0n560lyhh3z2feay5gjzggc37'
+        },
+        {
+          blockchain: 'BCH',
+          type: 'slpAddr',
+          address: 'simpleledger:qru6kq3p4tv6z2lmy0n560lyhh3z2feay5yffnac0q'
+        }
+      ],
+      encryptPubKey:
+        '021db6e97650659653ba61dd493dc348a7429cdcbafd4fb73b08b1223bf5bd98df',
+      jsonLd: {
+        '@context': 'https://schema.org/',
+        '@type': 'WebAPI',
+        name: 'trout-bch-wallet-service-dev',
+        version: '1.11.12',
+        protocol: 'ipfs-file-pin-service',
+        description:
+          'IPFS service providing BCH blockchain access needed by a wallet.',
+        documentation: 'https://ipfs-bch-wallet-service.fullstack.cash/',
+        provider: {
+          '@type': 'Organization',
+          name: 'Permissionless Software Foundation',
+          url: 'https://PSFoundation.cash'
+        },
+        identifier: 'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
+      },
+      updatedAt: '2021-08-24T23:13:19.306Z'
+    }
+  },
 ]
 
 // module.exports = {
