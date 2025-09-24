@@ -14,7 +14,6 @@ import sinon from 'sinon'
 import UseCases from '../../../src/use-cases/ipfs-use-cases.js'
 
 import adapters from '../mocks/adapters/index.js'
-
 describe('#ipfs-use-cases', () => {
   let uut
   let sandbox
@@ -92,15 +91,28 @@ describe('#ipfs-use-cases', () => {
       const result = await uut.getWritePrice()
       assert.isNumber(result)
     })
+    it('should re-instantiate psffpp instance', async () => {
+      const psffppMock = {}
+      uut.psffpp = psffppMock
+      const lastWritePriceUpdate = new Date()
+      lastWritePriceUpdate.setHours(lastWritePriceUpdate.getHours() - 10)
+      uut.lastWritePriceUpdate = lastWritePriceUpdate.getTime()
+      const result = await uut.getWritePrice()
+      assert.isNumber(result)
+      assert.notEqual(uut.lastWritePriceUpdate, lastWritePriceUpdate.getTime())
+      assert.notEqual(uut.psffpp, psffppMock)
+    })
 
     it('should handle error ', async () => {
       try {
+        uut.lastWritePriceUpdate = new Date().getTime()
         uut.psffpp = {
           getMcWritePrice: () => {
             throw new Error('test error')
           }
         }
         await uut.getWritePrice()
+        assert.fail('Unexpected code path')
       } catch (error) {
         assert.include(error.message, 'test error')
       }

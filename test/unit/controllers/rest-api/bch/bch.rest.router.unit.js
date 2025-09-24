@@ -18,7 +18,7 @@ let sandbox
 
 // const mockContext = require('../../../../unit/mocks/ctx-mock').context
 
-describe('#Users-REST-Router', () => {
+describe('#BCH-REST-Router', () => {
   // const testUser = {}
 
   beforeEach(() => {
@@ -73,6 +73,110 @@ describe('#Users-REST-Router', () => {
           'Must pass app object when attaching REST API controllers.'
         )
       }
+    })
+  })
+  describe('#getStatus', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'getStatus').resolves(true)
+
+      await uut.getStatus()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postProvider', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'postProvider').resolves(true)
+
+      await uut.postProvider()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postBalance', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'balance').resolves(true)
+
+      await uut.postBalance()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postUtxos', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'utxos').resolves(true)
+
+      await uut.postUtxos()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postUtxosBulk', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'utxosBulk').resolves(true)
+
+      await uut.postUtxosBulk()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postBroadcast', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'broadcast').resolves(true)
+
+      await uut.postBroadcast()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postTxHistory', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'txHistory').resolves(true)
+
+      await uut.postTxHistory()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postTxData', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'txData').resolves(true)
+
+      await uut.postTxData()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#postPubKey', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'pubKey').resolves(true)
+
+      await uut.postPubKey()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#utxoIsValid', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'utxoIsValid').resolves(true)
+
+      await uut.utxoIsValid()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#getTokenData', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'getTokenData').resolves(true)
+
+      await uut.getTokenData()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#getTokenData2', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'getTokenData2').resolves(true)
+
+      await uut.getTokenData2()
+      assert.isTrue(spy.calledOnce)
+    })
+  })
+  describe('#getService', () => {
+    it('should route to controller', async () => {
+      const spy = sandbox.stub(uut.bchRESTController, 'getService').resolves(true)
+
+      await uut.getService()
+      assert.isTrue(spy.calledOnce)
     })
   })
 })

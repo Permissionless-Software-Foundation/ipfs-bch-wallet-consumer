@@ -107,7 +107,7 @@ class JSONRPC {
 
       // Default return string
       let retObj = _this.defaultResponse()
-
+      console.log('parsedData ', parsedData)
       // Forward data on to bch adapter if this is the response of a BCH query.
       try {
         if (parsedData.payload.result.method === 'bch') {
