@@ -95,6 +95,10 @@ class IpfsUseCaseMock {
   async pinClaim() {
     return {}
   }
+
+  async getWritePrice() {
+    return 1.00
+  }
 }
 
 class UseCasesMock {

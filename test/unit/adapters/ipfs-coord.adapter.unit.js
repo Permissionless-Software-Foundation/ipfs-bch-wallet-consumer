@@ -151,7 +151,21 @@ describe('#IPFS', () => {
       }
     })
   })
+  describe('#subscribeToChat', () => {
+    it('should subscribe to the chat channel', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        adapters: {
+          pubsub: {
+            subscribeToPubsubChannel: async () => {
+            }
+          }
+        }
+      }
 
+      await uut.subscribeToChat()
+    })
+  })
   describe('#pollForBchServices', () => {
     it('should find and select the wallet service', () => {
       uut.ipfsCoord = {
@@ -169,46 +183,194 @@ describe('#IPFS', () => {
         'QmWkjYRRTaxVEuGK8ip2X3trVyJShFs6U9g1h9x6fK5mZ2'
       )
     })
+    it('should use preferredProvider if set', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      // Define already selected service provider.
+      uut.state.serviceProviders = [mockData.peers[2]]
+      uut.state.selectedServiceProvider = mockData.peers[2]
+      // Define preferred provider.
+      uut.config.preferredProvider = mockData.peers[0]
+      sandbox.stub(uut.semver, 'gt').returns(true)
 
-    it('should catch and report errors', () => {
-      uut.pollForBchServices()
+      await uut.pollForBchServices()
 
+      assert.equal(uut.state.selectedServiceProvider, uut.config.preferredProvider)
+    })
+
+    it('should log unknown errors', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'gt').throws(new Error('test error'))
+
+      await uut.pollForBchServices()
+
+      assert.equal(uut.state.selectedServiceProvider, '')
+      assert.isOk(true, 'Not throwing an error is a success.')
+    })
+    it('should handle ipfsCoord errors', async () => {
+      uut.ipfsCoord = {
+      }
+
+      await uut.pollForBchServices()
+
+      assert.equal(uut.state.selectedServiceProvider, '')
       assert.isOk(true, 'Not throwing an error is a success.')
     })
   })
 
-  // describe('#peerInputHandler', () => {
-  //   it('should emit an event trigger', () => {
-  //     const data = 'some data'
-  //
-  //     uut.peerInputHandler(data)
-  //
-  //     assert.isOk(true, 'Not throwing an error is a success')
-  //   })
-  //
-  //   it('should catch and report errors', () => {
-  //     // Force an error
-  //     sandbox.stub(uut.eventEmitter, 'emit').throws(new Error('test error'))
-  //
-  //     uut.peerInputHandler()
-  //
-  //     assert.isOk(true, 'Not throwing an error is a success.')
-  //   })
-  // })
-
-  describe('#subscribeToChat', () => {
-    it('should subscribe to the chat channel', async () => {
+  describe('#pollForP2wdbServices', () => {
+    it('should poll for P2WDB services', async () => {
       // Mock dependencies
       uut.ipfsCoord = {
-        adapters: {
-          pubsub: {
-            subscribeToPubsubChannel: async () => {
-            }
-          }
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'gt').returns(true)
+
+      await uut.pollForP2wdbServices()
+
+      assert.equal(uut.state.selectedP2wdbProvider, mockData.peers[2])
+    })
+    it('should use preferredP2wdbProvider if set', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
         }
       }
 
-      await uut.subscribeToChat()
+      uut.config.preferredP2wdbProvider = mockData.peers[2]
+      sandbox.stub(uut.semver, 'gt').returns(true)
+
+      await uut.pollForP2wdbServices()
+
+      assert.equal(uut.state.selectedP2wdbProvider, uut.config.preferredP2wdbProvider)
+    })
+    it('should handle a peer that does not match the protocol', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'gt').returns(false)
+
+      await uut.pollForP2wdbServices()
+
+      assert.equal(uut.state.selectedP2wdbProvider, '')
+    })
+    it('should log unknown errors', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'gt').throws(new Error('test error'))
+
+      await uut.pollForP2wdbServices()
+
+      assert.equal(uut.state.selectedP2wdbProvider, '')
+      assert.isOk(true, 'Not throwing an error is a success.')
+    })
+    it('should handle ipfsCoord errors', async () => {
+      uut.ipfsCoord = {
+      }
+
+      await uut.pollForP2wdbServices()
+
+      assert.equal(uut.state.selectedP2wdbProvider, '')
+      assert.isOk(true, 'Not throwing an error is a success.')
+    })
+  })
+
+  describe('#pollForIpfsFileServices', () => {
+    it('should poll for IPFS File services', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'gt').returns(true)
+
+      await uut.pollForIpfsFileServices()
+
+      assert.equal(uut.state.selectedIpfsFileProvider, mockData.peers[3])
+    })
+    it('should use preferredIpfsFileProvider if set', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      // Define already selected service provider.
+      uut.state.ipfsFileProviders = [mockData.peers[0]]
+      uut.state.selectedIpfsFileProvider = mockData.peers[0]
+
+      uut.config.preferredIpfsFileProvider = mockData.peers[3]
+      sandbox.stub(uut.semver, 'satisfies').returns(true)
+
+      await uut.pollForIpfsFileServices()
+
+      assert.equal(uut.state.selectedIpfsFileProvider, uut.config.preferredIpfsFileProvider)
+    })
+    it('should handle a peer that does not match the protocol', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'satisfies').returns(false)
+
+      await uut.pollForIpfsFileServices()
+
+      assert.equal(uut.state.selectedIpfsFileProvider, '')
+    })
+    it('should log unknown errors', async () => {
+      // Mock dependencies
+      uut.ipfsCoord = {
+        thisNode: {
+          peerList: mockData.peers,
+          peerData: mockData.peerData
+        }
+      }
+      sandbox.stub(uut.semver, 'satisfies').throws(new Error('test error'))
+
+      await uut.pollForIpfsFileServices()
+
+      assert.equal(uut.state.selectedIpfsFileProvider, '')
+      assert.isOk(true, 'Not throwing an error is a success.')
+    })
+    it('should handle ipfsCoord errors', async () => {
+      uut.ipfsCoord = {
+      }
+
+      await uut.pollForIpfsFileServices()
+
+      assert.equal(uut.state.selectedIpfsFileProvider, '')
+      assert.isOk(true, 'Not throwing an error is a success.')
     })
   })
 })

@@ -162,6 +162,40 @@ describe('#JSON RPC', () => {
       assert.equal(obj.result.method, 'auth')
       assert.equal(obj.id, id)
     })
+    it('should route to bch handler on success payload', async () => {
+      const id = uid()
+      const json = jsonrpc.success(id, { method: 'bch' })
+      const str = JSON.stringify(json)
+
+      // Mock the controller.
+      sandbox.stub(uut.adapters.bch, 'rpcHandler').resolves('true')
+
+      const result = await uut.router(str, 'peerA')
+      // console.log(result)
+
+      const obj = JSON.parse(result.retStr)
+      // console.log('obj: ', obj)
+
+      assert.equal(obj.result.value, 'true')
+      assert.equal(obj.id, id)
+    })
+    it('should route to bch handler on success payload', async () => {
+      const id = uid()
+      const json = jsonrpc.success(id, { method: 'file-pin' })
+      const str = JSON.stringify(json)
+
+      // Mock the controller.
+      sandbox.stub(uut.adapters.ipfsFiles, 'rpcHandler').resolves('true')
+
+      const result = await uut.router(str, 'peerA')
+      // console.log(result)
+
+      const obj = JSON.parse(result.retStr)
+      // console.log('obj: ', obj)
+
+      assert.equal(obj.result.value, 'true')
+      assert.equal(obj.id, id)
+    })
 
     it('should route to about handler', async () => {
       const id = uid()
@@ -186,6 +220,31 @@ describe('#JSON RPC', () => {
 
       assert.equal(obj.result.value, 'true')
       assert.equal(obj.result.method, 'about')
+      assert.equal(obj.id, id)
+    })
+    it('should route to bch handler', async () => {
+      const id = uid()
+      const userCall = jsonrpc.request(id, 'bch', { endpoint: 'getAll' })
+      const jsonStr = JSON.stringify(userCall, null, 2)
+
+      // Mock the controller.
+      sandbox.stub(uut.adapters.bch, 'rpcHandler').resolves('true')
+
+      // Force ipfs-coord communication.
+      uut.ipfsCoord.ipfs = {
+        orbitdb: {
+          sendToDb: () => {}
+        }
+      }
+
+      const result = await uut.router(jsonStr, 'peerA')
+      // console.log(result)
+
+      const obj = JSON.parse(result.retStr)
+      // console.log('obj: ', obj)
+
+      assert.equal(obj.result.value, 'true')
+      assert.equal(obj.result.method, 'bch')
       assert.equal(obj.id, id)
     })
 

@@ -219,9 +219,10 @@ class IpfsCoordAdapter {
         }
       }
     } catch (err) {
+      console.log('Error in pollForP2wdbServices()', err)
       // catch and handle known failure mode.
       if (
-        err.message.includes("Cannot read property 'peerList' of undefined")
+        err.message.includes('Cannot read')
       ) {
         return
       }
@@ -286,6 +287,9 @@ class IpfsCoordAdapter {
             _this.config.preferredProvider &&
             thisPeer === _this.config.preferredProvider
           ) {
+            console.log('preferredProvider: ', _this.config.preferredProvider)
+            console.log('thisPeer: ', thisPeer)
+            console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
             if (_this.state.selectedServiceProvider !== thisPeer) {
               console.log(`---->BCH wallet service switched to preferred peer: ${thisPeer}`)
             }
@@ -310,7 +314,7 @@ class IpfsCoordAdapter {
     } catch (err) {
       // catch and handle known failure mode.
       if (
-        err.message.includes("Cannot read property 'peerList' of undefined")
+        err.message.includes('Cannot read')
       ) {
         return
       }
@@ -400,7 +404,7 @@ class IpfsCoordAdapter {
     } catch (err) {
       // catch and handle known failure mode.
       if (
-        err.message.includes("Cannot read property 'peerList' of undefined")
+        err.message.includes('Cannot read')
       ) {
         return
       }

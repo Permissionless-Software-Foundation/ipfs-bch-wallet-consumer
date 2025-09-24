@@ -109,6 +109,9 @@ class P2wdbAdapter {
   // Choose the BCH wallet service to use.
   async selectProvider (providerId) {
     try {
+      if (!providerId || typeof providerId !== 'string') {
+        throw new Error('providerId must be a string!')
+      }
       this.ipfs.ipfsCoordAdapter.config.preferredP2wdbProvider = providerId
 
       return true
@@ -215,6 +218,10 @@ class P2wdbAdapter {
   // Returns a promise that resolves to data when the RPC response is recieved.
   async waitForRPCResponse (rpcId) {
     try {
+      if (!rpcId) {
+        throw new Error('rpcId can not be false or undefined')
+      }
+
       // Initialize variables for tracking the return data.
       let dataFound = false
       let cnt = 0

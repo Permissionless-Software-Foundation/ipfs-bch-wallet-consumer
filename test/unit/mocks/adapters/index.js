@@ -30,7 +30,7 @@ class IpfsAdapter {
 
 class IpfsCoordAdapter {
   constructor () {
-
+    this.config = {}
     this.ipfsCoord = {
       adapters: {
         ipfs: {
@@ -187,6 +187,9 @@ class BchUseCaseMock {
   async waitForRPCResponse () {
     return {}
   }
+  async selectProvider (){
+    return true
+  }
 }
 const bch = new BchUseCaseMock()
 const wallet = {
@@ -212,6 +215,18 @@ const ipfsFiles = {
       success: true,
       message: 'Pins'
     }
+  },
+  rpcHandler: () => {
+    return {
+      success: true,
+      message: 'RPC handler'
+    }
   }
 }
-export default { ipfs, localdb, bch, wallet, ipfsFiles }
+const p2wdb = {
+  getStatus: async () => {},
+  selectProvider: async () => {},
+  getEntryByHash: async () => {},
+  writeEntry: async () => {}
+}
+export default { ipfs, localdb, bch, wallet, ipfsFiles, p2wdb }

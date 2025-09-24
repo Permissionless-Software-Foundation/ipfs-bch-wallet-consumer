@@ -62,6 +62,18 @@ describe('#BCH-REST-Controller', () => {
   })
 
   describe('#handleError', () => {
+    it('should pass an error message', () => {
+      try {
+        const err = {
+          status: 422,
+          message: 'Unprocessable Entity'
+        }
+
+        uut.handleError(ctx, err)
+      } catch (err) {
+        assert.include(err.message, 'Unprocessable Entity')
+      }
+    })
     it('should still throw error if there is no message', () => {
       try {
         const err = {
@@ -462,6 +474,69 @@ describe('#BCH-REST-Controller', () => {
       }
 
       await uut.getTokenData2(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#getService', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter, 'state').value(null)
+        ctx.request.body = {
+          service: 'blah'
+        }
+
+        await uut.getService(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'Cannot read')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      sandbox.stub(uut.adapters.ipfs.ipfsCoordAdapter, 'state').value({ selectedServiceProvider: 'selected service' })
+      ctx.request.body = {
+        service: 'selected service'
+      }
+
+      await uut.getService(ctx)
+
+      // Assert the expected HTTP response
+      assert.equal(ctx.status, 200)
+    })
+  })
+
+  describe('#postProvider', () => {
+    it('should return 422 status on arbitrary error', async () => {
+      try {
+        uut.config.freezeProvider = true
+        ctx.request.body = {
+          providerId: 'selected provider id'
+        }
+
+        await uut.postProvider(ctx)
+
+        assert.fail('Unexpected result')
+      } catch (err) {
+        console.log('err: ', err)
+        assert.equal(err.status, 422)
+        assert.include(err.message, 'Consumer has preferredProvider set in environment variable. Refusing to switch providers.')
+      }
+    })
+
+    it('should return 200 status on success', async () => {
+      uut.config.freezeProvider = false
+      ctx.request.body = {
+        providerId: 'selected provider id'
+      }
+
+      sandbox.stub(uut.adapters.bch, 'selectProvider').resolves(true)
+      await uut.postProvider(ctx)
 
       // Assert the expected HTTP response
       assert.equal(ctx.status, 200)
