@@ -26,6 +26,7 @@ class TimerControllers {
     // Constants
     this.cleanUsageInterval = 60000 * 60 // 1 hour
     this.backupUsageInterval = 60000 * 10 // 10 minutes
+    this.rebootInterval = 60000 * 60 * 12 // 12 hours
 
     // Encapsulate dependencies
     this.config = config
@@ -33,6 +34,7 @@ class TimerControllers {
     // Bind 'this' object to all subfunctions.
     this.cleanUsage = this.cleanUsage.bind(this)
     this.backupUsage = this.backupUsage.bind(this)
+    this.autoReboot = this.autoReboot.bind(this)
   }
 
   // Start all the time-based controllers.
@@ -41,6 +43,11 @@ class TimerControllers {
     // when the server starts.
     this.cleanUsageHandle = setInterval(this.cleanUsage, this.cleanUsageInterval)
     this.backupUsageHandle = setInterval(this.backupUsage, this.backupUsageInterval)
+
+    // Periodically reboot this app. Helia has a slight memory leak, and occasionally
+    // runs into unrecoverable network issues. Rebooting is one way to overcome these
+    // black-box issues.
+    this.rebootHandle = setInterval(this.autoReboot, this.rebootInterval)
 
     return true
   }
@@ -97,6 +104,15 @@ class TimerControllers {
       // Note: Do not throw an error. This is a top-level function.
       return false
     }
+  }
+
+  // This timer is used to auto-reboot the processes. If this is being run in Docker container
+  // (the target for production), the Docker container should automatically restart the timer.
+  // This is a temporary fix to the IPFS node stalling occasionally until a better fix can be
+  // found.
+  autoReboot () {
+    console.log('Rebooting service.')
+    process.exit(1)
   }
 }
 
