@@ -277,6 +277,7 @@ class IpfsCoordAdapter {
             // Persist the config setting, so it can be used by other commands.
             // _this.conf.set('selectedService', thisPeer)
             console.log(`---->BCH wallet service selected: ${thisPeer}`)
+            console.log('preferredProvider: ', _this.config.preferredProvider)
           }
 
           // console.log('preferredProvider: ', _this.config.preferredProvider)
@@ -287,11 +288,12 @@ class IpfsCoordAdapter {
             _this.config.preferredProvider &&
             thisPeer === _this.config.preferredProvider
           ) {
-            console.log('preferredProvider: ', _this.config.preferredProvider)
-            console.log('thisPeer: ', thisPeer)
-            console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
+            // console.log('preferredProvider: ', _this.config.preferredProvider)
+            // console.log('thisPeer: ', thisPeer)
+            // console.log('selectedServiceProvider: ', _this.state.selectedServiceProvider)
             if (_this.state.selectedServiceProvider !== thisPeer) {
               console.log(`---->BCH wallet service switched to preferred peer: ${thisPeer}`)
+              console.log('preferredProvider: ', _this.config.preferredProvider)
             }
 
             _this.state.selectedServiceProvider = thisPeer
@@ -370,6 +372,7 @@ class IpfsCoordAdapter {
             // Persist the config setting, so it can be used by other commands.
             // _this.conf.set('selectedService', thisPeer)
             console.log(`---->IPFS File service selected: ${thisPeer}`)
+            console.log('preferredIpfsFileProvider: ', _this.config.preferredIpfsFileProvider)
           }
 
           // console.log('preferredProvider: ', _this.config.preferredProvider)
