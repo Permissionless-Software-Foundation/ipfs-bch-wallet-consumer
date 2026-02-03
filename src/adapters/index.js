@@ -41,7 +41,7 @@ class Adapters {
     this.passport = new Passport()
     this.nodemailer = new Nodemailer()
     this.jsonFiles = new JSONFiles()
-    this.bchjs = new BCHJS()
+    this.bchjs = new BCHJS({ restURL: config.apiServer })
     this.config = config
     this.bch = new BCH(localConfig)
     this.p2wdb = new P2WDB(localConfig)
