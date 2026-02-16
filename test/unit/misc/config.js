@@ -10,15 +10,24 @@ describe('#config', () => {
   before(() => {
     // Backup the current environment setting.
     currentEnv = process.env.CONSUMER_ENV
+
+    // Clear CONSUMER_ENV for the first test to ensure default behavior
+    delete process.env.CONSUMER_ENV
   })
 
   after(() => {
     // Restore the environment setting before starting these tests.
-    process.env.CONSUMER_ENV = currentEnv
+    if (currentEnv) {
+      process.env.CONSUMER_ENV = currentEnv
+    } else {
+      delete process.env.CONSUMER_ENV
+    }
   })
 
   it('Should return development environment config by default', async () => {
-    const importedConfig = await import('../../../config/index.js')
+    // Ensure CONSUMER_ENV is not set for this test
+    delete process.env.CONSUMER_ENV
+    const importedConfig = await import('../../../config/index.js?foo=bar0')
     const config = importedConfig.default
     // console.log('config: ', config)
 
